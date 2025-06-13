@@ -1,0 +1,49 @@
+# Entorno virtual Python
+env/
+venv/
+ENV/
+.venv/
+
+# Archivos de entorno y secretos
+*.env
+.env
+
+# Archivos de base de datos locales
+*.sqlite3
+db.sqlite3
+
+# Archivos de caché y compilados de Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Archivos de migración corruptos o temporales
+*.bak
+*.swp
+*.tmp
+
+# Archivos de logs
+*.log
+
+# Archivos de cobertura de tests
+htmlcov/
+.coverage
+.tox/
+.nox/
+.pytest_cache/
+
+# Archivos de administración de paquetes
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Volúmenes de Docker (si los usas fuera del contenedor)
+mariadb_data/
