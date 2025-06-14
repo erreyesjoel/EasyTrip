@@ -1,11 +1,10 @@
 /* clase hero-video */
 .hero-video {
   width: 100vw;
-  height: 60vh;
+  height: calc(100vh - 60px - 64px); // Ajusta 60px y 64px a la altura real de tu header y footer
   object-fit: cover;
   display: block;
   margin: 0;
   padding: 0;
   z-index: 1;
 }
-
