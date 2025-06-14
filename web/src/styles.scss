@@ -1,1 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* para que no haya margenes blancos, ni verticales ni horizontales, lo he puesto mas que nada por el header 
+en globales, para que se haga en toda la pagina */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
