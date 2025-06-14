@@ -49,3 +49,5 @@ dist/
 mariadb_data/
 
 web/public/videoHero.mp4
+
+bfg-1.14.0.jar
