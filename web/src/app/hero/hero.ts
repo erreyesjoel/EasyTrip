@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 
+// hero ts
 @Component({
   selector: 'app-hero',
   templateUrl: './hero.html',

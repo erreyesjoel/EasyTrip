@@ -47,3 +47,5 @@ dist/
 
 # Volúmenes de Docker (si los usas fuera del contenedor)
 mariadb_data/
+
+web/public/videoHero.mp4
