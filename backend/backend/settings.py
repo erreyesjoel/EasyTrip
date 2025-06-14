@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tablas',  # Aplicación personalizada para manejar tablas
+    'rest_framework',  # Django REST Framework para crear APIs
 ]
 
 MIDDLEWARE = [
