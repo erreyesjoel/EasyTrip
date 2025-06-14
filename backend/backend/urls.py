@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from tablas.views import ejemplo_get  # <--- importa la vista
+from tablas.views import ejemplo_get, registro_usuario  # <--- importa la vista
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/ejemplo/', ejemplo_get, name='ejemplo_get'),  # <--- agrega la URL para la vista
+    path('api/registro/', registro_usuario, name='registro_usuario'),  # <--- agrega la URL para la vista
 ]
