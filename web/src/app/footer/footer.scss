@@ -1,0 +1,22 @@
+@use '../../_variables' as vars;
+
+.main-footer {
+  width: 100vw;
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  padding: 1rem 0;
+  margin: 0;
+  font-size: 1rem;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  text-align: center;
+}
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 2rem;
+  }
