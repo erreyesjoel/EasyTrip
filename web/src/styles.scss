@@ -3,6 +3,8 @@
 /* para que no haya margenes blancos, ni verticales ni horizontales, lo he puesto mas que nada por el header 
 en globales, para que se haga en toda la pagina */
 
+@use 'variables';
+
 html, body {
   height: 100%;
   margin: 0;

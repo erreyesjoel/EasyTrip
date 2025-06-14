@@ -1,8 +1,10 @@
+@use '../../_variables' as vars;
+
 .main-header {
   width: 100vw;
   margin: 0;
   padding: 0.5rem 0;
-  background: rgb(79, 145, 118);
+  background: vars.$verde-esmeralda;
   color: #fff;
   display: flex;
   align-items: center;

@@ -1,6 +1,8 @@
+@use '../../_variables' as vars;
+
 .main-footer {
   width: 100vw;
-  background: rgb(79, 145, 118);
+  background: vars.$verde-esmeralda;
   color: #fff;
   padding: 1rem 0;
   margin: 0;
