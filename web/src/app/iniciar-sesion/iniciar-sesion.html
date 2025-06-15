@@ -1,2 +1,26 @@
-<p>iniciar-sesion works!</p>
-<h1>Iniciar Sesión</h1>
+<div class="formulario-container">
+  <form class="formulario" autocomplete="off" novalidate>
+    <h2 class="titulo-formulario">Iniciar sesión</h2>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      placeholder="Correo electrónico o nombre de usuario"
+      required
+      autocomplete="username"
+    >
+    <input
+      type="password"
+      id="password"
+      name="password"
+      placeholder="Contraseña"
+      required
+      autocomplete="current-password"
+    >
+    <button type="submit" class="enviar">Iniciar sesión</button>
+    <div class="extra-links">
+      <a href="#" class="olvido">¿Olvidaste tu contraseña?</a>
+      <a href="#" class="registro">¿No tienes cuenta? Regístrate</a>
+    </div>
+  </form>
+</div>

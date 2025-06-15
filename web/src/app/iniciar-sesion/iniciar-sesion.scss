@@ -1,0 +1,87 @@
+@use '../../_variables' as vars;
+
+.formulario-container {
+  position: relative;
+  height: 80vh;
+}
+.formulario {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border: 2px solid vars.$verde-esmeralda;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  padding: 40px 32px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 450px;
+  max-width: 480px;
+}
+
+.titulo-formulario {
+  text-align: center;
+  color: #222;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.formulario input {
+  width: auto;
+  padding: 12px 14px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+
+  &:focus {
+    border-color: vars.$verde-esmeralda;
+    box-shadow: 0 0 0 2px rgba(vars.$verde-esmeralda, 0.13);
+  }
+}
+
+.enviar {
+  width: 60%;
+  background-color: vars.$verde-esmeralda;
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 14px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin: 8px auto 0 auto; // Centrado horizontal y margen arriba
+  box-shadow: 0 2px 8px rgba(vars.$verde-esmeralda, 0.10);
+  transition: background 0.2s, transform 0.1s;
+
+  &:hover {
+    background-color: darken(vars.$verde-esmeralda, 10%);
+    transform: translateY(-2px) scale(1.04);
+  }
+}
+
+.extra-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 0.97rem;
+}
+
+.extra-links a {
+  color: vars.$verde-esmeralda;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+
+  &:hover {
+    text-decoration: underline;
+    color: darken(vars.$verde-esmeralda, 10%);
+  }
+}
