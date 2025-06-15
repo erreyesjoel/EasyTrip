@@ -17,9 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from tablas.views import ejemplo_get, registro_usuario  # <--- importa la vista
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/ejemplo/', ejemplo_get, name='ejemplo_get'),  # <--- agrega la URL para la vista
     path('api/registro/', registro_usuario, name='registro_usuario'),  # <--- agrega la URL para la vista
+    path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # <-- login JWT
+    path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),        # <-- refresh token
+
 ]
