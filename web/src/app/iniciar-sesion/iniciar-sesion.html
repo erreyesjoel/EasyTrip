@@ -12,9 +12,11 @@
 
   <form class="formulario" *ngIf="modoRegistro" autocomplete="off" novalidate>
     <h2 class="titulo-formulario">Registro</h2>
-    <input type="text" name="username" placeholder="Nombre de usuario" required>
+    <input type="text" name="nombre" placeholder="Nombre" required>
+    <input type="text" name="apellido" placeholder="Apellido" required>
     <input type="email" name="email" placeholder="Correo electrónico" required>
     <input type="password" name="password" placeholder="Contraseña" required>
+    <input type="password" name="confirmPassword" placeholder="Confirmar contraseña" required>
     <button type="submit" class="enviar">Registrarse</button>
     <div class="extra-links">
       <a href="#" (click)="mostrarLogin(); $event.preventDefault()">¿Ya tienes cuenta? Inicia sesión</a>
