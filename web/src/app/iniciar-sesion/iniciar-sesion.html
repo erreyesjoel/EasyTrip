@@ -1,26 +1,23 @@
 <div class="formulario-container">
-  <form class="formulario" autocomplete="off" novalidate>
+  <form class="formulario" *ngIf="!modoRegistro" autocomplete="off" novalidate>
     <h2 class="titulo-formulario">Iniciar sesión</h2>
-    <input
-      type="email"
-      id="email"
-      name="email"
-      placeholder="Correo electrónico o nombre de usuario"
-      required
-      autocomplete="username"
-    >
-    <input
-      type="password"
-      id="password"
-      name="password"
-      placeholder="Contraseña"
-      required
-      autocomplete="current-password"
-    >
+    <input type="email" id="email" name="email" placeholder="Correo electrónico o nombre de usuario" required autocomplete="username">
+    <input type="password" id="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
     <button type="submit" class="enviar">Iniciar sesión</button>
     <div class="extra-links">
       <a href="#" class="olvido">¿Olvidaste tu contraseña?</a>
-      <a href="#" class="registro">¿No tienes cuenta? Regístrate</a>
+      <a href="#" class="registro" (click)="mostrarRegistro(); $event.preventDefault()">¿No tienes cuenta? Regístrate</a>
+    </div>
+  </form>
+
+  <form class="formulario" *ngIf="modoRegistro" autocomplete="off" novalidate>
+    <h2 class="titulo-formulario">Registro</h2>
+    <input type="text" name="username" placeholder="Nombre de usuario" required>
+    <input type="email" name="email" placeholder="Correo electrónico" required>
+    <input type="password" name="password" placeholder="Contraseña" required>
+    <button type="submit" class="enviar">Registrarse</button>
+    <div class="extra-links">
+      <a href="#" (click)="mostrarLogin(); $event.preventDefault()">¿Ya tienes cuenta? Inicia sesión</a>
     </div>
   </form>
 </div>
