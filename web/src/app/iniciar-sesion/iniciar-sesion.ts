@@ -111,7 +111,7 @@ export class IniciarSesion implements OnInit {
           this.pasoRegistro = 3;
         } else {
           this.tipoMensaje = 'error';
-          this.mensaje = (data as any).error || 'Código incorrecto o expirado';
+          this.mensaje = (data as any).error;
         }
       })
       .catch((error) => {
