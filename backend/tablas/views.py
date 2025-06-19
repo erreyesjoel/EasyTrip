@@ -12,6 +12,8 @@ from django.conf import settings
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.response import Response
+from django.utils import timezone
+from datetime import timedelta
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -67,8 +69,12 @@ def enviar_codigo_verificacion(request):
             return JsonResponse({'error': 'El email ya está registrado.'}, status=400)
         # Generar código de 6 dígitos
         codigo = str(random.randint(100000, 999999))
-        # Guardar en la base de datos
-        CodigoVerificacion.objects.create(email=email, codigo=codigo)
+        # Guardar en la base de datos con fecha_expiracion a 7 minutos
+        CodigoVerificacion.objects.create(
+            email=email,
+            codigo=codigo,
+            fecha_expiracion=timezone.now() + timedelta(minutes=7)
+        )
         # Enviar email con HTML y APP_NAME en negrita
         send_mail(
             subject=f'Tu código de verificación en {settings.APP_NAME}',
@@ -94,11 +100,12 @@ def verificar_codigo(request):
         if not email or not codigo:
             return JsonResponse({'valido': False, 'error': 'Faltan datos'}, status=400)
         # Busca el código más reciente, no usado y no expirado
-        from django.utils import timezone
-        from datetime import timedelta
         ahora = timezone.now()
         codigos = CodigoVerificacion.objects.filter(
-            email=email, codigo=codigo, usado=False, creado__gte=ahora - timedelta(minutes=15)
+            email=email,
+            codigo=codigo,
+            usado=False,
+            fecha_expiracion__gte=ahora
         ).order_by('-creado')
         if codigos.exists():
             codigo_obj = codigos.first()

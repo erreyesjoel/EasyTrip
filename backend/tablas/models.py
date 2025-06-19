@@ -67,10 +67,10 @@ class CodigoVerificacion(models.Model):
     codigo = models.CharField(max_length=10)
     creado = models.DateTimeField(auto_now_add=True)
     usado = models.BooleanField(default=False)
+    fecha_expiracion = models.DateTimeField(null=True, blank=True)  # NUEVO
 
     def expirado(self):
-        return self.creado < timezone.now() - datetime.timedelta(minutes=15)  # 15 min de validez
-
+        return timezone.now() > self.fecha_expiracion if self.fecha_expiracion else False
     def __str__(self):
         return f"{self.email} - {self.codigo} - {'usado' if self.usado else 'no usado'}"
 
