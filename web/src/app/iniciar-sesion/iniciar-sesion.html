@@ -1,0 +1,53 @@
+<div class="formulario-container">
+  <!-- Login -->
+  <form class="formulario" *ngIf="!modoRegistro && !modoRecuperacion" autocomplete="off" novalidate>
+    <h2 class="titulo-formulario">Iniciar sesión</h2>
+    <input type="email" id="email" name="email" placeholder="Correo electrónico o nombre de usuario" required autocomplete="username" [(ngModel)]="loginEmail" [ngModelOptions]="{standalone: true}">
+    <input type="password" id="password" name="password" placeholder="Contraseña" required autocomplete="current-password" [(ngModel)]="loginPassword" [ngModelOptions]="{standalone: true}">
+    <button type="button" class="enviar" (click)="iniciarSesion()">Iniciar sesión</button>
+    <div class="extra-links">
+      <a href="#" class="olvido" (click)="mostrarRecuperacion(); $event.preventDefault()">¿Olvidaste tu contraseña?</a>
+      <a href="#" class="registro" (click)="mostrarRegistro(); $event.preventDefault()">¿No tienes cuenta? Regístrate</a>
+    </div>
+  </form>
+
+  <!-- Registro por pasos -->
+  <form class="formulario" *ngIf="modoRegistro" autocomplete="off" novalidate>
+    <h2 class="titulo-formulario">Registro</h2>
+
+    <!-- Paso 1: Solo input de email -->
+    <ng-container *ngIf="pasoRegistro === 1">
+      <input type="email" name="email" placeholder="Correo electrónico" required [(ngModel)]="registroEmail" #emailInput="ngModel" [ngModelOptions]="{standalone: true}">
+      <button type="button" class="enviar" (click)="enviarEmailRegistro()">Enviar código</button>
+    </ng-container>
+
+    <!-- Paso 2: Solo input de código -->
+    <ng-container *ngIf="pasoRegistro === 2">
+      <input type="text" name="codigo" placeholder="Código de verificación" required [(ngModel)]="registroCodigo" #codigoInput="ngModel" [ngModelOptions]="{standalone: true}">
+      <button type="button" class="enviar" (click)="verificarCodigoRegistro()">Verificar código</button>
+    </ng-container>
+
+    <!-- Paso 3: Nombre, apellido, contraseña y confirmar contraseña -->
+    <ng-container *ngIf="pasoRegistro === 3">
+      <input type="text" name="nombre" placeholder="Nombre" required [(ngModel)]="registroNombre" #nombreInput="ngModel" [ngModelOptions]="{standalone: true}">
+      <input type="text" name="apellido" placeholder="Apellido" required [(ngModel)]="registroApellido" #apellidoInput="ngModel" [ngModelOptions]="{standalone: true}">
+      <input type="password" name="password" placeholder="Contraseña" required [(ngModel)]="registroPassword" #passwordInput="ngModel" [ngModelOptions]="{standalone: true}">
+      <input type="password" name="confirmPassword" placeholder="Confirmar contraseña" required [(ngModel)]="registroPassword2" #password2Input="ngModel" [ngModelOptions]="{standalone: true}">
+      <button type="button" class="enviar" (click)="finalizarRegistro()">Registrarse</button>
+    </ng-container>
+
+    <div class="extra-links">
+      <a href="#" (click)="mostrarLogin(); $event.preventDefault()">¿Ya tienes cuenta? Inicia sesión</a>
+    </div>
+  </form>
+</div>
+
+<!-- Recuperación de contraseña -->
+<form class="formulario" *ngIf="modoRecuperacion" autocomplete="off" novalidate>
+  <h2 class="titulo-formulario">Recuperar contraseña</h2>
+  <input type="email" name="email" placeholder="Correo electrónico" required>
+  <button type="submit" class="enviar">Enviar enlace de recuperación</button>
+  <div class="extra-links">
+    <a href="#" (click)="mostrarLogin(); $event.preventDefault()">¿Ya tienes cuenta? Inicia sesión</a>
+  </div>
+</form>
