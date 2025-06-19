@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from .models import CodigoVerificacion
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.conf import settings
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -49,13 +50,18 @@ def enviar_codigo_verificacion(request):
         codigo = str(random.randint(100000, 999999))
         # Guardar en la base de datos
         CodigoVerificacion.objects.create(email=email, codigo=codigo)
-        # Enviar email
+        # Enviar email con HTML y APP_NAME en negrita
         send_mail(
-            'Tu código de verificación',
-            f'Tu código de verificación es: {codigo}',
-            None,  # Usa DEFAULT_FROM_EMAIL
-            [email],
+            subject=f'Tu código de verificación en {settings.APP_NAME}',
+            message=f'Tu código de verificación es: {codigo}',
+            from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",  # <-- aquí el nombre visible
+            recipient_list=[email],
             fail_silently=False,
+            html_message=f"""
+                <p><strong>{settings.APP_NAME}</strong></p>
+                <p>Tu código de verificación es: <b>{codigo}</b></p>
+                <p>Si no solicitaste este código, puedes ignorar este mensaje.</p>
+            """
         )
         return JsonResponse({'ok': True})
     return JsonResponse({'error': 'Método no permitido'}, status=405)
