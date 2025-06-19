@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
+import datetime
 
 class PaqueteTuristico(models.Model):
     ESTADO_CHOICES = [
@@ -59,3 +61,20 @@ class Reserva(models.Model):
     
     class Meta:
         db_table = 'reserva'
+
+class CodigoVerificacion(models.Model):
+    email = models.EmailField()
+    codigo = models.CharField(max_length=10)
+    creado = models.DateTimeField(auto_now_add=True)
+    usado = models.BooleanField(default=False)
+
+    def expirado(self):
+        return self.creado < timezone.now() - datetime.timedelta(minutes=15)  # 15 min de validez
+
+    def __str__(self):
+        return f"{self.email} - {self.codigo} - {'usado' if self.usado else 'no usado'}"
+
+    class Meta:
+        db_table = 'codigos_verificacion'
+
+        

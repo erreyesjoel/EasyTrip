@@ -2,6 +2,12 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+import random
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from .models import CodigoVerificacion
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -18,15 +24,62 @@ def ejemplo_get(request):
 
 @api_view(['POST'])
 def registro_usuario(request):
-    username = request.data.get('username')
     password = request.data.get('password')
     email = request.data.get('email')
 
-    if not username or not password:
-        return Response({'error': 'Username y password son requeridos.'}, status=status.HTTP_400_BAD_REQUEST)
+    if not email or not password:
+        return Response({'error': 'Email y password son requeridos.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    username = email.split('@')[0]  # Genera el username a partir del email
 
     if User.objects.filter(username=username).exists():
         return Response({'error': 'El usuario ya existe.'}, status=status.HTTP_400_BAD_REQUEST)
 
     user = User.objects.create_user(username=username, password=password, email=email)
-    return Response({'mensaje': 'Usuario creado correctamente.'}, status=status.HTTP_201_CREATED)
+    return Response({'mensaje': 'Usuario creado correctamente.', 'username': username}, status=status.HTTP_201_CREATED)
+
+@csrf_exempt
+def enviar_codigo_verificacion(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        if not email:
+            return JsonResponse({'error': 'Email requerido'}, status=400)
+        # Generar código de 6 dígitos
+        codigo = str(random.randint(100000, 999999))
+        # Guardar en la base de datos
+        CodigoVerificacion.objects.create(email=email, codigo=codigo)
+        # Enviar email
+        send_mail(
+            'Tu código de verificación',
+            f'Tu código de verificación es: {codigo}',
+            None,  # Usa DEFAULT_FROM_EMAIL
+            [email],
+            fail_silently=False,
+        )
+        return JsonResponse({'ok': True})
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+@csrf_exempt
+def verificar_codigo(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        codigo = data.get('codigo')
+        if not email or not codigo:
+            return JsonResponse({'valido': False, 'error': 'Faltan datos'}, status=400)
+        # Busca el código más reciente, no usado y no expirado
+        from django.utils import timezone
+        from datetime import timedelta
+        ahora = timezone.now()
+        codigos = CodigoVerificacion.objects.filter(
+            email=email, codigo=codigo, usado=False, creado__gte=ahora - timedelta(minutes=15)
+        ).order_by('-creado')
+        if codigos.exists():
+            codigo_obj = codigos.first()
+            codigo_obj.usado = True
+            codigo_obj.save()
+            return JsonResponse({'valido': True})
+        else:
+            return JsonResponse({'valido': False})
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
