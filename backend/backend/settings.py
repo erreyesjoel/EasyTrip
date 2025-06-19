@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import environ
+from datetime import timedelta
 import os
 import pymysql
 pymysql.install_as_MySQLdb()
@@ -160,3 +161,13 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(env('ACCESS_TOKEN_LIFETIME_MINUTES', default=15))), 
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(env('REFRESH_TOKEN_LIFETIME_DAYS', default=1))),
+}
+
+AUTHENTICATION_BACKENDS = [
+    'tablas.auth_backend.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',  # Deja el backend por defecto como respaldo
+]
