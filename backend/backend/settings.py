@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',  # Permite solicitudes CORS
     'tablas',  # Aplicación personalizada para manejar tablas
+    'accounts',  # Aplicación personalizada para manejar cuentas de usuario
     'rest_framework',  # Django REST Framework para crear APIs
 ]
 
@@ -171,3 +172,5 @@ AUTHENTICATION_BACKENDS = [
     'tablas.auth_backend.EmailOrUsernameModelBackend',
     'django.contrib.auth.backends.ModelBackend',  # Deja el backend por defecto como respaldo
 ]
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
