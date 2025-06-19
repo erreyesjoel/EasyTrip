@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -7,9 +7,18 @@ import { CommonModule } from '@angular/common';
   styleUrl: './iniciar-sesion.scss',
   imports: [CommonModule]
 })
-export class IniciarSesion {
+export class IniciarSesion implements OnInit {
   modoRegistro = false; // modo registro false, porque por defecto se muestra el login
   modoRecuperacion = false; // modo recuperacion false, porque por defecto se muestra el login
+
+  ngOnInit() {
+    // Prueba de fetch usando la variable de entorno para el backend
+    const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
+    fetch(`${apiBaseUrl}ejemplo/`)
+      .then(response => response.json())
+      .then(data => console.log('Respuesta de ejemplo:', data))
+      .catch(error => console.error('Error en fetch:', error));
+  }
 
   mostrarRegistro() {
     this.modoRegistro = true; // modo registro true, porque se ha pulsado el boton de registro
