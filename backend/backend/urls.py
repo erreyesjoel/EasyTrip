@@ -18,12 +18,13 @@ from django.contrib import admin
 from django.urls import path
 from tablas.views import ejemplo_get, registro_usuario, enviar_codigo_verificacion, verificar_codigo
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from tablas.views import CustomTokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/ejemplo/', ejemplo_get, name='ejemplo_get'),  # <--- agrega la URL para la vista
     path('api/registro/', registro_usuario, name='registro_usuario'),  # <--- agrega la URL para la vista
-    path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # <-- login JWT
+    path('api/login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),  # <-- login JWT
     path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),        # <-- refresh token
     path('api/registro-codigo/', enviar_codigo_verificacion, name='enviar_codigo_verificacion'),
     path('api/verificar-codigo/', verificar_codigo, name='verificar_codigo'),

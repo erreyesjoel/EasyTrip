@@ -2,9 +2,9 @@
   <!-- Login -->
   <form class="formulario" *ngIf="!modoRegistro && !modoRecuperacion" autocomplete="off" novalidate>
     <h2 class="titulo-formulario">Iniciar sesión</h2>
-    <input type="email" id="email" name="email" placeholder="Correo electrónico o nombre de usuario" required autocomplete="username">
-    <input type="password" id="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
-    <button type="submit" class="enviar">Iniciar sesión</button>
+    <input type="email" id="email" name="email" placeholder="Correo electrónico o nombre de usuario" required autocomplete="username" [(ngModel)]="loginEmail" [ngModelOptions]="{standalone: true}">
+    <input type="password" id="password" name="password" placeholder="Contraseña" required autocomplete="current-password" [(ngModel)]="loginPassword" [ngModelOptions]="{standalone: true}">
+    <button type="button" class="enviar" (click)="iniciarSesion()">Iniciar sesión</button>
     <div class="extra-links">
       <a href="#" class="olvido" (click)="mostrarRecuperacion(); $event.preventDefault()">¿Olvidaste tu contraseña?</a>
       <a href="#" class="registro" (click)="mostrarRegistro(); $event.preventDefault()">¿No tienes cuenta? Regístrate</a>

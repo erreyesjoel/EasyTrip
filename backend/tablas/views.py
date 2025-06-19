@@ -9,6 +9,9 @@ from .models import CodigoVerificacion
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.conf import settings
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.response import Response
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -97,3 +100,28 @@ def verificar_codigo(request):
         else:
             return JsonResponse({'valido': False})
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+# Clase personalizada para el token
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = TokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == 200:
+            access = response.data.get('access')
+            refresh = response.data.get('refresh')
+            response.set_cookie(
+                key='access_token',
+                value=access,
+                httponly=True,
+                secure=False,  # Usa False en desarrollo (HTTP), True en producción (HTTPS)
+                samesite='Lax'
+            )
+            response.set_cookie(
+                key='refresh_token',
+                value=refresh,
+                httponly=True,
+                secure=False,
+                samesite='Lax'
+            )
+        return response

@@ -23,6 +23,9 @@ export class IniciarSesion implements OnInit {
   registroPassword = ''; // password del registro
   registroPassword2 = ''; // password2 del registro
 
+  loginEmail = '';
+  loginPassword = '';
+
   ngOnInit() {
     // Prueba de fetch usando la variable de entorno para el backend
     const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
@@ -109,6 +112,32 @@ export class IniciarSesion implements OnInit {
       .then(response => response.json())
       .then(() => {
         this.mostrarLogin(); // Vuelve al login tras registrar
+      });
+  }
+
+  // Método para login JWT con cookie HttpOnly
+  iniciarSesion() {
+    const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
+    fetch(`${apiBaseUrl}login/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: this.loginEmail,
+        password: this.loginPassword
+      }),
+      credentials: 'include' // Importante para que la cookie viaje
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.access) {
+          console.log('Login correcto, cookie seteada');
+          // Aquí puedes redirigir o actualizar el estado de la app
+        } else {
+          console.log('Login incorrecto', data);
+        }
+      })
+      .catch(error => {
+        console.log('Error en login:', error);
       });
   }
 }
