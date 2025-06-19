@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Import FormsModule for ngModel
+import { FormsModule } from '@angular/forms';
+import { MensajesComponent } from '../mensajes/mensajes';
 
 @Component({
   selector: 'app-iniciar-sesion',
   templateUrl: './iniciar-sesion.html',
   styleUrl: './iniciar-sesion.scss',
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, MensajesComponent]
 })
 export class IniciarSesion implements OnInit {
   modoRegistro = false; // modo registro false, porque por defecto se muestra el login
@@ -25,6 +26,9 @@ export class IniciarSesion implements OnInit {
 
   loginEmail = '';
   loginPassword = '';
+
+  tipoMensaje: 'error' | 'exito' = 'exito';
+  mensaje = '';
 
   ngOnInit() {
     // Prueba de fetch usando la variable de entorno para el backend
@@ -68,7 +72,7 @@ export class IniciarSesion implements OnInit {
     });
 }
 
-  // Paso 2: Verificar código (ahora sí consulta el backend)
+  // Paso 2: Verificar código
   verificarCodigoRegistro() {
     const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
     fetch(`${apiBaseUrl}verificar-codigo/`, {
@@ -82,20 +86,27 @@ export class IniciarSesion implements OnInit {
       .then(response => response.json())
       .then(data => {
         if (data.valido) {
-          console.log('Código correcto');
+          this.tipoMensaje = 'exito';
+          this.mensaje = 'Código verificado correctamente';
           this.pasoRegistro = 3;
         } else {
-          console.log('Código incorrecto');
-          // No avanza de paso, solo log
+          this.tipoMensaje = 'error';
+          this.mensaje = 'Código incorrecto o expirado';
         }
       })
-      .catch(error => {
-        console.log('Error verificando código:', error);
+      .catch(() => {
+        this.tipoMensaje = 'error';
+        this.mensaje = 'Error verificando código';
       });
   }
 
   // Paso 3: Enviar datos finales de registro
   finalizarRegistro() {
+    if (this.registroPassword !== this.registroPassword2) {
+      this.tipoMensaje = 'error';
+      this.mensaje = 'Las contraseñas no coinciden';
+      return;
+    }
     const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
     fetch(`${apiBaseUrl}registro/`, {
       method: 'POST',
@@ -110,8 +121,19 @@ export class IniciarSesion implements OnInit {
       })
     })
       .then(response => response.json())
-      .then(() => {
-        this.mostrarLogin(); // Vuelve al login tras registrar
+      .then(data => {
+        if (data.error) {
+          this.tipoMensaje = 'error';
+          this.mensaje = data.error;
+        } else {
+          this.tipoMensaje = 'exito';
+          this.mensaje = 'Usuario registrado correctamente';
+          this.mostrarLogin();
+        }
+      })
+      .catch(() => {
+        this.tipoMensaje = 'error';
+        this.mensaje = 'Error en el registro';
       });
   }
 
@@ -125,19 +147,22 @@ export class IniciarSesion implements OnInit {
         username: this.loginEmail,
         password: this.loginPassword
       }),
-      credentials: 'include' // Importante para que la cookie viaje
+      credentials: 'include'
     })
       .then(response => response.json())
       .then(data => {
         if (data.access) {
-          console.log('Login correcto, cookie seteada');
+          this.tipoMensaje = 'exito';
+          this.mensaje = 'Login correcto, bienvenido!';
           // Aquí puedes redirigir o actualizar el estado de la app
         } else {
-          console.log('Login incorrecto', data);
+          this.tipoMensaje = 'error';
+          this.mensaje = 'Credenciales incorrectas';
         }
       })
-      .catch(error => {
-        console.log('Error en login:', error);
+      .catch(() => {
+        this.tipoMensaje = 'error';
+        this.mensaje = 'Error en login. Intenta de nuevo.';
       });
   }
 }

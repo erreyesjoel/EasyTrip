@@ -9,6 +9,7 @@
       <a href="#" class="olvido" (click)="mostrarRecuperacion(); $event.preventDefault()">¿Olvidaste tu contraseña?</a>
       <a href="#" class="registro" (click)="mostrarRegistro(); $event.preventDefault()">¿No tienes cuenta? Regístrate</a>
     </div>
+    <app-mensajes [tipo]="tipoMensaje" [mensaje]="mensaje"></app-mensajes>
   </form>
 
   <!-- Registro por pasos -->
