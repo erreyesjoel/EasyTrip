@@ -37,6 +37,8 @@
       <button type="button" class="enviar" (click)="finalizarRegistro()">Registrarse</button>
     </ng-container>
 
+    <app-mensajes [tipo]="tipoMensaje" [mensaje]="mensaje"></app-mensajes>
+
     <div class="extra-links">
       <a href="#" (click)="mostrarLogin(); $event.preventDefault()">¿Ya tienes cuenta? Inicia sesión</a>
     </div>

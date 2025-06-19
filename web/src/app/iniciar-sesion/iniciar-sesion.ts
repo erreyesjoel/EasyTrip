@@ -56,24 +56,39 @@ export class IniciarSesion implements OnInit {
   }
    // Paso 1: Enviar email para recibir código
   enviarEmailRegistro() {
-  const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
-  fetch(`${apiBaseUrl}registro-codigo/`, { // <-- ahora es 'registro-codigo/'
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: this.registroEmail })
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Código enviado:', data);
-      this.pasoRegistro = 2; // Mostrar input de código
+    this.mensaje = '';
+    const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
+    fetch(`${apiBaseUrl}registro-codigo/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: this.registroEmail })
     })
-    .catch(error => {
-      console.log('Error enviando email:', error);
-    });
-}
+      .then(async response => {
+        let data = {};
+        try {
+          data = await response.json();
+        } catch (e) {
+          data = {};
+        }
+        if (response.ok) {
+          this.tipoMensaje = 'exito';
+          this.mensaje = (data as any).mensaje || 'Código enviado al correo';
+          this.pasoRegistro = 2;
+        } else {
+          this.tipoMensaje = 'error';
+          this.mensaje = (data as any).error || 'Error enviando código';
+        }
+      })
+      .catch(error => {
+        this.tipoMensaje = 'error';
+        this.mensaje = 'Error enviando código';
+        console.error('Error enviando email:', error);
+      });
+  }
 
   // Paso 2: Verificar código
   verificarCodigoRegistro() {
+    this.mensaje = '';
     const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
     fetch(`${apiBaseUrl}verificar-codigo/`, {
       method: 'POST',
@@ -83,20 +98,26 @@ export class IniciarSesion implements OnInit {
         codigo: this.registroCodigo
       })
     })
-      .then(response => response.json())
-      .then(data => {
-        if (data.valido) {
+      .then(async response => {
+        let data = {};
+        try {
+          data = await response.json();
+        } catch (e) {
+          data = {};
+        }
+        if (response.ok && (data as any).valido) {
           this.tipoMensaje = 'exito';
           this.mensaje = 'Código verificado correctamente';
           this.pasoRegistro = 3;
         } else {
           this.tipoMensaje = 'error';
-          this.mensaje = 'Código incorrecto o expirado';
+          this.mensaje = (data as any).error || 'Código incorrecto o expirado';
         }
       })
-      .catch(() => {
+      .catch((error) => {
         this.tipoMensaje = 'error';
         this.mensaje = 'Error verificando código';
+        console.error('Error verificando código:', error);
       });
   }
 
@@ -107,6 +128,7 @@ export class IniciarSesion implements OnInit {
       this.mensaje = 'Las contraseñas no coinciden';
       return;
     }
+    this.mensaje = '';
     const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
     fetch(`${apiBaseUrl}registro/`, {
       method: 'POST',
@@ -120,15 +142,20 @@ export class IniciarSesion implements OnInit {
         password2: this.registroPassword2
       })
     })
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          this.tipoMensaje = 'error';
-          this.mensaje = data.error;
-        } else {
+      .then(async response => {
+        let data = {};
+        try {
+          data = await response.json();
+        } catch (e) {
+          data = {};
+        }
+        if (response.ok) {
           this.tipoMensaje = 'exito';
-          this.mensaje = 'Usuario registrado correctamente';
+          this.mensaje = (data as any).mensaje || 'Usuario registrado correctamente';
           this.mostrarLogin();
+        } else {
+          this.tipoMensaje = 'error';
+          this.mensaje = (data as any).error || 'Error en el registro';
         }
       })
       .catch(() => {
