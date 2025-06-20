@@ -12,6 +12,7 @@ import { environment } from '../../environments/environment';
 })
 export class Header implements OnInit {
   usuario: any = null;
+  menuAbierto = false; // <-- Añade esto
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -40,5 +41,13 @@ export class Header implements OnInit {
     document.cookie = "refresh_token=; Max-Age=0; path=/";
     this.usuario = null;
     window.location.href = '/iniciarSesion';
+  }
+
+  toggleMenu() {
+    this.menuAbierto = !this.menuAbierto;
+  }
+
+  cerrarMenu() {
+    this.menuAbierto = false;
   }
 }
