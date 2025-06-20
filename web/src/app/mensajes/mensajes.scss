@@ -1,0 +1,25 @@
+/* filepath: web/src/app/mensajes/mensajes.scss */
+.mensaje-error {
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background: #e74c3c;
+  padding: 5px;
+  border-radius: 13px;
+  margin-bottom: 5px;
+  max-width: 275px;
+}
+.mensaje-exito {
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background: #27ae60;
+  padding: 5px;
+  border-radius: 13px;
+  margin-bottom: 5px;
+  max-width: 275px;
+}

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',  # Permite solicitudes CORS
     'tablas',  # Aplicación personalizada para manejar tablas
+    'accounts',  # Aplicación personalizada para manejar cuentas de usuario
     'rest_framework',  # Django REST Framework para crear APIs
 ]
 
@@ -143,6 +144,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'tablas.auth_cookie.CustomJWTAuthentication',
+
     ),
 }
 
@@ -155,12 +158,11 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 APP_NAME = env('APP_NAME')
 
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://127.0.0.1:4200",
 ]
-
-CORS_ALLOW_CREDENTIALS = True
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(env('ACCESS_TOKEN_LIFETIME_MINUTES', default=15))), 
@@ -171,3 +173,5 @@ AUTHENTICATION_BACKENDS = [
     'tablas.auth_backend.EmailOrUsernameModelBackend',
     'django.contrib.auth.backends.ModelBackend',  # Deja el backend por defecto como respaldo
 ]
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
