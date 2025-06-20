@@ -239,3 +239,12 @@ def usuario_actual(request):
         'first_name': user.first_name,
         'last_name': user.last_name,
     })
+
+from rest_framework.decorators import api_view
+
+@api_view(['POST'])
+def logout_view(request):
+    response = Response({'ok': True, 'mensaje': 'Sesión cerrada'})
+    response.delete_cookie('access_token', path='/')
+    response.delete_cookie('refresh_token', path='/')
+    return response

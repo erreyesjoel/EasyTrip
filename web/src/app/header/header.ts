@@ -37,10 +37,12 @@ export class Header implements OnInit {
   }
 
   async logout() {
-    document.cookie = "access_token=; Max-Age=0; path=/";
-    document.cookie = "refresh_token=; Max-Age=0; path=/";
+    await fetch(environment.apiBaseUrl + 'logout/', {
+      method: 'POST',
+      credentials: 'include'
+    });
     this.usuario = null;
-    window.location.href = '/iniciarSesion';
+    window.location.href = '/'; // Redirige a la home después de cerrar sesión
   }
 
   toggleMenu() {
