@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MensajesComponent } from '../mensajes/mensajes';
+import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-iniciar-sesion',
@@ -35,7 +37,18 @@ export class IniciarSesion implements OnInit {
   tipoMensaje: 'error' | 'exito' = 'exito';
   mensaje = '';
 
+  constructor(private router: Router) {}
+
   async ngOnInit() {
+    // Comprueba si hay usuario autenticado
+    const res = await fetch(environment.apiBaseUrl + 'usuario/', {
+      credentials: 'include'
+    });
+    if (res.ok) {
+      // Si está autenticado, redirige a la home
+      this.router.navigate(['/']);
+    }
+
     // Prueba de fetch usando la variable de entorno para el backend
     const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
     try {
