@@ -14,7 +14,7 @@ export class IniciarSesion implements OnInit {
   modoRecuperacion = false; // modo recuperacion false, porque por defecto se muestra el login
 
   // Estados para el registro por pasos
-  pasoRegistro: 1 | 2 | 3 = 1; // paso registro 1, porque por defecto se muestra el login
+  pasoRegistro: 1 | 2 | 3 = 1; // paso registro 1, porque se ha pulsado el boton de registro
 
   // datos del registro, los campos del formulario de registro
   registroEmail = ''; // email del registro
@@ -23,7 +23,12 @@ export class IniciarSesion implements OnInit {
   registroApellido = ''; // apellido del registro
   registroPassword = ''; // password del registro
   registroPassword2 = ''; // password2 del registro
-
+  recuperacionEmail = '';
+  recuperacionCodigo = '';
+  recuperacionPassword = '';
+  recuperacionPassword2 = '';
+  recuperacionPaso: 1 | 2 = 1;
+  
   loginEmail = '';
   loginPassword = '';
 
@@ -195,6 +200,67 @@ export class IniciarSesion implements OnInit {
     } catch {
       this.tipoMensaje = 'error';
       this.mensaje = 'Error en login. Intenta de nuevo.';
+    }
+  }
+
+  // Paso 1: Enviar email para recibir el código de recuperación
+  async enviarEmailRecuperacion() {
+    this.mensaje = '';
+    const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
+    try {
+      const res = await fetch(`${apiBaseUrl}recuperar-password/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: this.recuperacionEmail })
+      });
+      let data = {};
+      try { data = await res.json(); } catch {}
+      if (res.ok) {
+        this.tipoMensaje = 'exito';
+        this.mensaje = (data as any).mensaje || 'Código enviado al correo';
+        this.recuperacionPaso = 2;
+      } else {
+        this.tipoMensaje = 'error';
+        this.mensaje = (data as any).error || 'Error enviando código';
+      }
+    } catch {
+      this.tipoMensaje = 'error';
+      this.mensaje = 'Error enviando código';
+    }
+  }
+
+  // Paso 2: Cambiar la contraseña usando el código recibido
+  async cambiarPasswordRecuperacion() {
+    if (this.recuperacionPassword !== this.recuperacionPassword2) {
+      this.tipoMensaje = 'error';
+      this.mensaje = 'Las contraseñas no coinciden';
+      return;
+    }
+    this.mensaje = '';
+    const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
+    try {
+      const res = await fetch(`${apiBaseUrl}cambiar-password/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: this.recuperacionEmail,
+          codigo: this.recuperacionCodigo,
+          password: this.recuperacionPassword
+        })
+      });
+      let data = {};
+      try { data = await res.json(); } catch {}
+      if (res.ok) {
+        this.tipoMensaje = 'exito';
+        this.mensaje = (data as any).mensaje || 'Contraseña cambiada correctamente';
+        this.mostrarLogin();
+      } else {
+        this.tipoMensaje = 'error';
+        this.mensaje = (data as any).error || 'Error cambiando contraseña';
+      }
+    } catch {
+      this.tipoMensaje = 'error';
+      this.mensaje = 'Error cambiando contraseña';
     }
   }
 }

@@ -62,17 +62,23 @@ class Reserva(models.Model):
     class Meta:
         db_table = 'reserva'
 
+
 class CodigoVerificacion(models.Model):
+    TIPO_CHOICES = [
+        ('registro', 'Registro'),
+        ('recuperacion', 'Recuperación'),
+    ]
     email = models.EmailField()
     codigo = models.CharField(max_length=10)
     creado = models.DateTimeField(auto_now_add=True)
     usado = models.BooleanField(default=False)
-    fecha_expiracion = models.DateTimeField(null=True, blank=True)  # NUEVO
+    fecha_expiracion = models.DateTimeField(null=True, blank=True)
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default='registro')  # NUEVO
 
     def expirado(self):
         return timezone.now() > self.fecha_expiracion if self.fecha_expiracion else False
     def __str__(self):
-        return f"{self.email} - {self.codigo} - {'usado' if self.usado else 'no usado'}"
+        return f"{self.email} - {self.codigo} - {self.tipo} - {'usado' if self.usado else 'no usado'}"
 
     class Meta:
         db_table = 'codigos_verificacion'

@@ -48,8 +48,17 @@
 <!-- Recuperación de contraseña -->
 <form class="formulario" *ngIf="modoRecuperacion" autocomplete="off" novalidate>
   <h2 class="titulo-formulario">Recuperar contraseña</h2>
-  <input type="email" name="email" placeholder="Correo electrónico" required>
-  <button type="submit" class="enviar">Enviar enlace de recuperación</button>
+  <ng-container *ngIf="recuperacionPaso === 1">
+    <input type="email" name="email" placeholder="Correo electrónico" required [(ngModel)]="recuperacionEmail" [ngModelOptions]="{standalone: true}">
+    <button type="button" class="enviar" (click)="enviarEmailRecuperacion()">Enviar código</button>
+  </ng-container>
+  <ng-container *ngIf="recuperacionPaso === 2">
+    <input type="text" name="codigo" placeholder="Código recibido" required [(ngModel)]="recuperacionCodigo" [ngModelOptions]="{standalone: true}">
+    <input type="password" name="password" placeholder="Nueva contraseña" required [(ngModel)]="recuperacionPassword" [ngModelOptions]="{standalone: true}">
+    <input type="password" name="password2" placeholder="Confirmar contraseña" required [(ngModel)]="recuperacionPassword2" [ngModelOptions]="{standalone: true}">
+    <button type="button" class="enviar" (click)="cambiarPasswordRecuperacion()">Cambiar contraseña</button>
+  </ng-container>
+  <app-mensajes [tipo]="tipoMensaje" [mensaje]="mensaje"></app-mensajes>
   <div class="extra-links">
     <a href="#" (click)="mostrarLogin(); $event.preventDefault()">¿Ya tienes cuenta? Inicia sesión</a>
   </div>

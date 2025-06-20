@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 from rest_framework import status
+from django.contrib.auth.tokens import default_token_generator
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import random
@@ -66,18 +67,15 @@ def enviar_codigo_verificacion(request):
         email = data.get('email')
         if not email:
             return JsonResponse({'error': 'Email requerido'}, status=400)
-        # NUEVO: comprobar si el email ya está registrado
         if User.objects.filter(email=email).exists():
             return JsonResponse({'error': 'El email ya está registrado.'}, status=400)
-        # Generar código de 6 dígitos
         codigo = str(random.randint(100000, 999999))
-        # Guardar en la base de datos con fecha_expiracion a 7 minutos
         CodigoVerificacion.objects.create(
             email=email,
             codigo=codigo,
-            fecha_expiracion=timezone.now() + timedelta(minutes=7)
+            fecha_expiracion=timezone.now() + timedelta(minutes=7),
+            tipo='registro'  # <--- aquí
         )
-        # Enviar email con HTML y APP_NAME en negrita
         send_mail(
             subject=f'Tu código de verificación en {settings.APP_NAME}',
             message=f'Tu código de verificación es: {codigo}',
@@ -101,13 +99,13 @@ def verificar_codigo(request):
         codigo = data.get('codigo')
         if not email or not codigo:
             return JsonResponse({'valido': False, 'error': 'Faltan datos'}, status=400)
-        # Busca el código más reciente, no usado y no expirado
         ahora = timezone.now()
         codigos = CodigoVerificacion.objects.filter(
             email=email,
             codigo=codigo,
             usado=False,
-            fecha_expiracion__gte=ahora
+            fecha_expiracion__gte=ahora,
+            tipo='registro'  # <--- aquí
         ).order_by('-creado')
         if codigos.exists():
             codigo_obj = codigos.first()
@@ -142,3 +140,68 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 samesite='Lax'
             )
         return response
+    
+@csrf_exempt
+def enviar_codigo_recuperacion(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        if not email:
+            return JsonResponse({'error': 'Email requerido'}, status=400)
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'No existe usuario con ese email.'}, status=400)
+        codigo = str(random.randint(100000, 999999))
+        CodigoVerificacion.objects.create(
+            email=email,
+            codigo=codigo,
+            fecha_expiracion=timezone.now() + timedelta(minutes=7),
+            tipo='recuperacion'  # <--- aquí
+        )
+        send_mail(
+            subject=f'Recuperación de contraseña en {settings.APP_NAME}',
+            message=f'Tu código de recuperación es: {codigo}',
+            from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
+            recipient_list=[email],
+            fail_silently=False,
+            html_message=f"""
+                <p><strong>{settings.APP_NAME}</strong></p>
+                <p>Tu código de recuperación es: <b>{codigo}</b></p>
+                <p>Si no solicitaste este código, ignora este mensaje.</p>
+            """
+        )
+        return JsonResponse({'ok': True, 'mensaje': 'Código enviado al correo.'})
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+@csrf_exempt
+def cambiar_password_con_codigo(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        codigo = data.get('codigo')
+        nueva_password = data.get('password')
+        if not email or not codigo or not nueva_password:
+            return JsonResponse({'error': 'Faltan datos.'}, status=400)
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'No existe usuario con ese email.'}, status=400)
+        ahora = timezone.now()
+        codigos = CodigoVerificacion.objects.filter(
+            email=email,
+            codigo=codigo,
+            usado=False,
+            fecha_expiracion__gte=ahora,
+            tipo='recuperacion'  # <--- aquí
+        ).order_by('-creado')
+        if codigos.exists():
+            codigo_obj = codigos.first()
+            codigo_obj.usado = True
+            codigo_obj.save()
+            user.set_password(nueva_password)
+            user.save()
+            return JsonResponse({'ok': True, 'mensaje': 'Contraseña cambiada correctamente.'})
+        else:
+            return JsonResponse({'error': 'Código incorrecto o expirado.'}, status=400)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
