@@ -6,12 +6,19 @@
       <a routerLink="/paquetes">Paquetes</a>
       <a routerLink="/reservas">Reservas</a>
       <a routerLink="/contacto">Contacto</a>
+      <ng-container *ngIf="usuario">
+        <div class="usuario-dropdown">
+          <span class="saludo-usuario" title="{{ usuario.username }}">
+           {{ usuario.username }}
+            <svg width="14" height="14" style="vertical-align: middle; margin-left: 4px;" viewBox="0 0 20 20"><path fill="currentColor" d="M5.5 8l4.5 4l4.5-4z"/></svg>
+          </span>
+          <div class="dropdown-menu">
+            <a href="#" (click)="logout(); $event.preventDefault()">Cerrar sesión</a>
+          </div>
+        </div>
+      </ng-container>
       <ng-container *ngIf="!usuario">
         <a routerLink="/iniciarSesion">Iniciar Sesion</a>
-      </ng-container>
-      <ng-container *ngIf="usuario">
-        <span>Hola {{ usuario.username }}</span>
-        <a href="#" (click)="logout(); $event.preventDefault()">Cerrar sesión</a>
       </ng-container>
     </nav>
   </div>
