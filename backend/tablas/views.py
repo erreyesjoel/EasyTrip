@@ -3,7 +3,8 @@ User = get_user_model()
 
 from rest_framework import status
 from django.contrib.auth.tokens import default_token_generator
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 import random
 from django.core.mail import send_mail
@@ -14,9 +15,9 @@ import json
 from django.conf import settings
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework.response import Response
 from django.utils import timezone
 from datetime import timedelta
+from rest_framework_simplejwt.tokens import RefreshToken
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -41,13 +42,11 @@ def registro_usuario(request):
     if not email or not password:
         return Response({'error': 'Email y password son requeridos.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    username = email.split('@')[0]  # Genera el username a partir del email
+    username = email.split('@')[0]
 
-    # PRIMERO: comprobar email
     if User.objects.filter(email=email).exists():
         return Response({'error': 'El email ya está registrado.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # LUEGO: comprobar username
     if User.objects.filter(username=username).exists():
         return Response({'error': 'El usuario ya existe.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -58,7 +57,29 @@ def registro_usuario(request):
         first_name=first_name,
         last_name=last_name
     )
-    return Response({'mensaje': 'Usuario creado correctamente.', 'username': username}, status=status.HTTP_201_CREATED)
+
+    # Genera los tokens
+    refresh = RefreshToken.for_user(user)
+    access = str(refresh.access_token)
+    refresh = str(refresh)
+    response = Response({'mensaje': 'Usuario creado correctamente.', 'username': username}, status=status.HTTP_201_CREATED)
+    response.set_cookie(
+        key='access_token',
+        value=access,
+        httponly=True,
+        secure=False,  # True en producción
+        samesite='Lax',
+        path='/'
+    )
+    response.set_cookie(
+        key='refresh_token',
+        value=refresh,
+        httponly=True,
+        secure=False,
+        samesite='Lax',
+        path='/'
+    )
+    return response
 
 @csrf_exempt
 def enviar_codigo_verificacion(request):
@@ -129,15 +150,17 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 key='access_token',
                 value=access,
                 httponly=True,
-                secure=False,  # Usa False en desarrollo (HTTP), True en producción (HTTPS)
-                samesite='Lax'
+                secure=False,  # True en producción
+                samesite='Lax',
+                path='/'       # <-- Añade esto
             )
             response.set_cookie(
                 key='refresh_token',
                 value=refresh,
                 httponly=True,
                 secure=False,
-                samesite='Lax'
+                samesite='Lax',
+                path='/'       # <-- Añade esto
             )
         return response
     
@@ -205,3 +228,14 @@ def cambiar_password_con_codigo(request):
         else:
             return JsonResponse({'error': 'Código incorrecto o expirado.'}, status=400)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def usuario_actual(request):
+    user = request.user
+    return Response({
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+    })

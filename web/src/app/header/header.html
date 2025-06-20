@@ -6,7 +6,13 @@
       <a routerLink="/paquetes">Paquetes</a>
       <a routerLink="/reservas">Reservas</a>
       <a routerLink="/contacto">Contacto</a>
-      <a routerLink="/iniciarSesion">Iniciar Sesion</a>
+      <ng-container *ngIf="!usuario">
+        <a routerLink="/iniciarSesion">Iniciar Sesion</a>
+      </ng-container>
+      <ng-container *ngIf="usuario">
+        <span>Hola {{ usuario.username }}</span>
+        <a href="#" (click)="logout(); $event.preventDefault()">Cerrar sesión</a>
+      </ng-container>
     </nav>
   </div>
 </header>

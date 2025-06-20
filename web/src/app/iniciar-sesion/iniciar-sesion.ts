@@ -148,7 +148,8 @@ export class IniciarSesion implements OnInit {
           apellido: this.registroApellido,
           password: this.registroPassword,
           password2: this.registroPassword2
-        })
+        }),
+        credentials: 'include' // <-- ¡AÑADE ESTO!
       });
       let data = {};
       try {
@@ -159,7 +160,7 @@ export class IniciarSesion implements OnInit {
       if (res.ok) {
         this.tipoMensaje = 'exito';
         this.mensaje = (data as any).mensaje || 'Usuario registrado correctamente';
-        this.mostrarLogin();
+        window.location.href = '/'; // Recarga para que el header detecte el login
       } else {
         this.tipoMensaje = 'error';
         this.mensaje = (data as any).error || 'Error en el registro';
@@ -192,7 +193,7 @@ export class IniciarSesion implements OnInit {
       if (data.access) {
         this.tipoMensaje = 'exito';
         this.mensaje = 'Login correcto, bienvenido!';
-        // Aquí puedes redirigir o actualizar el estado de la app
+        window.location.href = '/';
       } else {
         this.tipoMensaje = 'error';
         this.mensaje = 'Credenciales incorrectas';
