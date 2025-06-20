@@ -79,6 +79,20 @@ def registro_usuario(request):
         samesite='Lax',
         path='/'
     )
+
+    send_mail(
+        subject=f'Bienvenido a {settings.APP_NAME}',
+        message=(
+            f'¡Hola {first_name}!\n\n'
+            f'Tu cuenta en {settings.APP_NAME} ha sido creada correctamente.\n'
+            f'Tu nombre de usuario es: {username}\n\n'
+            '¡Gracias por registrarte!'
+        ),
+        from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
+        recipient_list=[email],
+        fail_silently=True
+    )
+
     return response
 
 @csrf_exempt
