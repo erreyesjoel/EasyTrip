@@ -3,9 +3,9 @@
     <span class="logo-titulo-texto">EasyTrip</span>
     <nav>
       <a routerLink="/">Inicio</a>
-      <a routerLink="/paquetes">Paquetes</a>
-      <a routerLink="/reservas">Reservas</a>
-      <a routerLink="/contacto">Contacto</a>
+      <a *ngIf="!usuario || usuario?.rol === 'cliente'" routerLink="/paquetes">Paquetes</a>
+      <a *ngIf="!usuario || usuario?.rol === 'cliente'" routerLink="/reservas">Reservas</a>
+      <a *ngIf="!usuario || usuario?.rol === 'cliente'" routerLink="/contacto">Contacto</a>
       <a *ngIf="usuario?.rol === 'administrador'" routerLink="/dashboard">Dashboard</a>
       <ng-container *ngIf="usuario">
         <div class="usuario-dropdown" [class.abierto]="menuAbierto">
