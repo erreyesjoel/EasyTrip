@@ -6,6 +6,7 @@
       <a routerLink="/paquetes">Paquetes</a>
       <a routerLink="/reservas">Reservas</a>
       <a routerLink="/contacto">Contacto</a>
+      <a *ngIf="usuario?.rol === 'administrador'" routerLink="/dashboard">Dashboard</a>
       <ng-container *ngIf="usuario">
         <div class="usuario-dropdown" [class.abierto]="menuAbierto">
           <span class="saludo-usuario" title="{{ usuario.username }}" (click)="toggleMenu()" tabindex="0">

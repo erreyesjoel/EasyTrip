@@ -252,6 +252,7 @@ def usuario_actual(request):
         'email': user.email,
         'first_name': user.first_name,
         'last_name': user.last_name,
+        'rol': user.rol
     })
 
 from rest_framework.decorators import api_view
