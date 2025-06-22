@@ -10,12 +10,16 @@
   font-weight: bold;
   margin-bottom: 2rem;
   color: vars.$verde-esmeralda;
+  text-align: center;
 }
 
+/* el contenedor de las tarjetas */
   .dashboard-cards {
     display: flex;
     gap: 2rem;
     flex-wrap: wrap;
+    justify-content: center; // centradas
+    // justify-content: flex-start; // a la izquierda (cuando crezca mucho)
   }
 
   .dashboard-card {
@@ -24,7 +28,8 @@
     box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     border: 1px solid #e0e4ea;
     padding: 2rem 1.5rem;
-    min-width: 370px;
+    min-width: 300px;
+    flex: 1 1 300px;
     transition: box-shadow 0.2s;
     &:hover {
       box-shadow: 0 4px 24px rgba(0,0,0,0.10);
@@ -35,11 +40,25 @@
       margin-bottom: 1rem;
     }
     .card-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       font-size: 1.1rem;
       color: #333;
 
+      span {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
       .boton-acceso-rapido {
-        margin-top: 1rem;
+        margin-top: 0; // quita el margen superior
+        margin-left: 1.2rem;
+        padding: 0.4rem 1rem;
+        font-size: 0.95rem;
+        display: inline-block;
+        white-space: nowrap;
       }
     }
 
