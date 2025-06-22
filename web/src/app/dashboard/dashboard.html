@@ -1,5 +1,26 @@
 <section class="dashboard">
-  <h1>Dashboard Administrador</h1>
-  <!-- Aquí irán las tarjetas resumen, actividad reciente y accesos rápidos -->
-  <p>Bienvenido al panel de administración.</p>
+  <h1 class="dashboard-title">Dashboard Administrador</h1>
+  <div class="dashboard-cards">
+    <div class="dashboard-card">
+      <h2 class="titulos-dashboard">Reservas actuales</h2>
+      <div class="card-content">
+        <strong>12</strong> reservas activas
+        <a routerLink="/reservas" class="boton-acceso-rapido">Ver reservas</a>
+      </div>
+    </div>
+    <div class="dashboard-card">
+      <h2 class="titulos-dashboard">Usuarios registrados</h2>
+      <div class="card-content">
+        <strong>58</strong> usuarios totales
+        <a routerLink="/usuarios" class="boton-acceso-rapido">Gestionar usuarios</a>
+      </div>
+    </div>
+    <div class="dashboard-card">
+      <h2 class="titulos-dashboard">Paquetes turísticos</h2>
+      <div class="card-content">
+        <strong>7</strong> paquetes disponibles
+        <a routerLink="/paquetes" class="boton-acceso-rapido">Ver paquetes</a>
+      </div>
+    </div>
+  </div>
 </section>

@@ -1,9 +1,71 @@
+@use '../../_variables' as vars;
+
 .dashboard {
   padding: 2rem;
-  h1 {
-    font-size: 2rem;
-    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
+  background: #fff;
+
+  /* el h1 de dashboard */
+  .dashboard-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: vars.$verde-esmeralda;
+}
+
+  .dashboard-cards {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .dashboard-card {
+    background: #f7f9fa;
+    border-radius: 1.2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #e0e4ea;
+    padding: 2rem 1.5rem;
+    min-width: 370px;
+    transition: box-shadow 0.2s;
+    &:hover {
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+    .titulos-dashboard {
+      color: vars.$verde-esmeralda;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .card-content {
+      font-size: 1.1rem;
+      color: #333;
+
+      .boton-acceso-rapido {
+        margin-top: 1rem;
+      }
+    }
+
+    .boton-acceso-rapido {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      background: vars.$verde-esmeralda;
+      color: #fff;
+      border: none;
+      border-radius: 0.7rem;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 500;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      transition: background 0.2s, box-shadow 0.2s;
+
+      &:hover,
+      &:focus {
+        background: darken(vars.$verde-esmeralda, 7%);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        color: #fff;
+        outline: none;
+      }
+    }
   }
 }
