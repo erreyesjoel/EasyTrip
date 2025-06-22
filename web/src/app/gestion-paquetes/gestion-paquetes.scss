@@ -24,21 +24,19 @@ body, :host {
 }
 
 .container-imagen {
-  position: relative;
-  left: 29%;
-  transform: translateX(-12%);
   width: 100%;
-  height: 100%;
-
-  &
-  .foto-paquete {
-    position: relative;
-    margin-top: 7px;
-    margin: 7px;
-    right: 17%;
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-  }
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.foto-paquete {
+  display: block;
+  width: calc(100% - 20px); // 10px de espacio a cada lado
+  margin: 7px auto;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
 
