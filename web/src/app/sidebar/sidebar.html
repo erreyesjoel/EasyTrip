@@ -1,0 +1,66 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <div class="logo">
+      <i class="icon-logo">🏢</i>
+      <span class="logo-text" *ngIf="!isCollapsed">AdminPanel</span>
+    </div>
+    <button class="toggle-btn" (click)="toggleSidebar()" type="button">
+      <i class="icon-menu">{{ isCollapsed ? '→' : '←' }}</i>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a href="/dashboard" class="nav-link active">
+          <i class="nav-icon">📊</i>
+          <span class="nav-text" *ngIf="!isCollapsed">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/reservas" class="nav-link">
+          <i class="nav-icon">📅</i>
+          <span class="nav-text" *ngIf="!isCollapsed">Reservas</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/usuarios" class="nav-link">
+          <i class="nav-icon">👥</i>
+          <span class="nav-text" *ngIf="!isCollapsed">Usuarios</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/paquetes" class="nav-link">
+          <i class="nav-icon">🎒</i>
+          <span class="nav-text" *ngIf="!isCollapsed">Paquetes</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/reportes" class="nav-link">
+          <i class="nav-icon">📈</i>
+          <span class="nav-text" *ngIf="!isCollapsed">Reportes</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/configuracion" class="nav-link">
+          <i class="nav-icon">⚙️</i>
+          <span class="nav-text" *ngIf="!isCollapsed">Configuración</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-info" *ngIf="!isCollapsed && usuario">
+      <div class="user-avatar">👤</div>
+      <div class="user-details">
+    <span class="user-name">{{ usuario.username }}</span>
+    <span class="user-role">{{ usuario.rol | titlecase }}</span>
+      </div>
+    </div>
+    <button class="logout-btn" title="Cerrar sesión" (click)="logout()">
+      <i class="logout-icon">🚪</i>
+      <span *ngIf="!isCollapsed">Salir</span>
+    </button>
+  </div>
+</aside>

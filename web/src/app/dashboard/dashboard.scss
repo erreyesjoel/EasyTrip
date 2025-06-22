@@ -1,89 +1,151 @@
 @use '../../_variables' as vars;
 
-.dashboard {
-  padding: 2rem;
-  background: #fff;
-
-  /* el h1 de dashboard */
-  .dashboard-title {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  color: vars.$verde-esmeralda;
-  text-align: center;
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: vars.$gris-claro;
 }
 
-/* el contenedor de las tarjetas */
+.main-content {
+  flex: 1;
+  margin-left: vars.$sidebar-width;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+
+  @media (max-width: vars.$mobile) {
+    margin-left: 0;
+  }
+}
+
+.dashboard {
+  padding: vars.$spacing-xl;
+  background: vars.$gris-claro;
+  min-height: 100vh;
+
+  .dashboard-title {
+    font-size: vars.$font-size-xxxl;
+    font-weight: bold;
+    margin-bottom: vars.$spacing-xl;
+    color: vars.$verde-esmeralda;
+    text-align: center;
+
+    @media (max-width: vars.$mobile) {
+      font-size: vars.$font-size-xxl;
+      margin-bottom: vars.$spacing-lg;
+    }
+  }
+
   .dashboard-cards {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    justify-content: center; // centradas
-    // justify-content: flex-start; // a la izquierda (cuando crezca mucho)
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: vars.$spacing-xl;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    @media (max-width: vars.$mobile) {
+      grid-template-columns: 1fr;
+      gap: vars.$spacing-lg;
+    }
   }
 
   .dashboard-card {
-    background: #f7f9fa;
-    border-radius: 1.2rem;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    border: 1px solid #e0e4ea;
-    padding: 2rem 1.5rem;
-    min-width: 300px;
-    flex: 1 1 300px;
-    transition: box-shadow 0.2s;
+    background: vars.$blanco;
+    border-radius: vars.$border-radius-xl;
+    box-shadow: vars.$shadow-sm;
+    border: 1px solid vars.$gris-medio;
+    padding: vars.$spacing-xl vars.$spacing-lg;
+    transition: all 0.3s ease;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     &:hover {
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      box-shadow: vars.$shadow-lg;
+      transform: translateY(-2px);
     }
+
     .titulos-dashboard {
       color: vars.$verde-esmeralda;
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
+      font-size: vars.$font-size-xl;
+      margin-bottom: vars.$spacing-md;
+      font-weight: 600;
     }
+
     .card-content {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 1.1rem;
-      color: #333;
+      font-size: vars.$font-size-lg;
+      color: vars.$gris-oscuro;
+      flex-wrap: wrap;
+      gap: vars.$spacing-md;
 
       span {
         display: flex;
         align-items: center;
-        gap: 0.3rem;
+        gap: vars.$spacing-xs;
+        font-weight: 500;
+
+        strong {
+          font-size: vars.$font-size-xxl;
+          color: vars.$verde-esmeralda;
+          font-weight: 700;
+        }
       }
 
       .boton-acceso-rapido {
-        margin-top: 0; // quita el margen superior
-        margin-left: 1.2rem;
-        padding: 0.4rem 1rem;
-        font-size: 0.95rem;
+        margin: 0;
+        padding: vars.$spacing-sm vars.$spacing-md;
+        font-size: vars.$font-size-sm;
         display: inline-block;
         white-space: nowrap;
+        flex-shrink: 0;
       }
     }
 
     .boton-acceso-rapido {
       display: inline-block;
-      padding: 0.6rem 1.2rem;
+      padding: vars.$spacing-md vars.$spacing-lg;
       background: vars.$verde-esmeralda;
-      color: #fff;
+      color: vars.$blanco;
       border: none;
-      border-radius: 0.7rem;
-      font-size: 1rem;
+      border-radius: vars.$border-radius;
+      font-size: vars.$font-size-base;
       font-family: inherit;
       font-weight: 500;
       text-decoration: none;
       text-align: center;
       cursor: pointer;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: vars.$shadow-sm;
+      transition: all 0.2s ease;
 
       &:hover,
       &:focus {
-        background: darken(vars.$verde-esmeralda, 7%);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        color: #fff;
+        background: vars.$verde-oscuro;
+        box-shadow: vars.$shadow-md;
+        color: vars.$blanco;
         outline: none;
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: vars.$mobile) {
+      padding: vars.$spacing-lg;
+      
+      .card-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: vars.$spacing-md;
+
+        .boton-acceso-rapido {
+          width: 100%;
+          text-align: center;
+        }
       }
     }
   }

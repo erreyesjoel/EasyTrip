@@ -186,36 +186,50 @@ export class IniciarSesion implements OnInit {
 
   // Método para login JWT con cookie HttpOnly
   async iniciarSesion() {
-    const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
+  const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
+  try {
+    const res = await fetch(`${apiBaseUrl}login/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: this.loginEmail,
+        password: this.loginPassword
+      }),
+      credentials: 'include'
+    });
+    let data: any = {};
     try {
-      const res = await fetch(`${apiBaseUrl}login/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: this.loginEmail,
-          password: this.loginPassword
-        }),
-        credentials: 'include'
-      });
-      let data: any = {};
-      try {
-        data = await res.json();
-      } catch (e) {
-        data = {};
-      }
-      if (data.access) {
-        this.tipoMensaje = 'exito';
-        this.mensaje = 'Login correcto, bienvenido!';
-        window.location.href = '/';
-      } else {
-        this.tipoMensaje = 'error';
-        this.mensaje = 'Credenciales incorrectas';
-      }
-    } catch {
-      this.tipoMensaje = 'error';
-      this.mensaje = 'Error en login. Intenta de nuevo.';
+      data = await res.json();
+    } catch (e) {
+      data = {};
     }
+    if (data.access) {
+      this.tipoMensaje = 'exito';
+      this.mensaje = 'Login correcto, bienvenido!';
+      // Espera 1 segundo antes de redirigir
+      setTimeout(async () => {
+        // Fetch user info to check role
+        const userRes = await fetch(`${apiBaseUrl}usuario/`, { credentials: 'include' });
+        if (userRes.ok) {
+          const usuario = await userRes.json();
+          if (usuario.rol === 'administrador') {
+            window.location.href = '/dashboard';
+          } else {
+            window.location.href = '/';
+          }
+        } else {
+          window.location.href = '/';
+        }
+      }, 1000);
+    } else {
+      this.tipoMensaje = 'error';
+      this.mensaje = 'Credenciales incorrectas';
+    }
+  } catch {
+    this.tipoMensaje = 'error';
+    this.mensaje = 'Error en login. Intenta de nuevo.';
   }
+}
 
   // Paso 1: Enviar email para recibir el código de recuperación
   async enviarEmailRecuperacion() {

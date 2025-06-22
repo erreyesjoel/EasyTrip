@@ -1,40 +1,46 @@
-<section class="dashboard">
-  <h1 class="dashboard-title">Dashboard Administrador</h1>
-  <div class="dashboard-cards">
-    <div class="dashboard-card">
-      <h2 class="titulos-dashboard">Reservas actuales</h2>
-      <div class="card-content">
-        <span><strong>12</strong> reservas activas</span>
-        <a routerLink="/reservas" class="boton-acceso-rapido">Ver reservas</a>
+<div class="admin-layout">
+<app-sidebar></app-sidebar>
+  
+  <main class="main-content">
+    <section class="dashboard">
+      <h1 class="dashboard-title">Dashboard Administrador</h1>
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h2 class="titulos-dashboard">Reservas actuales</h2>
+          <div class="card-content">
+            <span><strong>12</strong> reservas activas</span>
+            <a href="/reservas" class="boton-acceso-rapido">Ver reservas</a>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <h2 class="titulos-dashboard">Reservas pendientes</h2>
+          <div class="card-content">
+            <span><strong>4</strong> pendientes</span>
+            <a href="/reservas?estado=pendiente" class="boton-acceso-rapido">Ver pendientes</a>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <h2 class="titulos-dashboard">Reservas confirmadas</h2>
+          <div class="card-content">
+            <span><strong>8</strong> confirmadas</span>
+            <a href="/reservas?estado=confirmada" class="boton-acceso-rapido">Ver confirmadas</a>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <h2 class="titulos-dashboard">Usuarios registrados</h2>
+          <div class="card-content">
+            <span><strong>58</strong> usuarios totales</span>
+            <a href="/usuarios" class="boton-acceso-rapido">Gestionar usuarios</a>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <h2 class="titulos-dashboard">Paquetes turísticos</h2>
+          <div class="card-content">
+            <span><strong>7</strong> paquetes disponibles</span>
+            <a href="/paquetes" class="boton-acceso-rapido">Ver paquetes</a>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="dashboard-card">
-      <h2 class="titulos-dashboard">Reservas pendientes</h2>
-      <div class="card-content">
-        <span><strong>4</strong> pendientes</span>
-        <a routerLink="/reservas?estado=pendiente" class="boton-acceso-rapido">Ver pendientes</a>
-      </div>
-    </div>
-    <div class="dashboard-card">
-      <h2 class="titulos-dashboard">Reservas confirmadas</h2>
-      <div class="card-content">
-        <span><strong>8</strong> confirmadas</span>
-        <a routerLink="/reservas?estado=confirmada" class="boton-acceso-rapido">Ver confirmadas</a>
-      </div>
-    </div>
-    <div class="dashboard-card">
-      <h2 class="titulos-dashboard">Usuarios registrados</h2>
-      <div class="card-content">
-        <span><strong>58</strong> usuarios totales</span>
-        <a routerLink="/usuarios" class="boton-acceso-rapido">Gestionar usuarios</a>
-      </div>
-    </div>
-    <div class="dashboard-card">
-      <h2 class="titulos-dashboard">Paquetes turísticos</h2>
-      <div class="card-content">
-        <span><strong>7</strong> paquetes disponibles</span>
-        <a routerLink="/paquetes" class="boton-acceso-rapido">Ver paquetes</a>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
+  </main>
+</div>
