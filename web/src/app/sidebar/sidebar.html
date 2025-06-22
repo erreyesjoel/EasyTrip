@@ -87,7 +87,15 @@
 
   <div class="sidebar-footer">
     <div class="user-info" *ngIf="!isCollapsed && usuario">
-      <div class="user-avatar">👤</div>
+      <div class="user-avatar">
+        <!-- Heroicons: User Circle -->
+        <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <circle cx="12" cy="12" r="9" stroke-width="1.5"/>
+          <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+            d="M15.5 16.5a3.5 3.5 0 0 0-7 0"/>
+          <circle cx="12" cy="10" r="3" stroke-width="1.5"/>
+        </svg>
+      </div>
       <div class="user-details">
         <span class="user-name">{{ usuario.username }}</span>
         <span class="user-role">{{ usuario.rol | titlecase }}</span>

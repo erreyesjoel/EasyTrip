@@ -83,4 +83,22 @@ class CodigoVerificacion(models.Model):
     class Meta:
         db_table = 'codigos_verificacion'
 
+# clase para almacenar imágenes de paquetes turísticos, tabla aparte mejor que en el mismo modelo
+# para evitar que el modelo de paquete turístico crezca demasiado y para poder
+# manejar múltiples imágenes por paquete de forma más eficiente.
+class ImagenPaquete(models.Model):
+    paquete = models.ForeignKey(
+        PaqueteTuristico,
+        on_delete=models.CASCADE,
+        related_name='imagenes'
+    )
+    imagen = models.ImageField(upload_to='paquetes/')
+    descripcion = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"Imagen de {self.paquete.nombre}"
+
+    class Meta:
+        db_table = 'imagenes_paquetes'
+
         

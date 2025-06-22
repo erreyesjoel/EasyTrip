@@ -19,6 +19,8 @@ from django.urls import path
 from tablas.views import ejemplo_get, registro_usuario, enviar_codigo_verificacion, verificar_codigo, enviar_codigo_recuperacion, cambiar_password_con_codigo
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from tablas.views import CustomTokenObtainPairView, usuario_actual, logout_view
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,4 +35,8 @@ urlpatterns = [
     path('api/usuario/', usuario_actual, name='usuario_actual'),
     path('api/logout/', logout_view, name='logout_view'),
 ]
+
+# Solo en desarrollo: sirve archivos media desde MEDIA_URL
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
