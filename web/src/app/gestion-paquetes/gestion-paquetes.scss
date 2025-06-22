@@ -58,3 +58,38 @@ body, :host {
   margin-bottom: 0;
 }
 
+.acciones-paquete {
+  display: flex;
+  position: relative;
+  left: 100px;
+  justify-content: space-between;
+  width: 40%;
+  margin-top: 10px;
+}
+.editar-paquete {
+  position: relative;
+  min-width: 100px;
+  min-height: 40px;
+  top: 10px;
+  right: 10px;
+  background-color: vars.$azul-primario;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.eliminar-paquete {
+  position: relative;
+  min-width: 100px;
+  min-height: 40px;
+  top: 10px;
+  right: 10px;
+  background-color: vars.$rojo-primario;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
