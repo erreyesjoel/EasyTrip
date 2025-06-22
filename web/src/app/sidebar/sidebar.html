@@ -54,8 +54,8 @@
     <div class="user-info" *ngIf="!isCollapsed && usuario">
       <div class="user-avatar">👤</div>
       <div class="user-details">
-    <span class="user-name">{{ usuario.username }}</span>
-    <span class="user-role">{{ usuario.rol | titlecase }}</span>
+        <span class="user-name">{{ usuario.username }}</span>
+        <span class="user-role">{{ usuario.rol | titlecase }}</span>
       </div>
     </div>
     <button class="logout-btn" title="Cerrar sesión" (click)="logout()">
