@@ -60,10 +60,11 @@ body, :host {
 
 .acciones-paquete {
   display: flex;
+  gap: 16px; // o el valor que prefieras
   position: relative;
-  left: 90px;
-  justify-content: space-between;
-  width: 40%;
+  left: 80px;
+  justify-content: flex-start; // así no se separan a los extremos
+  width: auto; // o elimina width si no es necesario
   margin-top: 30px;
 }
 
