@@ -92,7 +92,7 @@ class ImagenPaquete(models.Model):
         on_delete=models.CASCADE,
         related_name='imagenes'
     )
-    imagen = models.ImageField(upload_to='paquetes/')
+    imagen = models.ImageField(upload_to='paquetes/', null=True, blank=True)
     descripcion = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
