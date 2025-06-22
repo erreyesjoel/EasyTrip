@@ -61,11 +61,17 @@ body, :host {
 .acciones-paquete {
   display: flex;
   position: relative;
-  left: 100px;
+  left: 90px;
   justify-content: space-between;
   width: 40%;
-  margin-top: 10px;
+  margin-top: 30px;
 }
+
+.editar-paquete,
+.eliminar-paquete {
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+}
+
 .editar-paquete {
   position: relative;
   min-width: 100px;
