@@ -1,0 +1,24 @@
+@use '../../_variables' as vars;
+
+body, :host {
+  background-color: vars.$gris-claro;
+  min-height: 100vh;
+}
+
+.titulo-pagina {
+ font-size: vars.$font-size-xxxl;
+    font-weight: bold;
+    margin-bottom: vars.$spacing-xl;
+    color: vars.$verde-esmeralda;
+    text-align: center;
+}
+
+.tarjeta-carta {
+    position: relative;
+    left: 35%;
+    transform: translateX(-60%);
+    min-height: 350px;
+    max-width: 350px;
+    border: 7px solid vars.$blanco;
+    border-radius: 24px;
+}
