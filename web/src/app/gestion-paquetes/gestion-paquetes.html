@@ -14,9 +14,60 @@
         <p class="descripcion-paquete">Una escapada inolvidable para toda la familia.</p>
       </div>
       <div class="acciones-paquete">
-        <button class="editar-paquete">Editar</button>
+        <button class="editar-paquete" (click)="abrirModal()">Editar</button>
         <button class="eliminar-paquete">Eliminar</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal de Edición -->
+  <div class="modal-backdrop" *ngIf="modalAbierto" (click)="cerrarModal()"></div>
+  <div class="modal-editar" *ngIf="modalAbierto">
+    <div class="modal-header">
+      <h3>Editar Paquete</h3>
+      <button class="cerrar-modal" (click)="cerrarModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="formularioPaquete" (ngSubmit)="guardarCambios()">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" formControlName="nombre" class="form-input">
+          <div class="error-msg" *ngIf="formularioPaquete.get('nombre')?.invalid && formularioPaquete.get('nombre')?.touched">
+            El nombre es obligatorio
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="descripcion">Descripción:</label>
+          <textarea id="descripcion" formControlName="descripcion" class="form-input" rows="3"></textarea>
+          <div class="error-msg" *ngIf="formularioPaquete.get('descripcion')?.invalid && formularioPaquete.get('descripcion')?.touched">
+            La descripción es obligatoria
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="precio">Precio (€):</label>
+          <input type="number" id="precio" formControlName="precio" class="form-input">
+          <div class="error-msg" *ngIf="formularioPaquete.get('precio')?.invalid && formularioPaquete.get('precio')?.touched">
+            El precio debe ser mayor que 0
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="duracion">Duración (días):</label>
+          <input type="number" id="duracion" formControlName="duracion" class="form-input">
+        </div>
+        
+        <div class="form-group">
+          <label for="cupo">Cupo:</label>
+          <input type="number" id="cupo" formControlName="cupo" class="form-input">
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
+          <button type="submit" class="btn-guardar" [disabled]="formularioPaquete.invalid">Guardar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
