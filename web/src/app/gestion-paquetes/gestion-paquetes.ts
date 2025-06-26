@@ -22,6 +22,7 @@ interface PaqueteTuristico {
 })
 export class GestionPaquetes {
   modalAbierto = false;
+  modalEliminarAbierto = false;
   formularioPaquete: FormGroup;
   
   // Datos de ejemplo (luego vendrán de una API)
@@ -46,8 +47,8 @@ export class GestionPaquetes {
     });
   }
 
+  // Modal de edición (existente)
   abrirModal(): void {
-    // Inicializa el formulario con los valores actuales
     this.formularioPaquete.patchValue({
       nombre: this.paqueteActual.nombre,
       descripcion: this.paqueteActual.descripcion,
@@ -65,16 +66,31 @@ export class GestionPaquetes {
 
   guardarCambios(): void {
     if (this.formularioPaquete.valid) {
-      // Actualiza el paquete actual con los valores del formulario
       this.paqueteActual = {
         ...this.paqueteActual,
         ...this.formularioPaquete.value
       };
       
       console.log('Paquete guardado:', this.paqueteActual);
-      // Aquí iría la llamada a tu API para guardar los cambios
-      
       this.cerrarModal();
     }
+  }
+
+  // Modal de eliminación (nuevo)
+  abrirModalEliminar(): void {
+    this.modalEliminarAbierto = true;
+  }
+
+  cerrarModalEliminar(): void {
+    this.modalEliminarAbierto = false;
+  }
+
+  eliminarPaquete(): void {
+    console.log('Eliminando paquete:', this.paqueteActual.id);
+    // Aquí iría la llamada a tu API para eliminar
+    // Por ejemplo: this.paquetesService.eliminarPaquete(this.paqueteActual.id).subscribe(...)
+    
+    this.cerrarModalEliminar();
+    // Después podrías redirigir o actualizar la lista de paquetes
   }
 }

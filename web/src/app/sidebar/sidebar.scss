@@ -11,7 +11,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.3s ease;
   z-index: 1000;
 
   &.collapsed {
@@ -53,27 +53,8 @@
       .icon-logo {
         font-size: vars.$font-size-xxl;
         color: vars.$verde-esmeralda;
-        transition: all 0.3s ease;
+        transition: transform 0.3s ease;
         filter: drop-shadow(0 2px 4px rgba(vars.$verde-esmeralda, 0.2));
-        position: relative;
-
-        &::before {
-          content: '';
-          position: absolute;
-          top: -2px;
-          left: -2px;
-          right: -2px;
-          bottom: -2px;
-          background: linear-gradient(45deg, vars.$verde-esmeralda, vars.$verde-claro);
-          border-radius: 8px;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          z-index: -1;
-        }
-
-        &:hover::before {
-          opacity: 0.1;
-        }
       }
 
       .logo-text {
@@ -84,7 +65,6 @@
         -webkit-text-fill-color: transparent;
         background-clip: text;
         letter-spacing: -0.5px;
-        transition: all 0.3s ease;
       }
     }
 
@@ -96,38 +76,17 @@
       border-radius: vars.$border-radius-lg;
       color: vars.$verde-esmeralda;
       font-size: vars.$font-size-lg;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       width: 36px;
       height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      overflow: hidden;
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        background: radial-gradient(circle, rgba(vars.$verde-esmeralda, 0.2) 0%, transparent 70%);
-        transition: all 0.3s ease;
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-      }
 
       &:hover {
         background: rgba(vars.$verde-esmeralda, 0.12);
         border-color: rgba(vars.$verde-esmeralda, 0.25);
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(vars.$verde-esmeralda, 0.15);
-
-        &::before {
-          width: 40px;
-          height: 40px;
-        }
       }
 
       &:active {
@@ -145,19 +104,16 @@
 
     &::-webkit-scrollbar {
       width: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
       background: transparent;
     }
 
     &::-webkit-scrollbar-thumb {
       background: rgba(vars.$verde-esmeralda, 0.2);
       border-radius: 2px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: rgba(vars.$verde-esmeralda, 0.3);
+      
+      &:hover {
+        background: rgba(vars.$verde-esmeralda, 0.3);
+      }
     }
 
     .nav-list {
@@ -177,47 +133,28 @@
       padding: vars.$spacing-md vars.$spacing-lg;
       color: vars.$gris-oscuro;
       text-decoration: none;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
       border-radius: vars.$border-radius-lg;
-      position: relative;
-      overflow: hidden;
       margin: 0 vars.$spacing-xs;
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(vars.$verde-esmeralda, 0.05), transparent);
-        transition: left 0.5s ease;
-      }
 
       .nav-icon {
         font-size: vars.$font-size-lg;
         min-width: 28px;
         text-align: center;
-        transition: all 0.3s ease;
         filter: grayscale(0.3);
       }
 
       .nav-text {
         font-weight: 500;
         font-size: vars.$font-size-base;
-        transition: all 0.3s ease;
         letter-spacing: 0.2px;
       }
 
       &:hover {
-        background: linear-gradient(135deg, rgba(vars.$verde-esmeralda, 0.08), rgba(vars.$verde-claro, 0.05));
+        background: rgba(vars.$verde-esmeralda, 0.08);
         color: vars.$verde-esmeralda;
         transform: translateX(4px);
         box-shadow: 0 4px 12px rgba(vars.$verde-esmeralda, 0.1);
-
-        &::before {
-          left: 100%;
-        }
 
         .nav-icon {
           filter: grayscale(0);
@@ -283,7 +220,7 @@
       background: rgba(vars.$verde-esmeralda, 0.05);
       border-radius: vars.$border-radius-lg;
       border: 1px solid rgba(vars.$verde-esmeralda, 0.1);
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, background-color 0.3s ease;
 
       &:hover {
         background: rgba(vars.$verde-esmeralda, 0.08);
@@ -302,22 +239,6 @@
         justify-content: center;
         font-size: vars.$font-size-lg;
         box-shadow: 0 4px 12px rgba(vars.$verde-esmeralda, 0.3);
-        position: relative;
-
-        &::before {
-          content: '';
-          position: absolute;
-          inset: -2px;
-          background: linear-gradient(135deg, vars.$verde-esmeralda, vars.$verde-claro);
-          border-radius: 50%;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          z-index: -1;
-        }
-
-        &:hover::before {
-          opacity: 0.3;
-        }
       }
 
       .user-details {
@@ -355,26 +276,10 @@
       cursor: pointer;
       font-size: vars.$font-size-base;
       font-weight: 500;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        background: radial-gradient(circle, rgba(vars.$error, 0.1) 0%, transparent 70%);
-        transition: all 0.3s ease;
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-      }
+      transition: background 0.3s ease, transform 0.3s ease;
 
       .logout-icon {
         font-size: vars.$font-size-lg;
-        transition: transform 0.3s ease;
       }
 
       &:hover {
@@ -383,12 +288,7 @@
         border-color: rgba(vars.$error, 0.3);
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(vars.$error, 0.15);
-
-        &::before {
-          width: 100px;
-          height: 100px;
-        }
-
+        
         .logout-icon {
           transform: translateX(2px);
         }
@@ -400,10 +300,9 @@
     }
   }
 
-  // Responsive enhancements
   @media (max-width: vars.$mobile) {
     transform: translateX(-100%);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.4s ease;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
 
     &.show {
@@ -416,30 +315,12 @@
   }
 }
 
-// Animation keyframes
-@keyframes slideInFromLeft {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+// Versión simplificada de la animación
+.sidebar {
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-// Add subtle animations on load
-.sidebar {
-  animation: slideInFromLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-
-  .nav-item {
-    opacity: 0;
-    animation: slideInFromLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-
-    @for $i from 1 through 10 {
-      &:nth-child(#{$i}) {
-        animation-delay: #{$i * 0.05}s;
-      }
-    }
-  }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

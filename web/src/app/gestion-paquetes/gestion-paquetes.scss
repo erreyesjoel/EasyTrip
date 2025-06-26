@@ -250,3 +250,39 @@ body, :host {
     }
   }
 }
+
+// Modal de confirmación para eliminar
+.modal-confirmar {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  padding: 0;
+}
+
+.mensaje-confirmacion {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: vars.$gris-oscuro;
+}
+
+.advertencia {
+  font-size: 14px;
+  color: vars.$rojo-primario;
+  margin-bottom: 24px;
+}
+
+.btn-eliminar {
+  background-color: vars.$rojo-primario;
+  color: white;
+  
+  &:hover {
+    background-color: darken(vars.$rojo-primario, 10%);
+  }
+}
