@@ -63,6 +63,13 @@
           <input type="number" id="cupo" formControlName="cupo" class="form-input">
         </div>
         
+        <div class="form-group">
+      <label for="estado">Estado:</label>
+      <select id="estado" formControlName="estado" class="form-input">
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
+      </select>
+    </div>
         <div class="modal-footer">
           <button type="button" class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
           <button type="submit" class="btn-guardar" [disabled]="formularioPaquete.invalid">Guardar</button>
