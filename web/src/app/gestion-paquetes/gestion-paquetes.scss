@@ -184,12 +184,15 @@ body, :host {
 .form-group {
   margin-bottom: 16px;
   
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: vars.$gris-oscuro;
-  }
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 14px; 
+  color: vars.$gris-oscuro; // Negro/gris oscuro más tradicional
+  letter-spacing: 0.5px;
+}
   
   .form-input {
     width: 95%;
