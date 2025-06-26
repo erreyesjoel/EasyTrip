@@ -21,8 +21,8 @@ interface PaqueteTuristico {
   styleUrl: './gestion-paquetes.scss'
 })
 export class GestionPaquetes {
-  modalAbierto = false;
-  modalEliminarAbierto = false;
+  modalAbierto = false; // por defecto en false, si lo dejas en true, te saldra abierto por defecto, no queremos eso jajaja
+  modalEliminarAbierto = false; // por defecto en false, si lo dejas en true, te saldra abierto por defecto, no queremos eso jajaja
   formularioPaquete: FormGroup;
   
   // Datos de ejemplo (luego vendrán de una API)
@@ -48,6 +48,8 @@ export class GestionPaquetes {
   }
 
   // Modal de edición (existente)
+  // si abres el modal, se cargan los datos actuales del paquete en el formulario
+  // aqui si true, porque el modal esta abierto
   abrirModal(): void {
     this.formularioPaquete.patchValue({
       nombre: this.paqueteActual.nombre,
@@ -60,10 +62,13 @@ export class GestionPaquetes {
     this.modalAbierto = true;
   }
 
+  // como cierras el modal, modalAbierto se vuelve false
   cerrarModal(): void {
     this.modalAbierto = false;
   }
 
+  // Guardar cambios del formulario
+  // si el formulario es válido, se guarda el paquete
   guardarCambios(): void {
     if (this.formularioPaquete.valid) {
       this.paqueteActual = {
@@ -77,10 +82,12 @@ export class GestionPaquetes {
   }
 
   // Modal de eliminación (nuevo)
+  // true, porque aqui simulamos que el modal está abierto
   abrirModalEliminar(): void {
     this.modalEliminarAbierto = true;
   }
 
+  // como cierras el modal, modalEliminarAbierto se vuelve false
   cerrarModalEliminar(): void {
     this.modalEliminarAbierto = false;
   }

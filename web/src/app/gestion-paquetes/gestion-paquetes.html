@@ -14,18 +14,18 @@
         <p class="descripcion-paquete">Una escapada inolvidable para toda la familia.</p>
       </div>
       <div class="acciones-paquete">
-        <button class="editar-paquete" (click)="abrirModal()">Editar</button>
-        <button class="eliminar-paquete" (click)="abrirModalEliminar()">Eliminar</button>
+        <button class="editar-paquete" (click)="abrirModal()">Editar</button> <!-- Botón para que se abra el modal editar el paquete -->
+        <button class="eliminar-paquete" (click)="abrirModalEliminar()">Eliminar</button> <!-- Botón para que se abra el modal de confirmación de eliminación del paquete -->
       </div>
     </div>
   </div>
 
   <!-- Modal de Edición -->
-  <div class="modal-backdrop" *ngIf="modalAbierto" (click)="cerrarModal()"></div>
-  <div class="modal-editar" *ngIf="modalAbierto">
+  <div class="modal-backdrop" *ngIf="modalAbierto" (click)="cerrarModal()"></div>   <!-- ngIf, si el modal esta abierto, podrás darle click para cerrarlo -->
+  <div class="modal-editar" *ngIf="modalAbierto"> <!-- Si el modal está abierto, se muestra el contenido -->
     <div class="modal-header">
       <h3>Editar Paquete</h3>
-      <button class="cerrar-modal" (click)="cerrarModal()">×</button>
+      <button class="cerrar-modal" (click)="cerrarModal()">×</button> <!-- Botón para cerrar el modal -->
     </div>
     <div class="modal-body">
       <form [formGroup]="formularioPaquete" (ngSubmit)="guardarCambios()">
@@ -79,11 +79,11 @@
   </div>
 
   <!-- Modal de Confirmación de Eliminación -->
-  <div class="modal-backdrop" *ngIf="modalEliminarAbierto" (click)="cerrarModalEliminar()"></div>
-  <div class="modal-confirmar" *ngIf="modalEliminarAbierto">
+  <div class="modal-backdrop" *ngIf="modalEliminarAbierto" (click)="cerrarModalEliminar()"></div> <!-- ngIf, si el modal de eliminar esta abierto, podrás darle click para cerrarlo -->
+  <div class="modal-confirmar" *ngIf="modalEliminarAbierto"> <!-- Si el modal está abierto, se muestra el contenido -->
     <div class="modal-header">
       <h3>Confirmar Eliminación</h3>
-      <button class="cerrar-modal" (click)="cerrarModalEliminar()">×</button>
+      <button class="cerrar-modal" (click)="cerrarModalEliminar()">×</button> <!-- Botón para cerrar el modal -->
     </div>
     <div class="modal-body">
       <p class="mensaje-confirmacion">¿Estás seguro de que deseas eliminar el paquete "<strong>{{ paqueteActual.nombre }}</strong>"?</p>
