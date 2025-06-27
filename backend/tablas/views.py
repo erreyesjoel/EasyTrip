@@ -18,6 +18,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
 from datetime import timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
+from .models import PaqueteTuristico, ImagenPaquete
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -308,7 +309,6 @@ def obtener_paquetes(request):
 # api creada, para crear un paquete turistico
 @api_view(['POST'])
 def crear_paquete(request):
-    from .models import PaqueteTuristico, ImagenPaquete
     if request.method == 'POST': # si el método es POST
         # Obtener los datos del cuerpo de la solicitud
         # Como un validated de laravel en un controller
