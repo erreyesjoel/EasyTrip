@@ -378,3 +378,21 @@ def editar_paquete(request, paquete_id):
         paquete.save()
         return Response({'ok': True, 'mensaje': 'Paquete editado correctamente.'})
     return Response({'error': 'Método no permitido'}, status=405)
+
+# api para eliminar un paquete turístico
+# Se usa DELETE para eliminar un paquete turístico
+# Se usa el id del paquete turístico para identificar cuál se va a eliminar
+# Se usa try-except para manejar el caso en que el paquete no exista
+# Si el paquete no existe, se devuelve un error 404
+# Si se elimina correctamente, se devuelve un mensaje de éxito
+# Se devuelve un error 405 si el método no es DELETE
+@api_view(['DELETE'])
+def eliminar_paquete(request, paquete_id):
+    if request.method == 'DELETE':
+        try:
+            paquete = PaqueteTuristico.objects.get(id=paquete_id)
+            paquete.delete()
+            return Response({'ok': True, 'mensaje': 'Paquete eliminado correctamente.'})
+        except PaqueteTuristico.DoesNotExist:
+            return Response({'error': 'Paquete no encontrado.'}, status=404)
+    return Response({'error': 'Método no permitido'}, status=405)
