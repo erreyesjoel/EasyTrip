@@ -256,13 +256,39 @@ constructor(private fb: FormBuilder) {
     this.modalEliminarAbierto = false;
   }
 
-  eliminarPaquete(): void {
+  // PROMISE se usa en typescript para manejar operaciones asíncronas
+  // Este método se encarga de eliminar un paquete usando fetch y async/await
+  // Aquí usamos el método DELETE para eliminar el paquete seleccionado
+
+  async eliminarPaquete(): Promise<void> {
     console.log('Eliminando paquete:', this.paqueteActual.id);
     // Aquí iría la llamada a tu API para eliminar usando fetch
-    
-    this.cerrarModalEliminar();
-    // Después podrías redirigir o actualizar la lista de paquetes
+    try {
+      const urlObj = new URL(this.baseUrl);
+      const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
+      const endpoint = `${baseUrlCorrecta}/api/eliminar-paquete/${this.paqueteActual.id}/`;
+
+      const res = await fetch(endpoint, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!res.ok) {
+        throw new Error('Error al eliminar el paquete');
+      }
+
+      const data = await res.json();
+      console.log('Respuesta de eliminación:', data);
+      // Recargamos la lista de paquetes para ver los cambios reflejados
+      this.cargarPaquete();
+      this.cerrarModalEliminar();
+    } catch (error) {
+      console.error('Error al eliminar el paquete:', error);
+    }
   }
+  
 
   // Método para seleccionar un paquete específico desde la lista o el selector
   seleccionarPaquete(paqueteOEvento: PaqueteTuristico | Event): void {
