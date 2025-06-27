@@ -56,6 +56,7 @@ body, :host {
 .main-content {
   margin-left: 260px; // Ajusta este valor al ancho real de tu sidebar
   padding: 32px 24px 24px 24px;
+  background-color: vars.$gris-claro; // Fondo gris claro, cuando habia mas de 3 tarjetas se veia el fondo blanco, ahora ya no!
 }
 
 .lista-paquetes {

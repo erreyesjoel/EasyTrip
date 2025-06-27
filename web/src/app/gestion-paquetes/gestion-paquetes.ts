@@ -115,56 +115,51 @@ constructor(private fb: FormBuilder) {
     }
   }
 
-  // Método para cargar un paquete usando fetch
-  cargarPaquete(): void {
+  // Método para cargar un paquete usando fetch y async/await
+  async cargarPaquete(): Promise<void> {
     // URL del endpoint para obtener paquetes
     // Verificamos y corregimos la URL base para evitar duplicaciones
     console.log('baseUrl original:', this.baseUrl);
-    
-    // Extraemos el dominio base utilizando URL
+
     try {
       // Creamos un objeto URL para manipularlo fácilmente
       const urlObj = new URL(this.baseUrl);
       // Construimos la URL correcta sin duplicación
       const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
       const url = `${baseUrlCorrecta}/api/paquetes/`;
-      
+
       console.log('URL final de petición:', url);
-        
-      // Hacemos la petición con fetch
-      fetch(url)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Error al cargar los paquetes');
-          }
-          return response.json();
-        })
-        .then((paquetesApi: PaqueteApi[]) => {
-          if (paquetesApi && paquetesApi.length > 0) {
-            // Convertimos todos los paquetes al formato que usa nuestro componente
-            this.paquetes = paquetesApi.map(paquete => ({
-              id: paquete.id,
-              nombre: paquete.nombre,
-              descripcion: paquete.descripcion,
-              precio: paquete.precio_base,
-              duracion: paquete.duracion_dias,
-              cupo: paquete.cupo_maximo,
-              estado: paquete.estado,
-              imagen_url: paquete.imagenes && paquete.imagenes.length > 0 
-                ? this.corregirUrl(paquete.imagenes[0].imagen_url) 
-                : this.imagenPredeterminada
-            }));
-            
-            // Seleccionamos el primer paquete como actual
-            this.paqueteActual = this.paquetes[0];
-            console.log('Paquetes cargados:', this.paquetes);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+
+      // Hacemos la petición con fetch usando async/await
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error('Error al cargar los paquetes');
+      }
+
+      const paquetesApi: PaqueteApi[] = await response.json();
+
+      if (paquetesApi && paquetesApi.length > 0) {
+        // Convertimos todos los paquetes al formato que usa nuestro componente
+        this.paquetes = paquetesApi.map(paquete => ({
+          id: paquete.id,
+          nombre: paquete.nombre,
+          descripcion: paquete.descripcion,
+          precio: paquete.precio_base,
+          duracion: paquete.duracion_dias,
+          cupo: paquete.cupo_maximo,
+          estado: paquete.estado,
+          imagen_url: paquete.imagenes && paquete.imagenes.length > 0 
+            ? this.corregirUrl(paquete.imagenes[0].imagen_url) 
+            : this.imagenPredeterminada
+        }));
+
+        // Seleccionamos el primer paquete como actual
+        this.paqueteActual = this.paquetes[0];
+        console.log('Paquetes cargados:', this.paquetes);
+      }
     } catch (error) {
-      console.error('Error al construir la URL:', error);
+      console.error('Error al construir la URL o al cargar los paquetes:', error);
     }
   }
 
