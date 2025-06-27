@@ -36,29 +36,6 @@
         </div>
       </div>
     </div>
-
-    <!-- También puedes mantener la vista del paquete actual (original) -->
-    <div class="tarjeta-carta" *ngIf="paqueteActual">
-      <div class="container-imagen">
-        <!-- Reemplazamos la URL fija por la propiedad imagen_url del paquete -->
-        <!-- Si hay error al cargar la imagen, se usa el método cargarImagenPredeterminada -->
-        <img class="foto-paquete" 
-             [src]="paqueteActual.imagen_url" 
-             (error)="cargarImagenPredeterminada($event)"
-             [alt]="'Imagen de ' + paqueteActual.nombre">
-      </div>
-      <div class="campos-paquete">
-        <div class="fila-paquete">
-          <h2 class="titulo-paquete">{{ paqueteActual.nombre }}</h2>
-          <span class="precio-paquete">{{ paqueteActual.precio }}&nbsp;€</span>
-        </div>
-        <p class="descripcion-paquete">{{ paqueteActual.descripcion }}</p>
-      </div>
-      <div class="acciones-paquete">
-        <button class="editar-paquete" (click)="abrirModal()">Editar</button> <!-- Botón para que se abra el modal editar el paquete -->
-        <button class="eliminar-paquete" (click)="abrirModalEliminar()">Eliminar</button> <!-- Botón para que se abra el modal de confirmación de eliminación del paquete -->
-      </div>
-    </div>
   </div>
 
   <!-- Modal de Edición -->

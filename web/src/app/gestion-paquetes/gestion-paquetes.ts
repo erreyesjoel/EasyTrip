@@ -177,7 +177,10 @@ constructor(private fb: FormBuilder) {
   // Modal de edición (existente)
   // si abres el modal, se cargan los datos actuales del paquete en el formulario
   // aqui si true, porque el modal esta abierto
-  abrirModal(): void {
+  abrirModal(paquete?: PaqueteTuristico): void {
+    if (paquete) {
+      this.paqueteActual = paquete;
+    }
     this.formularioPaquete.patchValue({
       nombre: this.paqueteActual.nombre,
       descripcion: this.paqueteActual.descripcion,
@@ -210,7 +213,10 @@ constructor(private fb: FormBuilder) {
 
   // Modal de eliminación (nuevo)
   // true, porque aqui simulamos que el modal está abierto
-  abrirModalEliminar(): void {
+  abrirModalEliminar(paquete?: PaqueteTuristico): void {
+    if (paquete) {
+      this.paqueteActual = paquete;
+    }
     this.modalEliminarAbierto = true;
   }
 
