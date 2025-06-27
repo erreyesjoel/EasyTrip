@@ -349,3 +349,32 @@ def crear_paquete(request):
             )
 
         return Response({'ok': True, 'mensaje': 'Paquete creado correctamente.'})
+
+# api para editar un paquete turístico
+# Se usa PUT o PATCH, dependiendo de si se quiere actualizar todo o solo algunos campos
+# Se usa el id del paquete turístico para identificar cuál se va a editar
+# Se usa json.loads para convertir el cuerpo de la solicitud (texto JSON) en un objeto Python (diccionario)
+# Se usa data.get para hacerlos como nullables por la prevención de errores
+# Se usa try-except para manejar el caso en que el paquete no exista
+# Se actualizan los campos del paquete con los datos del cuerpo de la solicitud
+# Si el paquete no existe, se devuelve un error 404
+# Si se actualiza correctamente, se devuelve un mensaje de éxito
+# put es para actualizar todo el paquete, patch es para actualizar solo algunos campos
+@api_view(['PUT', 'PATCH'])
+def editar_paquete(request, paquete_id):
+    if request.method in ['PUT', 'PATCH']:
+        data = json.loads(request.body)
+        try:
+            paquete = PaqueteTuristico.objects.get(id=paquete_id)
+        except PaqueteTuristico.DoesNotExist:
+            return Response({'error': 'Paquete no encontrado.'}, status=404)
+        # Actualizar los campos del paquete
+        paquete.nombre = data.get('nombre', paquete.nombre)
+        paquete.descripcion = data.get('descripcion', paquete.descripcion)
+        paquete.precio_base = data.get('precio_base', paquete.precio_base)
+        paquete.duracion_dias = data.get('duracion_dias', paquete.duracion_dias)
+        paquete.cupo_maximo = data.get('cupo_maximo', paquete.cupo_maximo)
+        paquete.estado = data.get('estado', paquete.estado)
+        paquete.save()
+        return Response({'ok': True, 'mensaje': 'Paquete editado correctamente.'})
+    return Response({'error': 'Método no permitido'}, status=405)
