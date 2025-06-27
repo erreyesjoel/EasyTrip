@@ -263,3 +263,44 @@ def logout_view(request):
     response.delete_cookie('access_token', path='/')
     response.delete_cookie('refresh_token', path='/')
     return response
+
+@api_view(['GET'])
+def obtener_paquetes(request):
+    """
+    Vista para obtener todos los paquetes turísticos y sus imágenes
+    """
+    from .models import PaqueteTuristico
+    
+    # Obtenemos todos los paquetes turísticos
+    paquetes = PaqueteTuristico.objects.all()
+    
+    # Preparamos la respuesta
+    resultado = []
+    for paquete in paquetes:
+        # Obtenemos las imágenes relacionadas
+        imagenes_data = []
+        for imagen in paquete.imagenes.all():
+            # Ya no necesitamos verificar es_predeterminada
+            # Simplemente comprobamos si la imagen existe
+            tiene_imagen_propia = imagen.imagen and hasattr(imagen.imagen, 'url')
+                
+            imagenes_data.append({
+                'id': imagen.id,
+                'descripcion': imagen.descripcion,
+                'imagen_url': imagen.imagen_url,
+                'es_predeterminada': not tiene_imagen_propia  # Calculamos dinámicamente
+            })
+            
+        paquete_data = {
+            'id': paquete.id,
+            'nombre': paquete.nombre,
+            'descripcion': paquete.descripcion,
+            'precio_base': float(paquete.precio_base),  # Convertimos Decimal a float para JSON
+            'duracion_dias': paquete.duracion_dias,
+            'cupo_maximo': paquete.cupo_maximo,
+            'estado': paquete.estado,
+            'imagenes': imagenes_data
+        }
+        resultado.append(paquete_data)
+    
+    return Response(resultado)

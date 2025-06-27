@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from tablas.views import ejemplo_get, registro_usuario, enviar_codigo_verificacion, verificar_codigo, enviar_codigo_recuperacion, cambiar_password_con_codigo
+from tablas.views import ejemplo_get, obtener_paquetes, registro_usuario, enviar_codigo_verificacion, verificar_codigo, enviar_codigo_recuperacion, cambiar_password_con_codigo
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from tablas.views import CustomTokenObtainPairView, usuario_actual, logout_view
 from django.conf import settings
@@ -34,9 +34,11 @@ urlpatterns = [
     path('api/cambiar-password/', cambiar_password_con_codigo, name='cambiar_password_con_codigo'),
     path('api/usuario/', usuario_actual, name='usuario_actual'),
     path('api/logout/', logout_view, name='logout_view'),
+    path('api/paquetes/', obtener_paquetes, name='obtener_paquetes'),
 ]
 
 # Solo en desarrollo: sirve archivos media desde MEDIA_URL
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+    # Configuración para servir archivos estáticos (predeterminados) SOLO EN PRODUCCION, COMO MEDIA_URL
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -4,14 +4,19 @@
     <h2 class="titulo-pagina">Gestion de Paquetes</h2>
     <div class="tarjeta-carta">
       <div class="container-imagen">
-        <img class="foto-paquete" src="https://picsum.photos/400/300" alt="Imagen aleatoria">
+        <!-- Reemplazamos la URL fija por la propiedad imagen_url del paquete -->
+        <!-- Si hay error al cargar la imagen, se usa el método cargarImagenPredeterminada -->
+        <img class="foto-paquete" 
+             [src]="paqueteActual.imagen_url" 
+             (error)="cargarImagenPredeterminada($event)"
+             [alt]="'Imagen de ' + paqueteActual.nombre">
       </div>
       <div class="campos-paquete">
         <div class="fila-paquete">
-          <h2 class="titulo-paquete">Título del Paquete</h2>
-          <span class="precio-paquete">50&nbsp;€</span>
+          <h2 class="titulo-paquete">{{ paqueteActual.nombre }}</h2>
+          <span class="precio-paquete">{{ paqueteActual.precio }}&nbsp;€</span>
         </div>
-        <p class="descripcion-paquete">Una escapada inolvidable para toda la familia.</p>
+        <p class="descripcion-paquete">{{ paqueteActual.descripcion }}</p>
       </div>
       <div class="acciones-paquete">
         <button class="editar-paquete" (click)="abrirModal()">Editar</button> <!-- Botón para que se abra el modal editar el paquete -->
@@ -64,15 +69,15 @@
         </div>
         
         <div class="form-group">
-      <label for="estado">Estado:</label>
-      <select id="estado" formControlName="estado" class="form-input">
-        <option value="activo">Activo</option>
-        <option value="inactivo">Inactivo</option>
-      </select>
-    </div>
+          <label for="estado">Estado:</label>
+          <select id="estado" formControlName="estado" class="form-input">
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+        </div>
         <div class="modal-footer">
           <button type="button" class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
-          <button type="submit" class="btn-guardar" [disabled]="formularioPaquete.invalid">Guardar</button>
+          <button type="submit" class="btn-guardar" [disabled]="formularioPaquete.invalid">Guardar</button> <!-- Botón para guardar los cambios del formulario -->
         </div>
       </form>
     </div>
@@ -86,12 +91,14 @@
       <button class="cerrar-modal" (click)="cerrarModalEliminar()">×</button> <!-- Botón para cerrar el modal -->
     </div>
     <div class="modal-body">
-      <p class="mensaje-confirmacion">¿Estás seguro de que deseas eliminar el paquete "<strong>{{ paqueteActual.nombre }}</strong>"?</p>
-      <p class="advertencia">Esta acción no se puede deshacer.</p>
-      
-      <div class="modal-footer">
-        <button type="button" class="btn-cancelar" (click)="cerrarModalEliminar()">Cancelar</button>
-        <button type="button" class="btn-eliminar" (click)="eliminarPaquete()">Eliminar</button>
+      <p class="mensaje-eliminar">¿Estás seguro de que deseas eliminar el paquete <strong>{{ paqueteActual.nombre }}</strong>?</p>
+      <p class="advertencia-eliminar">Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="modal-footer">
+      <!-- Botones centrados para confirmar o cancelar la eliminación -->
+      <div class="botones-confirmacion">
+        <button type="button" class="btn-cancelar" (click)="cerrarModalEliminar()">Cancelar</button> <!-- Botón para cancelar la eliminación -->
+        <button type="button" class="btn-eliminar" (click)="eliminarPaquete()">Eliminar</button> <!-- Botón para confirmar la eliminación -->
       </div>
     </div>
   </div>

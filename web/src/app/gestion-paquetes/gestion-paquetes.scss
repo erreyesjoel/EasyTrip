@@ -22,6 +22,7 @@ body, :host {
   border: 7px solid #fffbfb; 
   border-radius: 24px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.10), 0 1.5px 4px rgba(0,0,0,0.08);
+  padding-bottom: 80px; /* Añadir espacio en la parte inferior para los botones */
 }
 
 .container-imagen {
@@ -57,16 +58,20 @@ body, :host {
   color: vars.$gris-oscuro;
   margin-left: 9px;
   margin-bottom: 0;
+  max-height: 200px; /* Limitar altura */
+  overflow-y: auto; /* Permitir desplazamiento si es muy largo */
+  padding-right: 10px; /* Espacio para la barra de desplazamiento */
 }
 
 .acciones-paquete {
   display: flex;
-  gap: 16px; // o el valor que prefieras
-  position: relative;
-  left: 80px;
-  justify-content: flex-start; // así no se separan a los extremos
-  width: auto; // o elimina width si no es necesario
-  margin-top: 30px;
+  gap: 18px;
+  position: absolute; /* Cambiado de relative a absolute */
+  bottom: 20px; /* Posicionar en la parte inferior */
+  left: 52%; /* Centrar horizontalmente */
+  transform: translateX(-50%); /* Asegurar el centrado perfecto */
+  justify-content: center; /* Centrar los botones */
+  width: 80%; /* Ancho controlado */
 }
 
 .editar-paquete,

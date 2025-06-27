@@ -1,7 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar';
+import { environment } from '../../environments/environment';
+
+// Interfaz para manejar las imágenes que vienen del backend
+interface ImagenPaquete {
+  id: number;
+  descripcion: string;
+  imagen_url: string;
+}
+
+// Interfaz para manejar los paquetes que vienen del backend (API)
+interface PaqueteApi {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  precio_base: number; // En la API se llama precio_base
+  duracion_dias: number; // En la API se llama duracion_dias
+  cupo_maximo: number; // En la API se llama cupo_maximo
+  estado: string;
+  imagenes: ImagenPaquete[]; // Array de imágenes
+}
 
 interface PaqueteTuristico {
   id?: number;
@@ -11,6 +31,7 @@ interface PaqueteTuristico {
   duracion: number;
   cupo: number;
   estado: string;
+  imagen_url?: string; // URL de la imagen del paquete turístico (opcional, usamos ? para marcar como opcional)
 }
 
 @Component({
@@ -20,11 +41,17 @@ interface PaqueteTuristico {
   templateUrl: './gestion-paquetes.html',
   styleUrl: './gestion-paquetes.scss'
 })
-export class GestionPaquetes {
+export class GestionPaquetes implements OnInit {
   modalAbierto = false; // por defecto en false, si lo dejas en true, te saldra abierto por defecto, no queremos eso jajaja
   modalEliminarAbierto = false; // por defecto en false, si lo dejas en true, te saldra abierto por defecto, no queremos eso jajaja
   formularioPaquete: FormGroup;
   
+  // URL base para las imágenes
+  baseUrl = environment.apiBaseUrl;
+  
+  // URL de la imagen predeterminada
+  imagenPredeterminada: string;
+
   // Datos de ejemplo (luego vendrán de una API)
   paqueteActual: PaqueteTuristico = {
     id: 1,
@@ -33,20 +60,122 @@ export class GestionPaquetes {
     precio: 50,
     duracion: 5,
     cupo: 20,
-    estado: 'activo'
+    estado: 'activo',
+    // La URL de imagen se asignará en el constructor
+    imagen_url: ''
   };
+  
+constructor(private fb: FormBuilder) {
+  // Configuramos la URL de la imagen predeterminada
+  try {
+    const urlObj = new URL(this.baseUrl);
+    const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
+    this.imagenPredeterminada = `${baseUrlCorrecta}/static/img/paquetePredeterminada.webp`;
+  } catch (error) {
+    // En caso de error en la construcción de la URL, usamos la URL base directamente
+    console.error('Error al construir la URL de la imagen predeterminada:', error);
+    this.imagenPredeterminada = `${this.baseUrl}/static/img/paquetePredeterminada.webp`;
+  }
+  
+  // Asignamos la imagen predeterminada al paqueteActual
+  this.paqueteActual.imagen_url = this.imagenPredeterminada;
+  
+  // Inicializamos el formulario
+  this.formularioPaquete = this.fb.group({
+    nombre: ['', Validators.required],
+    descripcion: ['', Validators.required],
+    precio: [0, [Validators.required, Validators.min(0.01)]],
+    duracion: [1, [Validators.required, Validators.min(1)]],
+    cupo: [1, [Validators.required, Validators.min(1)]],
+    estado: ['activo']
+  });
+}
 
-  constructor(private fb: FormBuilder) {
-    this.formularioPaquete = this.fb.group({
-      nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      precio: [0, [Validators.required, Validators.min(0.01)]],
-      duracion: [1, [Validators.required, Validators.min(1)]],
-      cupo: [1, [Validators.required, Validators.min(1)]],
-      estado: ['activo']
-    });
+  // Este método se ejecutará cuando se inicialice el componente
+  ngOnInit(): void {
+    this.cargarPaquete();
   }
 
+  // Método para asegurarnos de que las URLs de imágenes usen el dominio correcto
+  corregirUrl(url: string): string {
+    if (url.startsWith('http')) {
+      // Si ya es una URL completa, la devolvemos tal cual
+      return url;
+    } else {
+      // Si es una ruta relativa, añadimos el dominio base
+      try {
+        const urlObj = new URL(this.baseUrl);
+        const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
+        // Si la URL comienza con /, no añadimos barra adicional
+        return url.startsWith('/') 
+          ? `${baseUrlCorrecta}${url}` 
+          : `${baseUrlCorrecta}/${url}`;
+      } catch (error) {
+        // En caso de error, devolvemos la URL original
+        return url;
+      }
+    }
+  }
+
+  // Método para cargar un paquete usando fetch
+  cargarPaquete(): void {
+    // URL del endpoint para obtener paquetes
+    // Verificamos y corregimos la URL base para evitar duplicaciones
+    console.log('baseUrl original:', this.baseUrl);
+    
+    // Extraemos el dominio base utilizando URL
+    try {
+      // Creamos un objeto URL para manipularlo fácilmente
+      const urlObj = new URL(this.baseUrl);
+      // Construimos la URL correcta sin duplicación
+      const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
+      const url = `${baseUrlCorrecta}/api/paquetes/`;
+      
+      console.log('URL final de petición:', url);
+        
+      // Hacemos la petición con fetch
+      fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error al cargar los paquetes');
+          }
+          return response.json();
+        })
+        .then((paquetes: PaqueteApi[]) => {
+          if (paquetes && paquetes.length > 0) {
+            const paquete = paquetes[0]; // Tomamos el primer paquete
+            
+            // Adaptamos al formato de nuestro componente
+            this.paqueteActual = {
+              id: paquete.id,
+              nombre: paquete.nombre,
+              descripcion: paquete.descripcion,
+              precio: paquete.precio_base,
+              duracion: paquete.duracion_dias,
+              cupo: paquete.cupo_maximo,
+              estado: paquete.estado,
+              // Si hay imágenes, tomamos la URL de la primera, si no, usamos la predeterminada
+              imagen_url: paquete.imagenes && paquete.imagenes.length > 0 
+                ? this.corregirUrl(paquete.imagenes[0].imagen_url) 
+                : this.imagenPredeterminada
+            };
+            console.log('Paquete cargado:', this.paqueteActual);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    } catch (error) {
+      console.error('Error al construir la URL:', error);
+    }
+  }
+
+  // Método para manejar errores de carga de imagen
+  cargarImagenPredeterminada(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = this.imagenPredeterminada;
+  }
+  
   // Modal de edición (existente)
   // si abres el modal, se cargan los datos actuales del paquete en el formulario
   // aqui si true, porque el modal esta abierto
@@ -94,8 +223,7 @@ export class GestionPaquetes {
 
   eliminarPaquete(): void {
     console.log('Eliminando paquete:', this.paqueteActual.id);
-    // Aquí iría la llamada a tu API para eliminar
-    // Por ejemplo: this.paquetesService.eliminarPaquete(this.paqueteActual.id).subscribe(...)
+    // Aquí iría la llamada a tu API para eliminar usando fetch
     
     this.cerrarModalEliminar();
     // Después podrías redirigir o actualizar la lista de paquetes
