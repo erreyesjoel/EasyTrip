@@ -52,16 +52,15 @@ export class GestionPaquetes implements OnInit {
   // URL de la imagen predeterminada
   imagenPredeterminada: string;
 
-  // Datos de ejemplo (luego vendrán de una API)
+  // Datos de ejemplo y para mantener el tipo
+  paquetes: PaqueteTuristico[] = []; // Array para todos los paquetes
   paqueteActual: PaqueteTuristico = {
-    id: 1,
-    nombre: 'Título del Paquete',
-    descripcion: 'Una escapada inolvidable para toda la familia.',
-    precio: 50,
-    duracion: 5,
-    cupo: 20,
+    nombre: '',
+    descripcion: '',
+    precio: 0,
+    duracion: 0,
+    cupo: 0,
     estado: 'activo',
-    // La URL de imagen se asignará en el constructor
     imagen_url: ''
   };
   
@@ -72,12 +71,11 @@ constructor(private fb: FormBuilder) {
     const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
     this.imagenPredeterminada = `${baseUrlCorrecta}/static/img/paquetePredeterminada.webp`;
   } catch (error) {
-    // En caso de error en la construcción de la URL, usamos la URL base directamente
     console.error('Error al construir la URL de la imagen predeterminada:', error);
     this.imagenPredeterminada = `${this.baseUrl}/static/img/paquetePredeterminada.webp`;
   }
   
-  // Asignamos la imagen predeterminada al paqueteActual
+  // Ahora podemos asignar la imagen predeterminada
   this.paqueteActual.imagen_url = this.imagenPredeterminada;
   
   // Inicializamos el formulario
@@ -141,12 +139,10 @@ constructor(private fb: FormBuilder) {
           }
           return response.json();
         })
-        .then((paquetes: PaqueteApi[]) => {
-          if (paquetes && paquetes.length > 0) {
-            const paquete = paquetes[0]; // Tomamos el primer paquete
-            
-            // Adaptamos al formato de nuestro componente
-            this.paqueteActual = {
+        .then((paquetesApi: PaqueteApi[]) => {
+          if (paquetesApi && paquetesApi.length > 0) {
+            // Convertimos todos los paquetes al formato que usa nuestro componente
+            this.paquetes = paquetesApi.map(paquete => ({
               id: paquete.id,
               nombre: paquete.nombre,
               descripcion: paquete.descripcion,
@@ -154,12 +150,14 @@ constructor(private fb: FormBuilder) {
               duracion: paquete.duracion_dias,
               cupo: paquete.cupo_maximo,
               estado: paquete.estado,
-              // Si hay imágenes, tomamos la URL de la primera, si no, usamos la predeterminada
               imagen_url: paquete.imagenes && paquete.imagenes.length > 0 
                 ? this.corregirUrl(paquete.imagenes[0].imagen_url) 
                 : this.imagenPredeterminada
-            };
-            console.log('Paquete cargado:', this.paqueteActual);
+            }));
+            
+            // Seleccionamos el primer paquete como actual
+            this.paqueteActual = this.paquetes[0];
+            console.log('Paquetes cargados:', this.paquetes);
           }
         })
         .catch(error => {
@@ -227,5 +225,19 @@ constructor(private fb: FormBuilder) {
     
     this.cerrarModalEliminar();
     // Después podrías redirigir o actualizar la lista de paquetes
+  }
+
+  // Método para seleccionar un paquete específico desde la lista o el selector
+  seleccionarPaquete(paqueteOEvento: PaqueteTuristico | Event): void {
+    if (paqueteOEvento instanceof Event) {
+      // Si es un evento (select change)
+      const selectElement = paqueteOEvento.target as HTMLSelectElement;
+      const id = Number(selectElement.value);
+      this.paqueteActual = this.paquetes.find(p => p.id === id) || this.paquetes[0];
+    } else {
+      // Si es un objeto paquete (click en tarjeta)
+      this.paqueteActual = paqueteOEvento;
+    }
+    console.log('Paquete seleccionado:', this.paqueteActual);
   }
 }

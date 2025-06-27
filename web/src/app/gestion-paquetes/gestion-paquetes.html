@@ -2,7 +2,43 @@
   <app-sidebar></app-sidebar>
   <div class="main-content">
     <h2 class="titulo-pagina">Gestion de Paquetes</h2>
-    <div class="tarjeta-carta">
+    
+    <!-- Selector de paquete (opcional) -->
+    <div class="selector-paquetes">
+      <select (change)="seleccionarPaquete($event)" class="form-select">
+        <option *ngFor="let paquete of paquetes" [value]="paquete.id">
+          {{ paquete.nombre }}
+        </option>
+      </select>
+    </div>
+    
+    <!-- Lista de todos los paquetes -->
+    <div class="lista-paquetes">
+      <div class="tarjeta-carta" *ngFor="let paquete of paquetes" (click)="seleccionarPaquete(paquete)">
+        <div class="container-imagen">
+          <!-- Reemplazamos la URL fija por la propiedad imagen_url del paquete -->
+          <!-- Si hay error al cargar la imagen, se usa el método cargarImagenPredeterminada -->
+          <img class="foto-paquete" 
+              [src]="paquete.imagen_url" 
+              (error)="cargarImagenPredeterminada($event)"
+              [alt]="'Imagen de ' + paquete.nombre">
+        </div>
+        <div class="campos-paquete">
+          <div class="fila-paquete">
+            <h2 class="titulo-paquete">{{ paquete.nombre }}</h2>
+            <span class="precio-paquete">{{ paquete.precio }}&nbsp;€</span>
+          </div>
+          <p class="descripcion-paquete">{{ paquete.descripcion }}</p>
+        </div>
+        <div class="acciones-paquete">
+          <button class="editar-paquete" (click)="abrirModal(paquete)">Editar</button> <!-- Botón para que se abra el modal editar el paquete -->
+          <button class="eliminar-paquete" (click)="abrirModalEliminar(paquete)">Eliminar</button> <!-- Botón para que se abra el modal de confirmación de eliminación del paquete -->
+        </div>
+      </div>
+    </div>
+
+    <!-- También puedes mantener la vista del paquete actual (original) -->
+    <div class="tarjeta-carta" *ngIf="paqueteActual">
       <div class="container-imagen">
         <!-- Reemplazamos la URL fija por la propiedad imagen_url del paquete -->
         <!-- Si hay error al cargar la imagen, se usa el método cargarImagenPredeterminada -->
