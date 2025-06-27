@@ -46,7 +46,7 @@ export class GestionPaquetes implements OnInit {
   modalEliminarAbierto = false; // por defecto en false, si lo dejas en true, te saldra abierto por defecto, no queremos eso jajaja
   formularioPaquete: FormGroup;
   
-  // URL base para las imágenes
+  // URL base de la API, se obtiene del entorno
   baseUrl = environment.apiBaseUrl;
   
   // URL de la imagen predeterminada
@@ -199,15 +199,51 @@ constructor(private fb: FormBuilder) {
 
   // Guardar cambios del formulario
   // si el formulario es válido, se guarda el paquete
-  guardarCambios(): void {
+  async guardarCambios(): Promise<void> {
     if (this.formularioPaquete.valid) {
+      // Actualizamos los datos locales del paquete actual
       this.paqueteActual = {
         ...this.paqueteActual,
         ...this.formularioPaquete.value
       };
-      
-      console.log('Paquete guardado:', this.paqueteActual);
-      this.cerrarModal();
+
+      // Construimos el endpoint usando la variable de entorno
+      try {
+        const urlObj = new URL(this.baseUrl);
+        const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
+        const endpoint = `${baseUrlCorrecta}/api/editar-paquete/${this.paqueteActual.id}/`;
+
+        // Preparamos el body con los nombres que espera el backend
+        const body = {
+          nombre: this.paqueteActual.nombre,
+          descripcion: this.paqueteActual.descripcion,
+          precio_base: this.paqueteActual.precio,
+          duracion_dias: this.paqueteActual.duracion,
+          cupo_maximo: this.paqueteActual.cupo,
+          estado: this.paqueteActual.estado
+        };
+
+        // Hacemos la petición PATCH para actualizar solo los campos editados
+        const res = await fetch(endpoint, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+
+        if (!res.ok) {
+          throw new Error('Error al editar el paquete');
+        }
+
+        const data = await res.json();
+        console.log('Respuesta de edición:', data);
+        // Recargamos la lista de paquetes para ver los cambios reflejados
+        this.cargarPaquete();
+        this.cerrarModal();
+      } catch (error) {
+        console.error('Error al editar el paquete:', error);
+      }
     }
   }
 
