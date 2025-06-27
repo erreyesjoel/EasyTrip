@@ -257,8 +257,20 @@ label {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin-top: 20px;
+
+  &.footer-eliminar {
+    position: relative;
+    top: -20px;
   
+  }
+
+  // de modal eliminar confirmacion
+  .botones-confirmacion {
+  display: flex;
+  justify-content: center;
+  gap: 12px; // Igual que .modal-footer
+}
+
   button {
     padding: 10px 16px;
     border-radius: 20px;
