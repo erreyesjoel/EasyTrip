@@ -304,3 +304,48 @@ def obtener_paquetes(request):
         resultado.append(paquete_data)
     
     return Response(resultado)
+
+# api creada, para crear un paquete turistico
+@api_view(['POST'])
+def crear_paquete(request):
+    from .models import PaqueteTuristico, ImagenPaquete
+    if request.method == 'POST': # si el método es POST
+        # Obtener los datos del cuerpo de la solicitud
+        # Como un validated de laravel en un controller
+        # Usamos json.loads para convertir el cuerpo de la solicitud (texto JSON) en un objeto Python (diccionario)
+        # usamos data.get, para hacerlos como nullables por la prevencion de errores
+        # total ya hacemos una validacion de todos los campos, si falta uno de ahi, error
+        data = json.loads(request.body)
+        id = data.get('id')
+        nombre = data.get('nombre')
+        descripcion = data.get('descripcion')
+        precio_base = data.get('precio_base')
+        duracion_dias = data.get('duracion_dias')
+        cupo_maximo = data.get('cupo_maximo')
+        estado = data.get('estado')
+        imagenes = data.get('imagenes', [])
+
+        # Validar datos requeridos
+        # Si falta algún dato, devolver un error, en este caso, imagen no, porque es como 'nullable'
+        if not all([nombre, descripcion, precio_base, duracion_dias, cupo_maximo, estado]):
+            return Response({'error': 'Faltan datos requeridos.'}, status=400)
+
+        # Crear el paquete turístico
+        paquete = PaqueteTuristico.objects.create(
+            nombre=nombre,
+            descripcion=descripcion,
+            precio_base=precio_base,
+            duracion_dias=duracion_dias,
+            cupo_maximo=cupo_maximo,
+            estado=estado
+        )
+
+        # Agregar imágenes al paquete, si existen
+        for imagen_data in imagenes:
+            imagen = ImagenPaquete.objects.create(
+                paquete=paquete,
+                descripcion=imagen_data.get('descripcion'),
+                imagen=imagen_data.get('imagen')
+            )
+
+        return Response({'ok': True, 'mensaje': 'Paquete creado correctamente.'})
