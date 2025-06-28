@@ -5,12 +5,20 @@ body, :host {
   min-height: 100vh;
 }
 
+.header-gestion-paquetes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 0 24px; // igual que el padding lateral de .main-content
+}
+
 .titulo-pagina {
- font-size: vars.$font-size-xxxl;
-    font-weight: bold;
-    margin-bottom: vars.$spacing-xl;
-    color: vars.$verde-esmeralda;
-    text-align: center;
+  font-size: vars.$font-size-xxxl;
+  font-weight: bold;
+  color: vars.$verde-esmeralda;
+  text-align: left;
+  margin: 0;
 }
 
 .tarjeta-carta {

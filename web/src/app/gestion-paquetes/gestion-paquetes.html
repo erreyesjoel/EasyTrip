@@ -1,24 +1,21 @@
 <div class="admin-layout">
   <app-sidebar></app-sidebar>
   <div class="main-content">
-    <h2 class="titulo-pagina">Gestion de Paquetes</h2>
-    
-    <!-- Botón para crear un nuevo paquete
-     si haces click se abrirá un modal para crear un nuevo paquete
-     el evento se llama abrirModalCrear -->
-
-     <div class="crear-paquete-container">
-       <button class="crear-paquete-btn" (click)="abrirModalCrear()">
-         <span class="icono-crear">
-           <!-- Icono Plus Circle -->
-           <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <circle cx="12" cy="12" r="9" stroke-width="1.5"/>
-      <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8"/>
-    </svg>
-  </span>
-  Crear paquete
-</button>
-</div>
+    <!-- Header de la sección: título a la izquierda y botón a la derecha.
+     El botón abre un modal para crear un nuevo paquete (evento abrirModalCrear) -->
+    <div class="header-gestion-paquetes">
+      <h2 class="titulo-pagina">Gestión de Paquetes</h2>
+      <button class="crear-paquete-btn" (click)="abrirModalCrear()">
+        <span class="icono-crear">
+          <!-- Icono Plus Circle -->
+          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <circle cx="12" cy="12" r="9" stroke-width="1.5"/>
+        <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8"/>
+      </svg>
+        </span>
+        Crear paquete
+      </button>
+    </div>
     
     <!-- Lista de todos los paquetes -->
     <div class="lista-paquetes">
