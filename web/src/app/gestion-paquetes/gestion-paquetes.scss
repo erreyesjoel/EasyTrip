@@ -354,8 +354,11 @@ label {
   }
 }
 
+
 .crear-paquete-btn {
   display: flex;
+  position: relative;
+  left: 40%;
   align-items: center;
   gap: 8px;
   background-color: vars.$verde-esmeralda;
