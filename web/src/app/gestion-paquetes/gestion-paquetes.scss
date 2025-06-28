@@ -462,3 +462,30 @@ label {
 .flecha-derecha { right: 8px; }
 .flecha-carrusel:hover { background: rgba(0,0,0,0.45); }
 .container-imagen { position: relative; }
+
+.modal-imagen-ampliada {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  padding: 24px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  img {
+    max-width: 80vw;
+    max-height: 80vh;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .cerrar-modal {
+    margin-top: 12px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 32px;
+    cursor: pointer;
+  }
+}

@@ -31,6 +31,8 @@
   </button>
   <img class="foto-paquete"
       [src]="getImagenActualTarjeta(paquete)"
+      (click)="abrirImagenAmpliada(getImagenActualTarjeta(paquete))"
+      style="cursor: zoom-in"
       (error)="cargarImagenPredeterminada($event)"
       [alt]="'Imagen de ' + paquete.nombre">
   <button 
@@ -117,7 +119,10 @@
     </div>
     <!-- Imágenes ya existentes (en edición) -->
     <div class="preview-imagen" *ngFor="let img of imagenesExistentes; let j = index">
-      <img [src]="corregirUrl(img.imagen_url)" [alt]="img.descripcion || 'Imagen existente'">
+      <img [src]="corregirUrl(img.imagen_url)"
+           (click)="abrirImagenAmpliada(corregirUrl(img.imagen_url))"
+           style="cursor: zoom-in"
+           [alt]="img.descripcion || 'Imagen existente'">
       <button type="button" class="btn-eliminar-imagen" (click)="eliminarImagenExistente(j)">×</button>
     </div>
           </div>
@@ -150,4 +155,11 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal de Imagen Ampliada -->
+  <div class="modal-backdrop" *ngIf="imagenAmpliada" (click)="cerrarImagenAmpliada()"></div>
+<div class="modal-imagen-ampliada" *ngIf="imagenAmpliada">
+  <img [src]="imagenAmpliada" alt="Imagen ampliada" />
+  <button class="cerrar-modal" (click)="cerrarImagenAmpliada()">×</button>
+</div>
 </div>

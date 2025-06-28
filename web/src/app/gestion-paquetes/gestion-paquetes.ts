@@ -75,6 +75,9 @@ export class GestionPaquetes implements OnInit {
   // Mapa para guardar el índice de la imagen actual de cada paquete (por id)
   imagenActualPorPaquete: { [paqueteId: number]: number } = {};
 
+  // Nueva propiedad para la imagen ampliada
+  imagenAmpliada: string | null = null;
+
   constructor(private fb: FormBuilder) {
     // Configuramos la URL de la imagen predeterminada
     try {
@@ -392,5 +395,15 @@ export class GestionPaquetes implements OnInit {
     if (nuevo < 0) nuevo = paquete.imagenes.length - 1;
     if (nuevo >= paquete.imagenes.length) nuevo = 0;
     this.imagenActualPorPaquete[paquete.id] = nuevo;
+  }
+
+  // Método para abrir la imagen ampliada
+  abrirImagenAmpliada(url: string) {
+    this.imagenAmpliada = url;
+  }
+
+  // Método para cerrar la imagen ampliada
+  cerrarImagenAmpliada() {
+    this.imagenAmpliada = null;
   }
 }
