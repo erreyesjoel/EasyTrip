@@ -93,6 +93,23 @@
             <option value="inactivo">Inactivo</option>
           </select>
         </div>
+        
+        <div class="form-group">
+          <label for="imagenes">Imágenes del paquete (opcional):</label>
+          <input type="file" id="imagenes" (change)="onImagenesSeleccionadas($event)" multiple accept="image/*">
+          <div class="preview-imagenes">
+            <div class="preview-imagen" *ngFor="let img of imagenesPreview; let i = index">
+      <img [src]="img.url" [alt]="'Imagen ' + (i+1)">
+      <button type="button" class="btn-eliminar-imagen" (click)="eliminarImagenPreview(i)">×</button>
+    </div>
+    <!-- Imágenes ya existentes (en edición) -->
+    <div class="preview-imagen" *ngFor="let img of imagenesExistentes; let j = index">
+      <img [src]="img.imagen_url" [alt]="img.descripcion || 'Imagen existente'">
+      <button type="button" class="btn-eliminar-imagen" (click)="eliminarImagenExistente(j)">×</button>
+    </div>
+          </div>
+        </div>
+        
         <div class="modal-footer">
           <button type="button" class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
           <button type="submit" class="btn-guardar" [disabled]="formularioPaquete.invalid">Guardar</button> <!-- Botón para guardar los cambios del formulario -->

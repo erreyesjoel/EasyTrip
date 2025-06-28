@@ -66,6 +66,11 @@ export class GestionPaquetes implements OnInit {
   
   modoCreacion = false;
 
+  // Arrays para gestionar imágenes en el modal
+  imagenesPreview: { file: File, url: string }[] = []; // Imágenes nuevas seleccionadas (aún no subidas)
+  imagenesExistentes: ImagenPaquete[] = []; // Imágenes ya guardadas en el backend (solo en edición)
+  imagenesEliminadas: number[] = []; // IDs de imágenes existentes a eliminar (solo en edición)
+
 constructor(private fb: FormBuilder) {
   // Configuramos la URL de la imagen predeterminada
   try {
@@ -177,6 +182,14 @@ constructor(private fb: FormBuilder) {
   abrirModal(paquete?: PaqueteTuristico): void {
     if (paquete) {
       this.paqueteActual = paquete;
+      // Cargamos imágenes existentes del paquete (si las hay)
+      this.imagenesExistentes = (paquete as any).imagenes || [];
+      this.imagenesEliminadas = [];
+      this.imagenesPreview = [];
+    } else {
+      this.imagenesExistentes = [];
+      this.imagenesEliminadas = [];
+      this.imagenesPreview = [];
     }
     this.formularioPaquete.patchValue({
       nombre: this.paqueteActual.nombre,
@@ -195,80 +208,99 @@ constructor(private fb: FormBuilder) {
     this.modoCreacion = false;
   }
 
+  // Abre el modal en modo creación
+  abrirModalCrear(): void {
+    this.modoCreacion = true;
+    this.formularioPaquete.reset({
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      duracion: 1,
+      cupo: 1,
+      estado: 'activo'
+    });
+    this.imagenesPreview = [];
+    this.imagenesExistentes = [];
+    this.imagenesEliminadas = [];
+    this.modalAbierto = true;
+  }
+
+  // Método para manejar la selección de imágenes nuevas (input file)
+  onImagenesSeleccionadas(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      Array.from(input.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.imagenesPreview.push({ file, url: e.target.result });
+        };
+        reader.readAsDataURL(file);
+      });
+      // Limpiar el input para permitir volver a seleccionar la misma imagen si se elimina
+      input.value = '';
+    }
+  }
+
+  // Elimina una imagen de la preview (aún no subida)
+  eliminarImagenPreview(index: number): void {
+    this.imagenesPreview.splice(index, 1);
+  }
+
+  // Elimina una imagen existente (ya subida al backend)
+  eliminarImagenExistente(index: number): void {
+    const img = this.imagenesExistentes[index];
+    if (img && img.id) {
+      this.imagenesEliminadas.push(img.id);
+      this.imagenesExistentes.splice(index, 1);
+    }
+  }
+
   // Guardar cambios del formulario
   // si el formulario es válido, se guarda el paquete
   async guardarCambios(): Promise<void> {
     if (this.formularioPaquete.valid) {
+      // Usamos FormData para enviar imágenes y datos
+      const formData = new FormData();
+      formData.append('nombre', this.formularioPaquete.value.nombre);
+      formData.append('descripcion', this.formularioPaquete.value.descripcion);
+      formData.append('precio_base', this.formularioPaquete.value.precio);
+      formData.append('duracion_dias', this.formularioPaquete.value.duracion);
+      formData.append('cupo_maximo', this.formularioPaquete.value.cupo);
+      formData.append('estado', this.formularioPaquete.value.estado);
+
+      // Añadir imágenes nuevas (si hay)
+      this.imagenesPreview.forEach((img) => {
+        formData.append('imagenes', img.file);
+      });
+
+      // Añadir IDs de imágenes a eliminar (solo en edición)
+      if (!this.modoCreacion && this.imagenesEliminadas.length > 0) {
+        formData.append('imagenes_eliminar', JSON.stringify(this.imagenesEliminadas));
+      }
+
+      const urlObj = new URL(this.baseUrl);
+      const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
+      let endpoint = '';
+      let method: 'POST' | 'PUT' = 'POST';
+
       if (this.modoCreacion) {
-        // Crear paquete
-        try {
-          const urlObj = new URL(this.baseUrl);
-          const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
-          const endpoint = `${baseUrlCorrecta}/api/crear-paquete/`;
-          const body = {
-            nombre: this.formularioPaquete.value.nombre,
-            descripcion: this.formularioPaquete.value.descripcion,
-            precio_base: this.formularioPaquete.value.precio,
-            duracion_dias: this.formularioPaquete.value.duracion,
-            cupo_maximo: this.formularioPaquete.value.cupo,
-            estado: this.formularioPaquete.value.estado
-          };
-          const res = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-          });
-          if (!res.ok) throw new Error('Error al crear el paquete');
-          await res.json();
-          this.cargarPaquete();
-          this.cerrarModal();
-        } catch (error) {
-          console.error('Error al crear el paquete:', error);
-        }
+        endpoint = `${baseUrlCorrecta}/api/crear-paquete/`;
+        method = 'POST';
       } else {
-        // Actualizamos los datos locales del paquete actual
-        this.paqueteActual = {
-          ...this.paqueteActual,
-          ...this.formularioPaquete.value
-        };
+        endpoint = `${baseUrlCorrecta}/api/editar-paquete/${this.paqueteActual.id}/`;
+        method = 'PUT';
+      }
 
-        // Construimos el endpoint usando la variable de entorno
-        try {
-          const urlObj = new URL(this.baseUrl);
-          const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
-          const endpoint = `${baseUrlCorrecta}/api/editar-paquete/${this.paqueteActual.id}/`;
-
-          // Preparamos el body con los nombres que espera el backend
-          const body = {
-            nombre: this.paqueteActual.nombre,
-            descripcion: this.paqueteActual.descripcion,
-            precio_base: this.paqueteActual.precio,
-            duracion_dias: this.paqueteActual.duracion,
-            cupo_maximo: this.paqueteActual.cupo,
-            estado: this.paqueteActual.estado
-          };
-
-          // Hacemos la petición PATCH para actualizar solo los campos editados
-          const res = await fetch(endpoint, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-          });
-
-          if (!res.ok) {
-            throw new Error('Error al editar el paquete');
-          }
-
-          const data = await res.json();
-          console.log('Respuesta de edición:', data);
-          // Recargamos la lista de paquetes para ver los cambios reflejados
-          this.cargarPaquete();
-          this.cerrarModal();
-        } catch (error) {
-          console.error('Error al editar el paquete:', error);
-        }
+      try {
+        const res = await fetch(endpoint, {
+          method,
+          body: formData
+        });
+        if (!res.ok) throw new Error('Error al guardar el paquete');
+        await this.cargarPaquete();
+        this.cerrarModal();
+      } catch (error) {
+        console.error('Error al guardar el paquete:', error);
       }
     }
   }
@@ -333,19 +365,5 @@ constructor(private fb: FormBuilder) {
       this.paqueteActual = paqueteOEvento;
     }
     console.log('Paquete seleccionado:', this.paqueteActual);
-  }
-
-  // Abre el modal en modo creación
-  abrirModalCrear(): void {
-    this.modoCreacion = true;
-    this.formularioPaquete.reset({
-      nombre: '',
-      descripcion: '',
-      precio: 0,
-      duracion: 1,
-      cupo: 1,
-      estado: 'activo'
-    });
-    this.modalAbierto = true;
   }
 }

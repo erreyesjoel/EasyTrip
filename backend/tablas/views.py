@@ -19,6 +19,8 @@ from django.utils import timezone
 from datetime import timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import PaqueteTuristico, ImagenPaquete
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import parser_classes
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -265,13 +267,12 @@ def logout_view(request):
     response.delete_cookie('refresh_token', path='/')
     return response
 
+# api para obtener todos los paquetes turísticos y sus imágenes
 @api_view(['GET'])
 def obtener_paquetes(request):
     """
     Vista para obtener todos los paquetes turísticos y sus imágenes
     """
-    from .models import PaqueteTuristico
-    
     # Obtenemos todos los paquetes turísticos
     paquetes = PaqueteTuristico.objects.all()
     
@@ -284,14 +285,12 @@ def obtener_paquetes(request):
             # Ya no necesitamos verificar es_predeterminada
             # Simplemente comprobamos si la imagen existe
             tiene_imagen_propia = imagen.imagen and hasattr(imagen.imagen, 'url')
-                
             imagenes_data.append({
                 'id': imagen.id,
                 'descripcion': imagen.descripcion,
                 'imagen_url': imagen.imagen_url,
                 'es_predeterminada': not tiene_imagen_propia  # Calculamos dinámicamente
             })
-            
         paquete_data = {
             'id': paquete.id,
             'nombre': paquete.nombre,
@@ -303,33 +302,34 @@ def obtener_paquetes(request):
             'imagenes': imagenes_data
         }
         resultado.append(paquete_data)
-    
     return Response(resultado)
+
 
 # api creada, para crear un paquete turistico
 @api_view(['POST'])
+@parser_classes([MultiPartParser, FormParser])
 def crear_paquete(request):
     if request.method == 'POST': # si el método es POST
-        # Obtener los datos del cuerpo de la solicitud
-        # Como un validated de laravel en un controller
-        # Usamos json.loads para convertir el cuerpo de la solicitud (texto JSON) en un objeto Python (diccionario)
+        # Si la petición es multipart (con imágenes), usamos request.data y request.FILES
+        if request.content_type and request.content_type.startswith('multipart'):
+            data = request.data
+        else:
+            # Obtener los datos del cuerpo de la solicitud
+            # Como un validated de laravel en un controller
+            # Usamos json.loads para convertir el cuerpo de la solicitud (texto JSON) en un objeto Python (diccionario)
+            data = json.loads(request.body)
         # usamos data.get, para hacerlos como nullables por la prevencion de errores
         # total ya hacemos una validacion de todos los campos, si falta uno de ahi, error
-        data = json.loads(request.body)
-        id = data.get('id')
         nombre = data.get('nombre')
         descripcion = data.get('descripcion')
         precio_base = data.get('precio_base')
         duracion_dias = data.get('duracion_dias')
         cupo_maximo = data.get('cupo_maximo')
         estado = data.get('estado')
-        imagenes = data.get('imagenes', [])
-
         # Validar datos requeridos
         # Si falta algún dato, devolver un error, en este caso, imagen no, porque es como 'nullable'
         if not all([nombre, descripcion, precio_base, duracion_dias, cupo_maximo, estado]):
             return Response({'error': 'Faltan datos requeridos.'}, status=400)
-
         # Crear el paquete turístico
         paquete = PaqueteTuristico.objects.create(
             nombre=nombre,
@@ -339,16 +339,32 @@ def crear_paquete(request):
             cupo_maximo=cupo_maximo,
             estado=estado
         )
-
-        # Agregar imágenes al paquete, si existen
-        for imagen_data in imagenes:
-            imagen = ImagenPaquete.objects.create(
-                paquete=paquete,
-                descripcion=imagen_data.get('descripcion'),
-                imagen=imagen_data.get('imagen')
-            )
-
-        return Response({'ok': True, 'mensaje': 'Paquete creado correctamente.'})
+        # Agregar imágenes al paquete, si existen (solo si es multipart)
+        if hasattr(request, 'FILES'):
+            imagenes = request.FILES.getlist('imagenes')
+            for img in imagenes:
+                ImagenPaquete.objects.create(paquete=paquete, imagen=img)
+        # Preparamos la respuesta con las imágenes actuales del paquete
+        imagenes_data = []
+        for imagen in paquete.imagenes.all():
+            tiene_imagen_propia = imagen.imagen and hasattr(imagen.imagen, 'url')
+            imagenes_data.append({
+                'id': imagen.id,
+                'descripcion': imagen.descripcion,
+                'imagen_url': imagen.imagen_url,
+                'es_predeterminada': not tiene_imagen_propia
+            })
+        paquete_data = {
+            'id': paquete.id,
+            'nombre': paquete.nombre,
+            'descripcion': paquete.descripcion,
+            'precio_base': float(paquete.precio_base),
+            'duracion_dias': paquete.duracion_dias,
+            'cupo_maximo': paquete.cupo_maximo,
+            'estado': paquete.estado,
+            'imagenes': imagenes_data
+        }
+        return Response({'ok': True, 'mensaje': 'Paquete creado correctamente.', 'paquete': paquete_data})
 
 # api para editar un paquete turístico
 # Se usa PUT o PATCH, dependiendo de si se quiere actualizar todo o solo algunos campos
@@ -356,27 +372,76 @@ def crear_paquete(request):
 # Se usa json.loads para convertir el cuerpo de la solicitud (texto JSON) en un objeto Python (diccionario)
 # Se usa data.get para hacerlos como nullables por la prevención de errores
 # Se usa try-except para manejar el caso en que el paquete no exista
-# Se actualizan los campos del paquete con los datos del cuerpo de la solicitud
+# Se actualizan los campos del paquete con los datos d
+# el cuerpo de la solicitud
 # Si el paquete no existe, se devuelve un error 404
 # Si se actualiza correctamente, se devuelve un mensaje de éxito
 # put es para actualizar todo el paquete, patch es para actualizar solo algunos campos
 @api_view(['PUT', 'PATCH'])
+@parser_classes([MultiPartParser, FormParser])
 def editar_paquete(request, paquete_id):
     if request.method in ['PUT', 'PATCH']:
-        data = json.loads(request.body)
+        # Se usa try-except para manejar el caso en que el paquete no exista
         try:
             paquete = PaqueteTuristico.objects.get(id=paquete_id)
         except PaqueteTuristico.DoesNotExist:
             return Response({'error': 'Paquete no encontrado.'}, status=404)
-        # Actualizar los campos del paquete
-        paquete.nombre = data.get('nombre', paquete.nombre)
-        paquete.descripcion = data.get('descripcion', paquete.descripcion)
-        paquete.precio_base = data.get('precio_base', paquete.precio_base)
-        paquete.duracion_dias = data.get('duracion_dias', paquete.duracion_dias)
-        paquete.cupo_maximo = data.get('cupo_maximo', paquete.cupo_maximo)
-        paquete.estado = data.get('estado', paquete.estado)
+        # Si la petición es multipart (con imágenes), usamos request.data y request.FILES
+        if request.content_type and request.content_type.startswith('multipart'):
+            data = request.data
+        else:
+            # Si es JSON puro, usamos json.loads
+            data = json.loads(request.body)
+        # Se actualizan los campos del paquete con los datos del cuerpo de la solicitud
+        nombre = data.get('nombre')
+        descripcion = data.get('descripcion')
+        precio_base = data.get('precio_base')
+        duracion_dias = data.get('duracion_dias')
+        cupo_maximo = data.get('cupo_maximo')
+        estado = data.get('estado')
+        if nombre: paquete.nombre = nombre
+        if descripcion: paquete.descripcion = descripcion
+        if precio_base: paquete.precio_base = precio_base
+        if duracion_dias: paquete.duracion_dias = duracion_dias
+        if cupo_maximo: paquete.cupo_maximo = cupo_maximo
+        if estado: paquete.estado = estado
         paquete.save()
-        return Response({'ok': True, 'mensaje': 'Paquete editado correctamente.'})
+        # Eliminar imágenes si se especifica (solo si viene el campo imagenes_eliminar)
+        imagenes_eliminar = data.get('imagenes_eliminar')
+        if imagenes_eliminar:
+            try:
+                ids = json.loads(imagenes_eliminar) if isinstance(imagenes_eliminar, str) else imagenes_eliminar
+                ImagenPaquete.objects.filter(id__in=ids, paquete=paquete).delete()
+            except Exception:
+                pass
+        # Añadir nuevas imágenes si se enviaron (solo si es multipart)
+        if hasattr(request, 'FILES'):
+            imagenes = request.FILES.getlist('imagenes')
+            for img in imagenes:
+                ImagenPaquete.objects.create(paquete=paquete, imagen=img)
+        # Preparamos la respuesta con las imágenes actuales del paquete
+        imagenes_data = []
+        for imagen in paquete.imagenes.all():
+            tiene_imagen_propia = imagen.imagen and hasattr(imagen.imagen, 'url')
+            imagenes_data.append({
+                'id': imagen.id,
+                'descripcion': imagen.descripcion,
+                'imagen_url': imagen.imagen_url,
+                'es_predeterminada': not tiene_imagen_propia
+            })
+        paquete_data = {
+            'id': paquete.id,
+            'nombre': paquete.nombre,
+            'descripcion': paquete.descripcion,
+            'precio_base': float(paquete.precio_base),
+            'duracion_dias': paquete.duracion_dias,
+            'cupo_maximo': paquete.cupo_maximo,
+            'estado': paquete.estado,
+            'imagenes': imagenes_data
+        }
+        # Si se actualiza correctamente, se devuelve un mensaje de éxito y los datos actualizados
+        return Response({'ok': True, 'mensaje': 'Paquete actualizado correctamente.', 'paquete': paquete_data})
+    # Se devuelve un error 405 si el método no es PUT o PATCH
     return Response({'error': 'Método no permitido'}, status=405)
 
 # api para eliminar un paquete turístico
