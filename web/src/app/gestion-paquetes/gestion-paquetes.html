@@ -117,7 +117,7 @@
     </div>
     <!-- Imágenes ya existentes (en edición) -->
     <div class="preview-imagen" *ngFor="let img of imagenesExistentes; let j = index">
-      <img [src]="img.imagen_url" [alt]="img.descripcion || 'Imagen existente'">
+      <img [src]="corregirUrl(img.imagen_url)" [alt]="img.descripcion || 'Imagen existente'">
       <button type="button" class="btn-eliminar-imagen" (click)="eliminarImagenExistente(j)">×</button>
     </div>
           </div>
