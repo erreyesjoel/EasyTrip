@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 import datetime
+from django.core.exceptions import ValidationError
 
 class PaqueteTuristico(models.Model):
     ESTADO_CHOICES = [
@@ -83,6 +84,15 @@ class CodigoVerificacion(models.Model):
     class Meta:
         db_table = 'codigos_verificacion'
 
+# Validación para el tamaño máximo de la imagen de los paquetes turísticos.
+# Esta función se puede usar en el método clean() del modelo o en un validador
+# personalizado para el campo de imagen.
+
+def validar_tamano_imagen(imagen):
+    max_size = 4 * 1024 * 1024  # 4 MB
+    if imagen.size > max_size:
+        raise ValidationError(f"La imagen no puede exceder los {max_size / (1024 * 1024)} MB.")
+    
 # clase para almacenar imágenes de paquetes turísticos, tabla aparte mejor que en el mismo modelo
 # para evitar que el modelo de paquete turístico crezca demasiado y para poder
 # manejar múltiples imágenes por paquete de forma más eficiente.
@@ -92,7 +102,7 @@ class ImagenPaquete(models.Model):
         on_delete=models.CASCADE,
         related_name='imagenes'
     )
-    imagen = models.ImageField(upload_to='paquetes/', null=True, blank=True)
+    imagen = models.ImageField(upload_to='paquetes/', null=True, blank=True, validators=[validar_tamano_imagen])  # Validación del tamaño de la imagen
     descripcion = models.CharField(max_length=255, blank=True)
 
     @property

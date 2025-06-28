@@ -21,6 +21,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import PaqueteTuristico, ImagenPaquete
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import parser_classes
+from django.core.exceptions import ValidationError
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -343,7 +344,13 @@ def crear_paquete(request):
         if hasattr(request, 'FILES'):
             imagenes = request.FILES.getlist('imagenes')
             for img in imagenes:
-                ImagenPaquete.objects.create(paquete=paquete, imagen=img)
+                # Validar tamaño de imagen antes de guardar
+                imagen_obj = ImagenPaquete(paquete=paquete, imagen=img)
+                try:
+                    imagen_obj.full_clean()  # Ejecuta los validadores, incluido el de tamaño
+                    imagen_obj.save()
+                except ValidationError as e:
+                    return Response({'error': e.message_dict.get('imagen', ['Error de validación'])[0]}, status=400)
         # Preparamos la respuesta con las imágenes actuales del paquete
         imagenes_data = []
         for imagen in paquete.imagenes.all():
@@ -418,7 +425,13 @@ def editar_paquete(request, paquete_id):
         if hasattr(request, 'FILES'):
             imagenes = request.FILES.getlist('imagenes')
             for img in imagenes:
-                ImagenPaquete.objects.create(paquete=paquete, imagen=img)
+                # Validar tamaño de imagen antes de guardar
+                imagen_obj = ImagenPaquete(paquete=paquete, imagen=img)
+                try:
+                    imagen_obj.full_clean()  # Ejecuta los validadores, incluido el de tamaño
+                    imagen_obj.save()
+                except ValidationError as e:
+                    return Response({'error': e.message_dict.get('imagen', ['Error de validación'])[0]}, status=400)
         # Preparamos la respuesta con las imágenes actuales del paquete
         imagenes_data = []
         for imagen in paquete.imagenes.all():
