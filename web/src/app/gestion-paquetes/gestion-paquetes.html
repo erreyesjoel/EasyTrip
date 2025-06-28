@@ -3,14 +3,20 @@
   <div class="main-content">
     <h2 class="titulo-pagina">Gestion de Paquetes</h2>
     
-    <!-- Selector de paquete (opcional) -->
-    <div class="selector-paquetes">
-      <select (change)="seleccionarPaquete($event)" class="form-select">
-        <option *ngFor="let paquete of paquetes" [value]="paquete.id">
-          {{ paquete.nombre }}
-        </option>
-      </select>
-    </div>
+    <!-- Botón para crear un nuevo paquete
+     si haces click se abrirá un modal para crear un nuevo paquete
+     el evento se llama abrirModalCrear -->
+  <button class="crear-paquete-btn" (click)="abrirModalCrear()">
+  <span class="icono-crear">
+    <!-- Icono Plus Circle -->
+    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <circle cx="12" cy="12" r="9" stroke-width="1.5"/>
+      <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8"/>
+    </svg>
+  </span>
+  Crear paquete
+</button>
+
     
     <!-- Lista de todos los paquetes -->
     <div class="lista-paquetes">
@@ -42,8 +48,8 @@
   <div class="modal-backdrop" *ngIf="modalAbierto" (click)="cerrarModal()"></div>   <!-- ngIf, si el modal esta abierto, podrás darle click para cerrarlo -->
   <div class="modal-editar" *ngIf="modalAbierto"> <!-- Si el modal está abierto, se muestra el contenido -->
     <div class="modal-header">
-      <h3>Editar Paquete</h3>
-      <button class="cerrar-modal" (click)="cerrarModal()">×</button> <!-- Botón para cerrar el modal -->
+  <h3>{{ modoCreacion ? 'Crear Paquete' : 'Editar Paquete' }}</h3>      
+  <button class="cerrar-modal" (click)="cerrarModal()">×</button> <!-- Botón para cerrar el modal -->
     </div>
     <div class="modal-body">
       <form [formGroup]="formularioPaquete" (ngSubmit)="guardarCambios()">

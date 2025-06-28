@@ -64,6 +64,8 @@ export class GestionPaquetes implements OnInit {
     imagen_url: ''
   };
   
+  modoCreacion = false;
+
 constructor(private fb: FormBuilder) {
   // Configuramos la URL de la imagen predeterminada
   try {
@@ -190,54 +192,83 @@ constructor(private fb: FormBuilder) {
   // como cierras el modal, modalAbierto se vuelve false
   cerrarModal(): void {
     this.modalAbierto = false;
+    this.modoCreacion = false;
   }
 
   // Guardar cambios del formulario
   // si el formulario es válido, se guarda el paquete
   async guardarCambios(): Promise<void> {
     if (this.formularioPaquete.valid) {
-      // Actualizamos los datos locales del paquete actual
-      this.paqueteActual = {
-        ...this.paqueteActual,
-        ...this.formularioPaquete.value
-      };
-
-      // Construimos el endpoint usando la variable de entorno
-      try {
-        const urlObj = new URL(this.baseUrl);
-        const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
-        const endpoint = `${baseUrlCorrecta}/api/editar-paquete/${this.paqueteActual.id}/`;
-
-        // Preparamos el body con los nombres que espera el backend
-        const body = {
-          nombre: this.paqueteActual.nombre,
-          descripcion: this.paqueteActual.descripcion,
-          precio_base: this.paqueteActual.precio,
-          duracion_dias: this.paqueteActual.duracion,
-          cupo_maximo: this.paqueteActual.cupo,
-          estado: this.paqueteActual.estado
+      if (this.modoCreacion) {
+        // Crear paquete
+        try {
+          const urlObj = new URL(this.baseUrl);
+          const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
+          const endpoint = `${baseUrlCorrecta}/api/crear-paquete/`;
+          const body = {
+            nombre: this.formularioPaquete.value.nombre,
+            descripcion: this.formularioPaquete.value.descripcion,
+            precio_base: this.formularioPaquete.value.precio,
+            duracion_dias: this.formularioPaquete.value.duracion,
+            cupo_maximo: this.formularioPaquete.value.cupo,
+            estado: this.formularioPaquete.value.estado
+          };
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+          if (!res.ok) throw new Error('Error al crear el paquete');
+          await res.json();
+          this.cargarPaquete();
+          this.cerrarModal();
+        } catch (error) {
+          console.error('Error al crear el paquete:', error);
+        }
+      } else {
+        // Actualizamos los datos locales del paquete actual
+        this.paqueteActual = {
+          ...this.paqueteActual,
+          ...this.formularioPaquete.value
         };
 
-        // Hacemos la petición PATCH para actualizar solo los campos editados
-        const res = await fetch(endpoint, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-        });
+        // Construimos el endpoint usando la variable de entorno
+        try {
+          const urlObj = new URL(this.baseUrl);
+          const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
+          const endpoint = `${baseUrlCorrecta}/api/editar-paquete/${this.paqueteActual.id}/`;
 
-        if (!res.ok) {
-          throw new Error('Error al editar el paquete');
+          // Preparamos el body con los nombres que espera el backend
+          const body = {
+            nombre: this.paqueteActual.nombre,
+            descripcion: this.paqueteActual.descripcion,
+            precio_base: this.paqueteActual.precio,
+            duracion_dias: this.paqueteActual.duracion,
+            cupo_maximo: this.paqueteActual.cupo,
+            estado: this.paqueteActual.estado
+          };
+
+          // Hacemos la petición PATCH para actualizar solo los campos editados
+          const res = await fetch(endpoint, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+          });
+
+          if (!res.ok) {
+            throw new Error('Error al editar el paquete');
+          }
+
+          const data = await res.json();
+          console.log('Respuesta de edición:', data);
+          // Recargamos la lista de paquetes para ver los cambios reflejados
+          this.cargarPaquete();
+          this.cerrarModal();
+        } catch (error) {
+          console.error('Error al editar el paquete:', error);
         }
-
-        const data = await res.json();
-        console.log('Respuesta de edición:', data);
-        // Recargamos la lista de paquetes para ver los cambios reflejados
-        this.cargarPaquete();
-        this.cerrarModal();
-      } catch (error) {
-        console.error('Error al editar el paquete:', error);
       }
     }
   }
@@ -302,5 +333,19 @@ constructor(private fb: FormBuilder) {
       this.paqueteActual = paqueteOEvento;
     }
     console.log('Paquete seleccionado:', this.paqueteActual);
+  }
+
+  // Abre el modal en modo creación
+  abrirModalCrear(): void {
+    this.modoCreacion = true;
+    this.formularioPaquete.reset({
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      duracion: 1,
+      cupo: 1,
+      estado: 'activo'
+    });
+    this.modalAbierto = true;
   }
 }
