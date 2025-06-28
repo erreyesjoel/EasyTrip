@@ -32,6 +32,7 @@ interface PaqueteTuristico {
   cupo: number;
   estado: string;
   imagen_url?: string; // URL de la imagen del paquete turístico (opcional, usamos ? para marcar como opcional)
+  imagenes?: ImagenPaquete[];
 }
 
 @Component({
@@ -71,30 +72,33 @@ export class GestionPaquetes implements OnInit {
   imagenesExistentes: ImagenPaquete[] = []; // Imágenes ya guardadas en el backend (solo en edición)
   imagenesEliminadas: number[] = []; // IDs de imágenes existentes a eliminar (solo en edición)
 
-constructor(private fb: FormBuilder) {
-  // Configuramos la URL de la imagen predeterminada
-  try {
-    const urlObj = new URL(this.baseUrl);
-    const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
-    this.imagenPredeterminada = `${baseUrlCorrecta}/static/img/paquetePredeterminada.webp`;
-  } catch (error) {
-    console.error('Error al construir la URL de la imagen predeterminada:', error);
-    this.imagenPredeterminada = `${this.baseUrl}/static/img/paquetePredeterminada.webp`;
+  // Mapa para guardar el índice de la imagen actual de cada paquete (por id)
+  imagenActualPorPaquete: { [paqueteId: number]: number } = {};
+
+  constructor(private fb: FormBuilder) {
+    // Configuramos la URL de la imagen predeterminada
+    try {
+      const urlObj = new URL(this.baseUrl);
+      const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
+      this.imagenPredeterminada = `${baseUrlCorrecta}/static/img/paquetePredeterminada.webp`;
+    } catch (error) {
+      console.error('Error al construir la URL de la imagen predeterminada:', error);
+      this.imagenPredeterminada = `${this.baseUrl}/static/img/paquetePredeterminada.webp`;
+    }
+    
+    // Ahora podemos asignar la imagen predeterminada
+    this.paqueteActual.imagen_url = this.imagenPredeterminada;
+    
+    // Inicializamos el formulario
+    this.formularioPaquete = this.fb.group({
+      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      precio: [0, [Validators.required, Validators.min(0.01)]],
+      duracion: [1, [Validators.required, Validators.min(1)]],
+      cupo: [1, [Validators.required, Validators.min(1)]],
+      estado: ['activo']
+    });
   }
-  
-  // Ahora podemos asignar la imagen predeterminada
-  this.paqueteActual.imagen_url = this.imagenPredeterminada;
-  
-  // Inicializamos el formulario
-  this.formularioPaquete = this.fb.group({
-    nombre: ['', Validators.required],
-    descripcion: ['', Validators.required],
-    precio: [0, [Validators.required, Validators.min(0.01)]],
-    duracion: [1, [Validators.required, Validators.min(1)]],
-    cupo: [1, [Validators.required, Validators.min(1)]],
-    estado: ['activo']
-  });
-}
 
   // Este método se ejecutará cuando se inicialice el componente
   ngOnInit(): void {
@@ -149,17 +153,18 @@ constructor(private fb: FormBuilder) {
       if (paquetesApi && paquetesApi.length > 0) {
         // Convertimos todos los paquetes al formato que usa nuestro componente
         this.paquetes = paquetesApi.map(paquete => ({
-          id: paquete.id,
-          nombre: paquete.nombre,
-          descripcion: paquete.descripcion,
-          precio: paquete.precio_base,
-          duracion: paquete.duracion_dias,
-          cupo: paquete.cupo_maximo,
-          estado: paquete.estado,
-          imagen_url: paquete.imagenes && paquete.imagenes.length > 0 
-            ? this.corregirUrl(paquete.imagenes[0].imagen_url) 
-            : this.imagenPredeterminada
-        }));
+        id: paquete.id,
+        nombre: paquete.nombre,
+        descripcion: paquete.descripcion,
+        precio: paquete.precio_base,
+        duracion: paquete.duracion_dias,
+        cupo: paquete.cupo_maximo,
+        estado: paquete.estado,
+        imagen_url: paquete.imagenes && paquete.imagenes.length > 0 
+          ? this.corregirUrl(paquete.imagenes[0].imagen_url) 
+          : this.imagenPredeterminada,
+        imagenes: paquete.imagenes // <-- Añade esto para que el carrusel tenga acceso a todas las imágenes
+      }));
 
         // Seleccionamos el primer paquete como actual
         this.paqueteActual = this.paquetes[0];
@@ -365,5 +370,27 @@ constructor(private fb: FormBuilder) {
       this.paqueteActual = paqueteOEvento;
     }
     console.log('Paquete seleccionado:', this.paqueteActual);
+  }
+
+  // Devuelve la URL de la imagen actual a mostrar en la tarjeta
+  getImagenActualTarjeta(paquete: any): string {
+    // Si el paquete tiene imágenes, mostramos la seleccionada, si no, la predeterminada
+    const idx = this.imagenActualPorPaquete[paquete.id] || 0;
+    if (paquete.imagenes && paquete.imagenes.length > 0) {
+      // Si el índice está fuera de rango, lo corregimos
+      const safeIdx = ((idx % paquete.imagenes.length) + paquete.imagenes.length) % paquete.imagenes.length;
+      return this.corregirUrl(paquete.imagenes[safeIdx].imagen_url);
+    }
+    return this.imagenPredeterminada;
+  }
+
+  // Cambia la imagen actual del carrusel de la tarjeta (izquierda/derecha)
+  cambiarImagenTarjeta(paquete: any, cambio: number): void {
+    if (!paquete.imagenes || paquete.imagenes.length < 2) return;
+    const actual = this.imagenActualPorPaquete[paquete.id] || 0;
+    let nuevo = actual + cambio;
+    if (nuevo < 0) nuevo = paquete.imagenes.length - 1;
+    if (nuevo >= paquete.imagenes.length) nuevo = 0;
+    this.imagenActualPorPaquete[paquete.id] = nuevo;
   }
 }

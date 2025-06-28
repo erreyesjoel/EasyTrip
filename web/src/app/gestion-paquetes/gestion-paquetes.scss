@@ -43,6 +43,7 @@ body, :host {
 
 .foto-paquete {
   display: block;
+  min-height: 350px;
   width: calc(100% - 20px); // 10px de espacio a cada lado
   margin: 7px;
   border-radius: 20px;
@@ -438,3 +439,26 @@ label {
 .btn-eliminar-imagen:hover {
   background: #c0392b;
 }
+
+.flecha-carrusel {
+  background: rgba(0,0,0,0.25);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 22px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.flecha-izquierda { left: 8px; }
+.flecha-derecha { right: 8px; }
+.flecha-carrusel:hover { background: rgba(0,0,0,0.45); }
+.container-imagen { position: relative; }

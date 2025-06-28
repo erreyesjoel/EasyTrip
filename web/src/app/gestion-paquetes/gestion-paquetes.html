@@ -21,12 +21,25 @@
     <div class="lista-paquetes">
       <div class="tarjeta-carta" *ngFor="let paquete of paquetes" (click)="seleccionarPaquete(paquete)">
         <div class="container-imagen">
-          <!-- Reemplazamos la URL fija por la propiedad imagen_url del paquete -->
-          <!-- Si hay error al cargar la imagen, se usa el método cargarImagenPredeterminada -->
-          <img class="foto-paquete" 
-              [src]="paquete.imagen_url" 
-              (error)="cargarImagenPredeterminada($event)"
-              [alt]="'Imagen de ' + paquete.nombre">
+          <!-- Carrusel de imágenes: flecha izquierda, imagen actual, flecha derecha -->
+          <button 
+    type="button" 
+    class="flecha-carrusel flecha-izquierda" 
+    (click)="cambiarImagenTarjeta(paquete, -1); $event.stopPropagation()" 
+    *ngIf="(paquete.imagenes?.length || 0) > 1">
+    ‹
+  </button>
+  <img class="foto-paquete"
+      [src]="getImagenActualTarjeta(paquete)"
+      (error)="cargarImagenPredeterminada($event)"
+      [alt]="'Imagen de ' + paquete.nombre">
+  <button 
+    type="button" 
+    class="flecha-carrusel flecha-derecha" 
+    (click)="cambiarImagenTarjeta(paquete, 1); $event.stopPropagation()" 
+    *ngIf="(paquete.imagenes?.length || 0) > 1">
+    ›
+  </button>
         </div>
         <div class="campos-paquete">
           <div class="fila-paquete">
