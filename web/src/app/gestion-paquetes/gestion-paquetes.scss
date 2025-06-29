@@ -611,7 +611,7 @@ select {
   padding: 0;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
-  margin-left: 2px;
+  margin-left: 0;
   svg {
     stroke: #fff;
   }
@@ -624,9 +624,9 @@ select {
 
 .badge-estado {
   position: absolute;
-  top: 12px;
+  top: 17px;
   right: 12px;
-  padding: 6px 16px;
+  padding: 10px 16px;
   border-radius: 16px;
   font-size: 14px;
   font-weight: 600;
@@ -634,10 +634,11 @@ select {
   z-index: 3;
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
   letter-spacing: 0.5px;
+  background: #2ecc40; // fallback
   &.activo {
-    background: #2ecc40; // Verde
+    background: linear-gradient(90deg, #2ecc40 0%, #27ae60 100%);
   }
   &.inactivo {
-    background: #e74c3c; // Rojo
+    background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
   }
 }
