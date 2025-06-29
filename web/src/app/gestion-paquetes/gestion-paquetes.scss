@@ -492,7 +492,7 @@ label {
 
 .filtros-outer-container {
   width: 95%;
-  max-width: none;
+  max-width: 1455px;
   margin: 0 0 24px 40px; // margen izquierdo de 40px
   background: #fff;
   border-radius: 18px;
@@ -520,7 +520,7 @@ label {
     flex: 0 1 auto;
   }
 
-  input[type="text"],
+input[type="text"],
 input[type="number"],
 select {
   font-family: 'Montserrat', Arial, Helvetica, sans-serif;
@@ -530,8 +530,7 @@ select {
   padding: 8px 14px;
   background: #fff;
   color: vars.$gris-oscuro;
-  min-width: 120px;
-  max-width: 200px;
+  min-width: 227px;
   transition: border 0.2s, box-shadow 0.2s;
   outline: none;
 
