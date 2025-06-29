@@ -275,26 +275,42 @@ def obtener_paquetes(request):
     Vista para obtener todos los paquetes turísticos y sus imágenes,
     con filtros por query string (nombre, estado, precio_base, duracion, cupo).
     """
-    # Mapeo de parámetros de query a campos de modelo
     filtro_map = {
         'nombre':      lambda v: {'nombre__icontains': v},
         'estado':      lambda v: {'estado': v},
-        'precio_base':  lambda v: {'precio_base': float(v)},
+        # 'precio_base':  lambda v: {'precio_base': float(v)},  # <-- Elimina esta línea
         'duracion':    lambda v: {'duracion_dias': int(v)},
         'cupo':        lambda v: {'cupo_maximo__gte': int(v)},
     }
 
     filtros = {}
-    # Recorremos el mapeo y solo añadimos los filtros presentes y válidos
     for param, builder in filtro_map.items():
         valor = request.GET.get(param)
         if valor not in [None, '']:
             try:
                 filtros.update(builder(valor))
             except (ValueError, TypeError):
-                pass  # Si el valor no es válido, simplemente no se filtra por ese campo
+                pass
 
-    # Obtenemos los paquetes filtrados
+    # Lógica especial para el filtro de precio "starts with"
+    precio_valor = request.GET.get('precio_base')
+    if precio_valor not in [None, '']:
+        try:
+            precio_float = float(precio_valor)
+            # Calcula el siguiente número entero mayor
+            if '.' in precio_valor:
+                # Si el usuario pone "50.5", busca entre 50.5 y 50.6
+                decimales = len(precio_valor.split('.')[1])
+                incremento = 10 ** -decimales
+                precio_max = precio_float + incremento
+            else:
+                # Si el usuario pone "50", busca entre 50.0 y 51.0
+                precio_max = precio_float + 1
+            filtros['precio_base__gte'] = precio_float
+            filtros['precio_base__lt'] = precio_max
+        except ValueError:
+            pass
+
     paquetes = PaqueteTuristico.objects.filter(**filtros).order_by('id')
 
     # Preparamos la respuesta
