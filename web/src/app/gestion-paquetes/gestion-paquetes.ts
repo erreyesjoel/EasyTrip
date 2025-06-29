@@ -406,4 +406,56 @@ export class GestionPaquetes implements OnInit {
   cerrarImagenAmpliada() {
     this.imagenAmpliada = null;
   }
+
+  async filtrarPaquetes(): Promise<void> {
+  // Recoge los valores de los filtros usando querySelector
+  const nombre = (document.querySelector('#filtroNombre') as HTMLInputElement)?.value || '';
+  const estado = (document.querySelector('#filtroEstado') as HTMLSelectElement)?.value || '';
+  const precio = (document.querySelector('#filtroPrecio') as HTMLInputElement)?.value || '';
+  const duracion = (document.querySelector('#filtroDuracion') as HTMLInputElement)?.value || '';
+  const cupo = (document.querySelector('#filtroCupo') as HTMLInputElement)?.value || '';
+
+  // Construye la query string solo con los filtros que tengan valor
+  const params = new URLSearchParams();
+  if (nombre) params.append('nombre', nombre);
+  if (estado) params.append('estado', estado);
+  if (precio) params.append('precio_max', precio);
+  if (duracion) params.append('duracion', duracion);
+  if (cupo) params.append('cupo', cupo);
+
+  const urlObj = new URL(this.baseUrl);
+  const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
+  const url = `${baseUrlCorrecta}/api/paquetes/${params.toString() ? '?' + params.toString() : ''}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Error al filtrar los paquetes');
+    const paquetesApi: PaqueteApi[] = await response.json();
+    this.paquetes = paquetesApi.map(paquete => ({
+      id: paquete.id,
+      nombre: paquete.nombre,
+      descripcion: paquete.descripcion,
+      precio: paquete.precio_base,
+      duracion: paquete.duracion_dias,
+      cupo: paquete.cupo_maximo,
+      estado: paquete.estado,
+      imagen_url: paquete.imagenes && paquete.imagenes.length > 0 
+        ? this.corregirUrl(paquete.imagenes[0].imagen_url) 
+        : this.imagenPredeterminada,
+      imagenes: paquete.imagenes
+    }));
+    // Si quieres, puedes resetear el paqueteActual aquí
+  } catch (error) {
+    console.error('Error al filtrar los paquetes:', error);
+  }
+}
+
+reiniciarFiltros(): void {
+  (document.querySelector('#filtroNombre') as HTMLInputElement).value = '';
+  (document.querySelector('#filtroEstado') as HTMLSelectElement).value = '';
+  (document.querySelector('#filtroPrecio') as HTMLInputElement).value = '';
+  (document.querySelector('#filtroDuracion') as HTMLInputElement).value = '';
+  (document.querySelector('#filtroCupo') as HTMLInputElement).value = '';
+  this.filtrarPaquetes();
+}
 }

@@ -28,6 +28,26 @@
     <input type="number" id="filtroPrecio" min="0" placeholder="Precio máx.">
     <input type="number" id="filtroDuracion" min="1" placeholder="Duración (días)">
     <input type="number" id="filtroCupo" min="1" placeholder="Cupo mín.">
+
+    <!-- Botón lupa para filtrar -->
+    <button type="button" class="btn-lupa-filtrar" (click)="filtrarPaquetes()" title="Filtrar">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <circle cx="11" cy="11" r="7" stroke-width="2"/>
+        <line x1="16.5" y1="16.5" x2="21" y2="21" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- Botón para reiniciar filtros -->
+    <button type="button" class="btn-reiniciar-filtros" (click)="reiniciarFiltros()" title="Reiniciar filtros">
+      <!-- Puedes usar solo texto, o un icono de reinicio (SVG) -->
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path d="M4 4v5h5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M20 20v-5h-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M5.07 19A9 9 0 1 1 12 21a9 9 0 0 1-6.93-2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <!-- O solo texto: -->
+      <!-- <span>Reiniciar</span> -->
+    </button>
   </div>
 </div>
     <!-- Lista de todos los paquetes -->

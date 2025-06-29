@@ -272,31 +272,48 @@ def logout_view(request):
 @api_view(['GET'])
 def obtener_paquetes(request):
     """
-    Vista para obtener todos los paquetes turísticos y sus imágenes
+    Vista para obtener todos los paquetes turísticos y sus imágenes,
+    con filtros por query string (nombre, estado, precio_max, duracion, cupo).
     """
-    # Obtenemos todos los paquetes turísticos
-    paquetes = PaqueteTuristico.objects.all()
-    
+    # Mapeo de parámetros de query a campos de modelo
+    filtro_map = {
+        'nombre':      lambda v: {'nombre__icontains': v},
+        'estado':      lambda v: {'estado': v},
+        'precio_max':  lambda v: {'precio_base__lte': float(v)},
+        'duracion':    lambda v: {'duracion_dias': int(v)},
+        'cupo':        lambda v: {'cupo_maximo__gte': int(v)},
+    }
+
+    filtros = {}
+    # Recorremos el mapeo y solo añadimos los filtros presentes y válidos
+    for param, builder in filtro_map.items():
+        valor = request.GET.get(param)
+        if valor not in [None, '']:
+            try:
+                filtros.update(builder(valor))
+            except (ValueError, TypeError):
+                pass  # Si el valor no es válido, simplemente no se filtra por ese campo
+
+    # Obtenemos los paquetes filtrados
+    paquetes = PaqueteTuristico.objects.filter(**filtros).order_by('id')
+
     # Preparamos la respuesta
     resultado = []
     for paquete in paquetes:
-        # Obtenemos las imágenes relacionadas
         imagenes_data = []
         for imagen in paquete.imagenes.all():
-            # Ya no necesitamos verificar es_predeterminada
-            # Simplemente comprobamos si la imagen existe
             tiene_imagen_propia = imagen.imagen and hasattr(imagen.imagen, 'url')
             imagenes_data.append({
                 'id': imagen.id,
                 'descripcion': imagen.descripcion,
                 'imagen_url': imagen.imagen_url,
-                'es_predeterminada': not tiene_imagen_propia  # Calculamos dinámicamente
+                'es_predeterminada': not tiene_imagen_propia
             })
         paquete_data = {
             'id': paquete.id,
             'nombre': paquete.nombre,
             'descripcion': paquete.descripcion,
-            'precio_base': float(paquete.precio_base),  # Convertimos Decimal a float para JSON
+            'precio_base': float(paquete.precio_base),
             'duracion_dias': paquete.duracion_dias,
             'cupo_maximo': paquete.cupo_maximo,
             'estado': paquete.estado,
@@ -304,7 +321,6 @@ def obtener_paquetes(request):
         }
         resultado.append(paquete_data)
     return Response(resultado)
-
 
 # api creada, para crear un paquete turistico
 @api_view(['POST'])
