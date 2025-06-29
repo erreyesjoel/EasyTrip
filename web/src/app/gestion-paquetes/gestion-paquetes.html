@@ -17,6 +17,19 @@
       </button>
     </div>
     
+    <div class="filtros-outer-container">
+  <div class="filtros-container">
+    <input type="text" id="filtroNombre" placeholder="Nombre">
+    <select id="filtroEstado">
+      <option value="">Estado</option>
+      <option value="activo">Activo</option>
+      <option value="inactivo">Inactivo</option>
+    </select>
+    <input type="number" id="filtroPrecio" min="0" placeholder="Precio máx.">
+    <input type="number" id="filtroDuracion" min="1" placeholder="Duración (días)">
+    <input type="number" id="filtroCupo" min="1" placeholder="Cupo mín.">
+  </div>
+</div>
     <!-- Lista de todos los paquetes -->
     <div class="lista-paquetes">
       <div class="tarjeta-carta" *ngFor="let paquete of paquetes" (click)="seleccionarPaquete(paquete)">
