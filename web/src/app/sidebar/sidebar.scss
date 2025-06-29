@@ -51,6 +51,8 @@
       position: relative;
 
       .icon-logo {
+        display: flex;
+        align-items: center;
         font-size: vars.$font-size-xxl;
         color: vars.$verde-esmeralda;
         transition: transform 0.3s ease;

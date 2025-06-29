@@ -3,6 +3,8 @@ from django.db import models
 from django.utils import timezone
 import datetime
 from django.core.exceptions import ValidationError
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 class PaqueteTuristico(models.Model):
     ESTADO_CHOICES = [
@@ -124,3 +126,9 @@ class ImagenPaquete(models.Model):
 
     class Meta:
         db_table = 'imagenes_paquetes'     
+
+
+@receiver(post_delete, sender=ImagenPaquete)
+def eliminar_archivo_imagen(sender, instance, **kwargs):
+    if instance.imagen and instance.imagen.name:
+        instance.imagen.delete(save=False)
