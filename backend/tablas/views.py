@@ -273,13 +273,13 @@ def logout_view(request):
 def obtener_paquetes(request):
     """
     Vista para obtener todos los paquetes turísticos y sus imágenes,
-    con filtros por query string (nombre, estado, precio_max, duracion, cupo).
+    con filtros por query string (nombre, estado, precio_base, duracion, cupo).
     """
     # Mapeo de parámetros de query a campos de modelo
     filtro_map = {
         'nombre':      lambda v: {'nombre__icontains': v},
         'estado':      lambda v: {'estado': v},
-        'precio_max':  lambda v: {'precio_base__lte': float(v)},
+        'precio_base':  lambda v: {'precio_base': float(v)},
         'duracion':    lambda v: {'duracion_dias': int(v)},
         'cupo':        lambda v: {'cupo_maximo__gte': int(v)},
     }

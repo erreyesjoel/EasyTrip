@@ -419,7 +419,7 @@ export class GestionPaquetes implements OnInit {
   const params = new URLSearchParams();
   if (nombre) params.append('nombre', nombre);
   if (estado) params.append('estado', estado);
-  if (precio) params.append('precio_max', precio);
+  if (precio) params.append('precio_base', precio);
   if (duracion) params.append('duracion', duracion);
   if (cupo) params.append('cupo', cupo);
 
