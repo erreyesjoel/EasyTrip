@@ -54,6 +54,10 @@
     <div class="lista-paquetes">
       <div class="tarjeta-carta" *ngFor="let paquete of paquetes" (click)="seleccionarPaquete(paquete)">
         <div class="container-imagen">
+          <!-- Badge de estado -->
+      <span class="badge-estado" [ngClass]="{'activo': paquete.estado === 'activo', 'inactivo': paquete.estado === 'inactivo'}">
+        {{ paquete.estado | titlecase }}
+      </span>
           <!-- Carrusel de imágenes: flecha izquierda, imagen actual, flecha derecha -->
           <button 
     type="button" 
