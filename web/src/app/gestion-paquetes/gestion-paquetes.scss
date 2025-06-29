@@ -492,15 +492,15 @@ label {
 
 .filtros-outer-container {
   width: 95%;
-  max-width: 1200px;
-  margin: 0 auto 24px auto;
+  max-width: none;
+  margin: 0 0 24px 40px; // margen izquierdo de 40px
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-  padding: 18px 32px 10px 32px;
+  padding: 18px 24px 10px 24px; // padding izquierdo igual que .main-content
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; // Para que el contenido empiece a la izquierda
 }
 
 .filtros-container {
