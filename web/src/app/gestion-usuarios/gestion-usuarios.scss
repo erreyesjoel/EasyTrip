@@ -1,6 +1,17 @@
+@use '../../_variables' as vars;
+
+
 .admin-layout {
   display: flex;
   min-height: 100vh;
+}
+
+.titulo-pagina {
+  font-size: vars.$font-size-xxxl;
+  font-weight: bold;
+  color: vars.$verde-esmeralda;
+  text-align: left;
+  margin: 0;
 }
 
 app-sidebar {
@@ -15,7 +26,7 @@ app-sidebar {
   padding: 40px 32px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .titulo-pagina {
