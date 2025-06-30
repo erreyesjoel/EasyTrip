@@ -1,0 +1,195 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+app-sidebar {
+  flex: 0 0 240px;
+  min-width: 220px;
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.titulo-pagina {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 32px;
+  color: #222;
+  letter-spacing: 0.5px;
+}
+
+.tabla-usuarios {
+  width: 100%;
+  max-width: 950px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px 0 rgba(60, 72, 88, 0.08);
+  overflow-x: auto;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 1.05rem;
+  color: #333;
+}
+
+.tabla-usuarios thead tr {
+  background: linear-gradient(90deg, #4f8cff 0%, #6ed0fa 100%);
+}
+
+.tabla-usuarios th, .tabla-usuarios td {
+  padding: 16px 18px;
+  text-align: left;
+}
+
+.tabla-usuarios th {
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border-bottom: 2px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.tabla-usuarios tbody tr {
+  transition: background 0.2s;
+}
+
+.tabla-usuarios tbody tr:hover {
+  background: #f0f6ff;
+}
+
+.tabla-usuarios td {
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.badge-estado {
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+  padding: 6px 18px;
+  border-radius: 16px;
+  font-size: 1em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border: 1.5px solid transparent;
+  box-shadow: 0 1px 4px 0 rgba(60, 72, 88, 0.07);
+  user-select: none;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+}
+
+.estado-activo {
+  background: #e8f5e9;
+  color: #218838;
+  border-color: #b7e0c2;
+}
+
+.estado-inactivo {
+  background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+  color: #771005;
+  border-color: #d1d5db;
+}
+
+.btn-editar,
+.btn-baja,
+.btn-activar,
+.btn-eliminar {
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 1em;
+  font-weight: 500;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-editar {
+  background: linear-gradient(90deg, #4f8cff 0%, #6ed0fa 100%);
+  color: #fff;
+}
+.btn-editar:hover {
+  background: #357ae8;
+}
+
+.btn-baja {
+  background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
+  color: #fff;
+}
+.btn-baja:hover {
+  background: #e74c3c;
+}
+
+.btn-activar {
+  background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+  color: #fff;
+}
+.btn-activar:hover {
+  background: #27ae60;
+}
+
+.btn-eliminar {
+  background: linear-gradient(90deg, #e53935 0%, #e35d5b 100%);
+  color: #fff;
+}
+.btn-eliminar:hover {
+  background: #b71c1c;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  padding: 7px;
+  margin-right: 6px;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    stroke: #4f8cff;
+    transition: stroke 0.18s;
+  }
+
+  &:hover {
+    background: #e3f0ff;
+    box-shadow: 0 2px 8px rgba(79,140,255,0.10);
+    svg { stroke: #357ae8; }
+  }
+
+  &:last-child {
+    margin-right: 0;
+    svg { stroke: #e53935; }
+    &:hover svg { stroke: #b71c1c; }
+  }
+}
+
+@media (max-width: 1100px) {
+  .tabla-usuarios {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .tabla-usuarios th, .tabla-usuarios td {
+    padding: 10px 8px;
+    font-size: 0.98rem;
+  }
+  .titulo-pagina {
+    font-size: 1.3rem;
+  }
+  .main-content {
+    padding: 24px 4px;
+  }
+}
