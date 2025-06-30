@@ -6,7 +6,7 @@
   min-height: 100vh;
 }
 
-.titulo-pagina {
+.titulo-pagina-usuarios {
   font-size: vars.$font-size-xxxl;
   font-weight: bold;
   color: vars.$verde-esmeralda;
@@ -29,13 +29,7 @@ app-sidebar {
   align-items: flex-start;
 }
 
-.titulo-pagina {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 32px;
-  color: #222;
-  letter-spacing: 0.5px;
-}
+
 
 .tabla-usuarios {
   width: 100%;
