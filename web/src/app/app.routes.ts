@@ -3,10 +3,14 @@ import { Hero } from './hero/hero';
 import { IniciarSesion } from './iniciar-sesion/iniciar-sesion';
 import { DashboardComponent } from './dashboard/dashboard';import { AdminGuard } from './guards/admin.guard';
 import { GestionPaquetes } from './gestion-paquetes/gestion-paquetes';
+import { GestionUsuarios } from './gestion-usuarios/gestion-usuarios'; // importa el componente
+
 export const routes: Routes = [
   { path: '', component: Hero },
   { path: 'iniciarSesion', component: IniciarSesion },
   // La ruta 'dashboard' solo es accesible para usuarios con rol administrador gracias a AdminGuard
   { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] },
   { path: 'gestion-paquetes', component: GestionPaquetes, canActivate: [AdminGuard] },
+  { path: 'usuarios', component: GestionUsuarios, canActivate: [AdminGuard] }, // <-- NUEVA RUTA
+
 ];
