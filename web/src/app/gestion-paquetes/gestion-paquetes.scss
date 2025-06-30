@@ -1,5 +1,5 @@
 @use '../../_variables' as vars;
-
+g
 body, :host {
   background-color: vars.$gris-claro;
   min-height: 100vh;
@@ -18,7 +18,7 @@ body, :host {
   font-weight: bold;
   color: vars.$verde-esmeralda;
   text-align: left;
-  margin: 0;
+  margin: 10px;
 }
 
 .tarjeta-carta {
