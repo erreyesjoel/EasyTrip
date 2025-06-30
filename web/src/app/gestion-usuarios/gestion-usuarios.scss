@@ -13,7 +13,6 @@
   text-align: left;
   margin: 20px;
   margin-bottom: 25px;
-  margin-top: -30px;
 }
 
 app-sidebar {
@@ -26,7 +25,7 @@ app-sidebar {
 .main-content {
   flex: 1;
   margin: 35px;
-  padding: 40px 32px;
+  padding: 5px 32px 40px 32px; // Reduce el padding-top si quieres que el contenido suba
   display: flex;
   flex-direction: column;
   align-items: flex-start;
