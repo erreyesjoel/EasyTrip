@@ -539,3 +539,27 @@ def gestion_usuarios_tabla(request):
             'date_joined': user.date_joined.strftime('%Y-%m-%d %H:%M:%S')
         })
     return Response(data)
+
+# api para crear un usuario
+# Se usa el modelo User de Django para crear un nuevo usuario
+@api_view(['POST'])
+def crear_usuario(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        first_name = data.get('first_name', '')
+        last_name = data.get('last_name', '')
+        rol = data.get('rol', 'usuario')
+        user = User(
+            username=username,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            rol=rol
+        )
+        user.set_password(password)
+        user.save()
+        return Response({'200': True, 'mensaje': 'Usuario creado correctamente.'})
+    return Response({'error': 'Método no permitido'}, status=405)
