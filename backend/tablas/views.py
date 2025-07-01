@@ -588,10 +588,7 @@ def editar_usuario(request, user_id):
         user.first_name = first_name
         user.last_name = last_name
         user.rol = rol
-        if password:
-            user.set_password(password)
         # guardamos el usuario
-        # si no se cambia el password, no hace falta llamar a set_password
         user.save()
         return Response({'200': True, 'mensaje': 'Usuario editado correctamente.'})
     return Response({'error': 'Método no permitido'}, status=405)
