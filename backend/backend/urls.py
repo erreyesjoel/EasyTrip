@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from tablas.views import editar_paquete, ejemplo_get, eliminar_paquete, obtener_paquetes, registro_usuario, crear_paquete, enviar_codigo_verificacion, verificar_codigo, enviar_codigo_recuperacion, cambiar_password_con_codigo
+from tablas.views import editar_paquete, ejemplo_get, eliminar_paquete, obtener_paquetes, registro_usuario, crear_paquete, enviar_codigo_verificacion, verificar_codigo, enviar_codigo_recuperacion, cambiar_password_con_codigo, gestion_usuarios_tabla
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from tablas.views import CustomTokenObtainPairView, usuario_actual, logout_view
 from django.conf import settings
@@ -38,6 +38,7 @@ urlpatterns = [
     path('api/crear-paquete/', crear_paquete, name='crear_paquete'),
     path('api/editar-paquete/<int:paquete_id>/', editar_paquete, name='editar_paquete'),  # Para editar un paquete
     path('api/eliminar-paquete/<int:paquete_id>/', eliminar_paquete, name='eliminar_paquete'),  # Para eliminar un paquete
+    path('api/gestion-usuarios/', gestion_usuarios_tabla, name='gestion_usuarios_tabla'),
 ]
 
 # Solo en desarrollo: sirve archivos media desde MEDIA_URL

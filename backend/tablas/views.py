@@ -506,3 +506,25 @@ def eliminar_paquete(request, paquete_id):
         except PaqueteTuristico.DoesNotExist:
             return Response({'error': 'Paquete no encontrado.'}, status=404)
     return Response({'error': 'Método no permitido'}, status=405)
+
+# en esta api get, cogemos todos los usuarios del sistema, para la gestion de usuarios en formato tabla
+# y los devolvemos en un formato JSON, para que se puedan mostrar en una tabla
+# Se usa el modelo User de Django para obtener todos los usuarios
+# Se usa el decorador @api_view para indicar que es una vista de API
+@api_view(['GET'])
+def gestion_usuarios_tabla(request):
+    usuarios = User.objects.all()
+    data = []
+    for user in usuarios:
+        data.append({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'rol': user.rol,
+            'last_login': user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else None,
+            'is_active': user.is_active,
+            'date_joined': user.date_joined.strftime('%Y-%m-%d %H:%M:%S')
+        })
+    return Response(data)
