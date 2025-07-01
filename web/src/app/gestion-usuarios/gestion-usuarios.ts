@@ -40,8 +40,16 @@ export class GestionUsuarios {
   /* Carga los usuarios desde la API 
   funcion independiente, que llamaremos desde ngOnInit */
   async cargarUsuarios(): Promise<void> {
+    // Realiza una petición a la API para obtener los usuarios
+    // Utiliza la URL base definida en el entorno para construir la URL completa (variable de entorno, que indica donde se ejecuta el backend)
     const res = await fetch(environment.apiBaseUrl + 'gestion-usuarios');
-    if (res.status === 200) {
+    if (res.status === 200) { // Si la respuesta es exitosa (código 200)
+      // Convierte la respuesta JSON a un array de objetos Usuario
+      // Utiliza la interfaz Usuario para tipar los datos obtenidos
+      // Esto asegura que los datos cumplen con la estructura definida en la interfaz Usuario
+      // Esto es una promesa, por eso usamos await
+      // res.json() devuelve una promesa que se resuelve con el cuerpo de la respuesta
+      // En este caso, esperamos que sea un array de usuarios
       const usuarios: Usuario[] = await res.json();
       this.usuarios = usuarios; // 
       // Ahora this.usuarios contiene los usuarios obtenidos de la API
