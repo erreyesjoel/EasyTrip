@@ -563,3 +563,35 @@ def crear_usuario(request):
         user.save()
         return Response({'200': True, 'mensaje': 'Usuario creado correctamente.'})
     return Response({'error': 'Método no permitido'}, status=405)
+
+# api para editar un usuario
+@api_view(['PUT', 'PATCH'])
+def editar_usuario(request, user_id):
+    if request.method in ['PUT', 'PATCH']:
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'Usuario no encontrado.'}, status=404)
+        
+        # cogemos los datos del cuerpo de la solicitud
+        data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
+        email = data.get('email')
+        first_name = data.get('first_name', '')
+        last_name = data.get('last_name', '')
+        rol = data.get('rol', user.rol)
+
+        # datos / campos validos, para editar el usuario
+        user.username = username
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
+        user.rol = rol
+        if password:
+            user.set_password(password)
+        # guardamos el usuario
+        # si no se cambia el password, no hace falta llamar a set_password
+        user.save()
+        return Response({'200': True, 'mensaje': 'Usuario editado correctamente.'})
+    return Response({'error': 'Método no permitido'}, status=405)
