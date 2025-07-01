@@ -545,23 +545,33 @@ def gestion_usuarios_tabla(request):
 @api_view(['POST'])
 def crear_usuario(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
+        # Recoge los datos del request
+        data = request.data
         username = data.get('username')
         email = data.get('email')
-        password = data.get('password')
+        rol = data.get('rol', 'usuario')
         first_name = data.get('first_name', '')
         last_name = data.get('last_name', '')
-        rol = data.get('rol', 'usuario')
-        user = User(
+        password = data.get('password', '12345678')  # Puedes cambiar esto por un campo real si lo añades al modal
+
+        # Validaciones básicas
+        if not username or not email:
+            return Response({'error': 'Username y email son requeridos.'}, status=400)
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'El username ya existe.'}, status=400)
+        if User.objects.filter(email=email).exists():
+            return Response({'error': 'El email ya existe.'}, status=400)
+
+        # Crea el usuario
+        user = User.objects.create_user(
             username=username,
             email=email,
+            password=password,
             first_name=first_name,
             last_name=last_name,
             rol=rol
         )
-        user.set_password(password)
-        user.save()
-        return Response({'200': True, 'mensaje': 'Usuario creado correctamente.'})
+        return Response({'ok': True, 'mensaje': 'Usuario creado correctamente.'}, status=201)
     return Response({'error': 'Método no permitido'}, status=405)
 
 # api para editar un usuario
@@ -608,3 +618,12 @@ def eliminar_usuario(request, user_id):
         except User.DoesNotExist:
             return Response({'error': 'Usuario no encontrado.'}, status=404)
     return Response({'error': 'Método no permitido'}, status=405)
+
+@api_view(['GET'])
+def obtener_roles_usuario(request):
+    # Devuelve los roles definidos en el modelo User
+    # Se asume que el campo se llama 'rol' y tiene choices
+    roles = []
+    for value, label in User._meta.get_field('rol').choices:
+        roles.append({'value': value, 'label': label})
+    return Response(roles)

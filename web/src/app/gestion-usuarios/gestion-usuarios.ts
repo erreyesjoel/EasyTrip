@@ -34,6 +34,7 @@ export class GestionUsuarios {
   // por eso ngOnInit porque es el ciclo de vida del componente que se ejecuta al inicializar
 
   usuarios: Usuario[] = [];
+  roles: { value: string, label: string }[] = [];
 
   modalUsuarioAbierto = false; // Controla la visibilidad del modal de crear/editar
   modalEliminarUsuarioAbierto = false; // Controla la visibilidad del modal de eliminar
@@ -52,8 +53,9 @@ export class GestionUsuarios {
     });
   }
 
-  ngOnInit() {
-      this.cargarUsuarios();
+  async ngOnInit() {
+    await this.cargarRoles();
+    await this.cargarUsuarios();
   }
 
   /* Carga los usuarios desde la API 
@@ -75,6 +77,16 @@ export class GestionUsuarios {
       console.log("Usuarios de la bbdd:", usuarios);
     } else {
       console.log("Error en la peticion");
+    }
+  }
+
+  async cargarRoles() {
+    // Llama a la API para obtener los roles
+    const res = await fetch(environment.apiBaseUrl + 'roles-usuario/');
+    if (res.status === 200) {
+      this.roles = await res.json();
+    } else {
+      this.roles = [];
     }
   }
 
@@ -101,9 +113,44 @@ export class GestionUsuarios {
   }
 
   // Guardar usuario (solo visual/funcional)
-  guardarUsuario() {
-    // Aquí iría la lógica para crear o editar usuario
-    this.cerrarModalUsuario();
+  async guardarUsuario() {
+    if (this.modoCreacionUsuario) {
+      // Si es creación
+      // Recoge los datos del formulario
+      const datos = this.formularioUsuario.value;
+      // Puedes añadir un campo de password si lo deseas
+      // datos.password = '12345678';
+
+      // Llama a la API para crear el usuario
+      const res = await fetch(environment.apiBaseUrl + 'crear-usuario/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+      });
+      if (res.status === 201) {
+        // Recarga la tabla de usuarios
+        await this.cargarUsuarios();
+        this.cerrarModalUsuario();
+      } else {
+        const error = await res.json();
+        alert(error.error || 'Error al crear usuario');
+      }
+    } else if (this.usuarioActual) {
+      // Editar usuario
+      const datos = this.formularioUsuario.value;
+      const res = await fetch(environment.apiBaseUrl + 'editar-usuario/' + this.usuarioActual.id + '/', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+      });
+      if (res.status === 200) {
+        await this.cargarUsuarios();
+        this.cerrarModalUsuario();
+      } else {
+        const error = await res.json();
+        alert(error.error || 'Error al editar usuario');
+      }
+    }
   }
 
   // Abre el modal de eliminar usuario
@@ -119,9 +166,19 @@ export class GestionUsuarios {
   }
 
   // Eliminar usuario (solo visual/funcional)
-  eliminarUsuario() {
-    // Aquí iría la lógica para eliminar usuario
-    this.cerrarModalEliminarUsuario();
+  async eliminarUsuario() {
+    if (this.usuarioActual) {
+      const res = await fetch(environment.apiBaseUrl + 'eliminar-usuario/' + this.usuarioActual.id + '/', {
+        method: 'DELETE'
+      });
+      if (res.status === 200) {
+        await this.cargarUsuarios();
+        this.cerrarModalEliminarUsuario();
+      } else {
+        const error = await res.json();
+        alert(error.error || 'Error al eliminar usuario');
+      }
+    }
   }
 
   toggleEstado(usuario: Usuario) {
