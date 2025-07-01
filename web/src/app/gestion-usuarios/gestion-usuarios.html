@@ -38,13 +38,13 @@
             </td>
             <td>
               <!-- Tus botones de acción aquí, igual que antes -->
-              <button class="icon-btn" title="Editar">
+              <button class="icon-btn" title="Editar" (click)="abrirModalEditarUsuario(usuario)">
                 <!-- Icono lápiz -->
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
                 </svg>
               </button>
-              <button class="icon-btn" [title]="usuario.is_active ? 'Dar de baja' : 'Activar'">
+              <button class="icon-btn" [title]="usuario.is_active ? 'Dar de baja' : 'Activar'" (click)="toggleEstado(usuario)">
                 <!-- Icono según estado -->
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <circle cx="12" cy="7" r="4" stroke-width="1.7"/>
@@ -52,7 +52,7 @@
                   <path *ngIf="usuario.is_active" stroke-width="1.7" stroke-linecap="round" d="M9 12l2 2 4-4"/>
                 </svg>
               </button>
-              <button class="icon-btn" title="Eliminar">
+              <button class="icon-btn" title="Eliminar" (click)="abrirModalEliminarUsuario(usuario)">
                 <!-- Icono papelera -->
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <rect x="5" y="7" width="14" height="12" rx="2" stroke-width="1.7"/>
@@ -63,6 +63,70 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Edición/Creación de Usuario -->
+<div class="modal-backdrop" *ngIf="modalUsuarioAbierto" (click)="cerrarModalUsuario()"></div>
+<div class="modal-editar" *ngIf="modalUsuarioAbierto">
+  <div class="modal-header">
+    <h3>{{ modoCreacionUsuario ? 'Crear Usuario' : 'Editar Usuario' }}</h3>
+    <button class="cerrar-modal" (click)="cerrarModalUsuario()">×</button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="formularioUsuario" (ngSubmit)="guardarUsuario()">
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input id="username" type="text" formControlName="username" class="form-input">
+      </div>
+      <div class="form-group">
+        <label for="first_name">Nombre:</label>
+        <input id="first_name" type="text" formControlName="first_name" class="form-input">
+      </div>
+      <div class="form-group">
+        <label for="last_name">Apellido:</label>
+        <input id="last_name" type="text" formControlName="last_name" class="form-input">
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input id="email" type="email" formControlName="email" class="form-input">
+      </div>
+      <div class="form-group">
+        <label for="rol">Rol:</label>
+        <select id="rol" formControlName="rol" class="form-input">
+          <option value="admin">Admin</option>
+          <option value="usuario">Usuario</option>
+        </select>
+      </div>
+      <!-- No hay campo de contraseña aquí, solo en crear usuario si lo deseas -->
+      <div class="modal-footer">
+        <button type="button" class="btn-cancelar" (click)="cerrarModalUsuario()">Cancelar</button>
+        <button type="submit" class="btn-guardar" [disabled]="formularioUsuario.invalid">
+          {{ modoCreacionUsuario ? 'Crear' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de Confirmación de Eliminación de Usuario -->
+<div class="modal-backdrop" *ngIf="modalEliminarUsuarioAbierto" (click)="cerrarModalEliminarUsuario()"></div>
+<div class="modal-confirmar" *ngIf="modalEliminarUsuarioAbierto">
+  <div class="modal-header">
+    <h3>Confirmar Eliminación</h3>
+    <button class="cerrar-modal" (click)="cerrarModalEliminarUsuario()">×</button>
+  </div>
+  <div class="modal-body">
+    <p class="mensaje-eliminar">
+      ¿Estás seguro de que deseas eliminar el usuario <strong>{{ usuarioActual?.username }}</strong>?
+    </p>
+    <p class="advertencia-eliminar">Esta acción no se puede deshacer.</p>
+  </div>
+  <div class="modal-footer footer-eliminar">
+    <div class="botones-confirmacion">
+      <button type="button" class="btn-cancelar" (click)="cerrarModalEliminarUsuario()">Cancelar</button>
+      <button type="button" class="btn-eliminar" (click)="eliminarUsuario()">Eliminar</button>
     </div>
   </div>
 </div>

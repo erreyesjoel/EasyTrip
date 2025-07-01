@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar/sidebar';
 import { environment } from '../../environments/environment';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 // Interfaz para el usuario
@@ -21,7 +23,7 @@ interface Usuario {
 
 @Component({
   selector: 'app-gestion-usuarios',
-  imports: [CommonModule, SidebarComponent],
+  imports: [CommonModule, SidebarComponent, ReactiveFormsModule],
   templateUrl: './gestion-usuarios.html',
   styleUrls: ['./gestion-usuarios.scss']
 })
@@ -32,6 +34,23 @@ export class GestionUsuarios {
   // por eso ngOnInit porque es el ciclo de vida del componente que se ejecuta al inicializar
 
   usuarios: Usuario[] = [];
+
+  modalUsuarioAbierto = false; // Controla la visibilidad del modal de crear/editar
+  modalEliminarUsuarioAbierto = false; // Controla la visibilidad del modal de eliminar
+  modoCreacionUsuario = false; // true = crear, false = editar
+  usuarioActual: Usuario | null = null; // Usuario seleccionado para editar/eliminar
+
+  formularioUsuario: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.formularioUsuario = this.fb.group({
+      username: [''],
+      first_name: [''],
+      last_name: [''],
+      email: [''],
+      rol: ['usuario']
+    });
+  }
 
   ngOnInit() {
       this.cargarUsuarios();
@@ -57,5 +76,55 @@ export class GestionUsuarios {
     } else {
       console.log("Error en la peticion");
     }
+  }
+
+  // Abre el modal para crear usuario
+  abrirModalCrearUsuario() {
+    this.modoCreacionUsuario = true;
+    this.formularioUsuario.reset({ rol: 'usuario' });
+    this.usuarioActual = null;
+    this.modalUsuarioAbierto = true;
+  }
+
+  // Abre el modal para editar usuario
+  abrirModalEditarUsuario(usuario: Usuario) {
+    this.modoCreacionUsuario = false;
+    this.usuarioActual = usuario;
+    this.formularioUsuario.patchValue(usuario);
+    this.modalUsuarioAbierto = true;
+  }
+
+  // Cierra el modal de crear/editar
+  cerrarModalUsuario() {
+    this.modalUsuarioAbierto = false;
+    this.usuarioActual = null;
+  }
+
+  // Guardar usuario (solo visual/funcional)
+  guardarUsuario() {
+    // Aquí iría la lógica para crear o editar usuario
+    this.cerrarModalUsuario();
+  }
+
+  // Abre el modal de eliminar usuario
+  abrirModalEliminarUsuario(usuario: Usuario) {
+    this.usuarioActual = usuario;
+    this.modalEliminarUsuarioAbierto = true;
+  }
+
+  // Cierra el modal de eliminar usuario
+  cerrarModalEliminarUsuario() {
+    this.modalEliminarUsuarioAbierto = false;
+    this.usuarioActual = null;
+  }
+
+  // Eliminar usuario (solo visual/funcional)
+  eliminarUsuario() {
+    // Aquí iría la lógica para eliminar usuario
+    this.cerrarModalEliminarUsuario();
+  }
+
+  toggleEstado(usuario: Usuario) {
+    // Aquí irá la lógica para activar/desactivar usuario
   }
 }

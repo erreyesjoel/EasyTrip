@@ -211,3 +211,174 @@ app-sidebar {
     padding: 24px 4px;
   }
 }
+
+// Estilos para el modal (idénticos a gestión de paquetes)
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-editar {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  padding: 0;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: vars.$verde-esmeralda;
+  color: white;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .cerrar-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.7rem;
+    cursor: pointer;
+    padding: 0 8px;
+    line-height: 1;
+  }
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: vars.$gris-oscuro;
+    letter-spacing: 0.5px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background-color: #fff;
+    box-sizing: border-box;
+    &:focus {
+      outline: none;
+      border-color: vars.$verde-esmeralda;
+      box-shadow: 0 0 0 2px rgba(39,174,96,0.08);
+    }
+  }
+  select.form-input {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23555' viewBox='0 0 12 12'%3E%3Cpath d='M3.5 5l2.5 2.5L8.5 5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    &::-ms-expand { display: none; }
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  &.footer-eliminar {
+    justify-content: center;
+  }
+  .botones-confirmacion {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+button {
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .btn-cancelar {
+    background: #e0e0e0;
+    color: #333;
+    &:hover {
+      background: #d1d5db;
+      color: #111;
+      box-shadow: 0 2px 8px rgba(60,72,88,0.08);
+    }
+  }
+  .btn-guardar {
+    background: vars.$verde-esmeralda;
+    color: #fff;
+    &:hover {
+      background: darken(vars.$verde-esmeralda, 10%);
+      box-shadow: 0 2px 8px rgba(39,174,96,0.10);
+    }
+    &:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+  }
+  .btn-eliminar {
+    background: vars.$rojo-primario;
+    color: #fff;
+    &:hover {
+      background: darken(vars.$rojo-primario, 10%);
+      box-shadow: 0 2px 8px rgba(231,76,60,0.10);
+    }
+  }
+}
+
+.modal-confirmar {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  padding: 0;
+}
+
+.mensaje-eliminar {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: vars.$gris-oscuro;
+}
+
+.advertencia-eliminar {
+  font-size: 14px;
+  color: vars.$rojo-primario;
+  margin-bottom: 24px;
+}
