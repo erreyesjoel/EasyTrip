@@ -57,6 +57,15 @@ app-sidebar {
   text-align: left;
 }
 
+// Para que los textos largos se corten con puntos suspensivos
+// puedes usar la clase .textos-largos en los <td> correspondientes
+.textos-largos {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .tabla-usuarios th {
   color: #fff;
   font-weight: 700;

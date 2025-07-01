@@ -20,10 +20,10 @@
         <tbody>
           <!-- Mostrar usuarios dinámicamente -->
           <tr *ngFor="let usuario of usuarios">
-            <td>{{ usuario.username }}</td>
-            <td>{{ usuario.first_name ? usuario.first_name : 'Anonimo' }}</td> <!-- Si no encuentra first_name se muestra 'Anonimo' -->
-            <td>{{ usuario.last_name ? usuario.last_name : 'Anonimo' }}</td> <!-- Si no encuentra last_name se muestra 'Anonimo' -->
-            <td>{{ usuario.email }}</td>
+            <td class="textos-largos">{{ usuario.username }}</td>
+            <td class="textos-largos">{{ usuario.first_name ? usuario.first_name : 'Anonimo' }}</td> <!-- Si no encuentra first_name se muestra 'Anonimo' -->
+            <td class="textos-largos">{{ usuario.last_name ? usuario.last_name : 'Anonimo' }}</td> <!-- Si no encuentra last_name se muestra 'Anonimo' -->
+            <td class="textos-largos">{{ usuario.email }}</td>
             <td>{{ usuario.rol | titlecase }}</td>
             <td>
               <span class="badge-estado" [ngClass]="usuario.is_active ? 'estado-activo' : 'estado-inactivo'">
