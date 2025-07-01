@@ -6,20 +6,27 @@
   min-height: 100vh;
 }
 
+.cabecera-usuarios {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; // el botón y el título quedan arriba alineados
+  width: 100%;
+  padding: 0 24px;
+  margin-bottom: 24px;
+}
+
 .titulo-pagina-usuarios {
   font-size: vars.$font-size-xxxl;
   font-weight: bold;
   color: vars.$verde-esmeralda;
+  margin: 20px 0 0 0;
   text-align: left;
-  margin: 20px;
-  margin-bottom: 25px;
 }
 
 app-sidebar {
   flex: 0 0 240px;
   min-width: 220px;
   background: #fff;
-  border-right: 1px solid #e0e0e0;
 }
 
 .main-content {
@@ -381,4 +388,50 @@ button {
   font-size: 14px;
   color: vars.$rojo-primario;
   margin-bottom: 24px;
+}
+
+.header-gestion-usuarios {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 0 24px;
+}
+
+.crear-usuario-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 97%;
+  margin-top: 0;
+  margin-bottom: 24px;
+  padding: 0 24px;
+  position: relative;
+  top: -38px; // ajusta este valor para alinear el botón con la parte superior del título
+  z-index: 1;
+}
+
+.crear-usuario-btn {
+  display: flex;
+  gap: 8px;
+  background-color: vars.$verde-esmeralda;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 18px;
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+  &:hover {
+    background-color: darken(vars.$verde-esmeralda, 10%);
+  }
+
+  .icono-crear-usuario {
+    display: flex;
+    align-items: center;
+  }
 }
