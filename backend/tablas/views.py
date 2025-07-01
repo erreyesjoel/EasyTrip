@@ -595,3 +595,19 @@ def editar_usuario(request, user_id):
         user.save()
         return Response({'200': True, 'mensaje': 'Usuario editado correctamente.'})
     return Response({'error': 'Método no permitido'}, status=405)
+
+# api para eliminar un usuario
+@api_view(['DELETE'])
+def eliminar_usuario(request, user_id):
+    if request.method == 'DELETE':
+        try:
+            # cogemos el usuario por su id
+            user = User.objects.get(id=user_id)
+            # lo eliminamos
+            # si no existe, se lanza una excepción User.DoesNotExist
+            # si se elimina correctamente, se devuelve un mensaje de éxito
+            user.delete()
+            return Response({'200': True, 'mensaje': 'Usuario eliminado correctamente.'})
+        except User.DoesNotExist:
+            return Response({'error': 'Usuario no encontrado.'}, status=404)
+    return Response({'error': 'Método no permitido'}, status=405)
