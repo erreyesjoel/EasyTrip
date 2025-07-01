@@ -21,6 +21,6 @@ class CustomUser(AbstractUser):
     def save(self, *args, **kwargs):
         if not self.last_login:
             self.last_login = timezone.now()
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
     class Meta:
         db_table = 'usuarios'

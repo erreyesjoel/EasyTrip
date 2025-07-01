@@ -22,6 +22,7 @@ from .models import PaqueteTuristico, ImagenPaquete
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import parser_classes
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -162,6 +163,16 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         if response.status_code == 200:
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            username_or_email = request.data.get('username') or request.data.get('email')
+            user = User.objects.filter(email=username_or_email).first()
+            if not user:
+                user = User.objects.filter(username=username_or_email).first()
+            print("Intentando login para:", username_or_email, "Usuario encontrado:", user)
+            if user:
+                user.last_login = timezone.now()
+                user.save(update_fields=['last_login'])
             access = response.data.get('access')
             refresh = response.data.get('refresh')
             response.set_cookie(
