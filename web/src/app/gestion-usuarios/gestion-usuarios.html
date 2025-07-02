@@ -88,29 +88,17 @@
   </div>
   <div class="modal-body">
     <form [formGroup]="formularioUsuario" (ngSubmit)="guardarUsuario()">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input id="username" type="text" formControlName="username" class="form-input">
-      </div>
-      <div class="form-group">
-        <label for="first_name">Nombre:</label>
-        <input id="first_name" type="text" formControlName="first_name" class="form-input">
-      </div>
-      <div class="form-group">
-        <label for="last_name">Apellido:</label>
-        <input id="last_name" type="text" formControlName="last_name" class="form-input">
-      </div>
+      <!-- Solo campos editables -->
       <div class="form-group">
         <label for="email">Email:</label>
         <input id="email" type="email" formControlName="email" class="form-input">
       </div>
       <div class="form-group">
         <label for="rol">Rol:</label>
-       <select id="rol" formControlName="rol" class="form-input">
-      <option *ngFor="let rol of roles" [value]="rol.value">{{ rol.label }}</option>
-    </select>
+        <select id="rol" formControlName="rol" class="form-input">
+          <option *ngFor="let rol of roles" [value]="rol.value">{{ rol.label }}</option>
+        </select>
       </div>
-      <!-- No hay campo de contraseña aquí, solo en crear usuario si lo deseas -->
       <div class="modal-footer">
         <button type="button" class="btn-cancelar" (click)="cerrarModalUsuario()">Cancelar</button>
         <button type="submit" class="btn-guardar" [disabled]="formularioUsuario.invalid">

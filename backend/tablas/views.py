@@ -575,33 +575,36 @@ def crear_usuario(request):
     return Response({'error': 'Método no permitido'}, status=405)
 
 # api para editar un usuario
+# api para editar un usuario
 @api_view(['PUT', 'PATCH'])
 def editar_usuario(request, user_id):
     if request.method in ['PUT', 'PATCH']:
+        # Busca el usuario por su ID
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return Response({'error': 'Usuario no encontrado.'}, status=404)
-        
-        # cogemos los datos del cuerpo de la solicitud
-        data = json.loads(request.body)
-        username = data.get('username')
-        password = data.get('password')
-        email = data.get('email')
-        first_name = data.get('first_name', '')
-        last_name = data.get('last_name', '')
-        rol = data.get('rol', user.rol)
 
-        # datos / campos validos, para editar el usuario
-        user.username = username
-        user.email = email
-        user.first_name = first_name
-        user.last_name = last_name
-        user.rol = rol
-        # guardamos el usuario
+        # Solo permitimos editar email y rol
+        data = request.data
+        email = data.get('email')
+        rol = data.get('rol')
+
+        # Validación de email (opcional: puedes agregar más validaciones)
+        if email:
+            # Verifica que el email no esté en uso por otro usuario
+            if User.objects.exclude(id=user_id).filter(email=email).exists():
+                return Response({'error': 'El email ya está en uso por otro usuario.'}, status=400)
+            user.email = email
+
+        if rol:
+            user.rol = rol
+
         user.save()
-        return Response({'200': True, 'mensaje': 'Usuario editado correctamente.'})
+        return Response({'mensaje': 'Usuario actualizado correctamente.'})
+
     return Response({'error': 'Método no permitido'}, status=405)
+
 
 # api para eliminar un usuario
 @api_view(['DELETE'])
