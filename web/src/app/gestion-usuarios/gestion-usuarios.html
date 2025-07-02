@@ -212,7 +212,7 @@
 
 <!-- Modal de Confirmación de Estado de Usuario -->
 <div class="modal-backdrop" *ngIf="modalEstadoUsuarioAbierto" (click)="cerrarModalEstadoUsuario()"></div>
-<div class="modal-confirmar" *ngIf="modalEstadoUsuarioAbierto">
+<div class="modal-confirmar modal-confirmar-estado" *ngIf="modalEstadoUsuarioAbierto">
   <div class="modal-header">
     <h3>{{ usuarioEstadoActual?.is_active ? 'Dar de baja' : 'Activar' }} usuario</h3>
     <button class="cerrar-modal" (click)="cerrarModalEstadoUsuario()">×</button>
