@@ -96,15 +96,15 @@ app-sidebar {
       display: block;
       width: 14px;
       height: 8px;
-      stroke: #fff;
+      stroke: #fff; // <-- siempre blanco
       fill: none;
-      opacity: 0.6;
+      opacity: 1;   // <-- siempre opacas
       transition: stroke 0.2s, opacity 0.2s;
     }
 
     &.activo-asc svg.arriba,
     &.activo-desc svg.abajo {
-      stroke: #ffd700;
+      stroke: #ffffff; // <-- también blanco cuando está activo
       opacity: 1;
     }
   }
