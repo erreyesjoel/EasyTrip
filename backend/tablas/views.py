@@ -475,7 +475,7 @@ def editar_paquete(request, paquete_id):
                     imagen_obj.save()
                 except ValidationError as e:
                     return Response({'error': e.message_dict.get('imagen', ['Error de validación'])[0]}, status=400)
-        # Preparamos la respuesta con las imágenes actuales del paquete
+        # Preparamos la respuesta with las imágenes actuales del paquete
         imagenes_data = []
         for imagen in paquete.imagenes.all():
             tiene_imagen_propia = imagen.imagen and hasattr(imagen.imagen, 'url')
@@ -524,19 +524,40 @@ def eliminar_paquete(request, paquete_id):
 # Se usa el decorador @api_view para indicar que es una vista de API
 @api_view(['GET'])
 def gestion_usuarios_tabla(request):
+    """
+    Devuelve la lista de usuarios, permitiendo filtrar por email, rol y estado (is_active).
+    Parámetros de query string:
+      - email: filtra por email (contiene, insensible a mayúsculas)
+      - rol: filtra por rol exacto
+      - estado: 'activo' o 'inactivo' (mapea a is_active True/False)
+    """
     usuarios = User.objects.all()
+
+    email = request.GET.get('email')
+    rol = request.GET.get('rol')
+    estado = request.GET.get('estado')
+
+    if email:
+        usuarios = usuarios.filter(email__icontains=email)
+    if rol:
+        usuarios = usuarios.filter(rol=rol)
+    if estado == 'activo':
+        usuarios = usuarios.filter(is_active=True)
+    elif estado == 'inactivo':
+        usuarios = usuarios.filter(is_active=False)
+
     data = []
     for user in usuarios:
         data.append({
             'id': user.id,
             'username': user.username,
             'email': user.email,
+            'rol': user.rol,
+            'is_active': user.is_active,
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'rol': user.rol,
-            'last_login': user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else None,
-            'is_active': user.is_active,
-            'date_joined': user.date_joined.strftime('%Y-%m-%d %H:%M:%S')
+            'last_login': user.last_login,
+            'date_joined': user.date_joined,
         })
     return Response(data)
 
