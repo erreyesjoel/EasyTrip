@@ -4,6 +4,7 @@ import { SidebarComponent } from '../sidebar/sidebar';
 import { environment } from '../../environments/environment';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms'; 
 
 
 // Interfaz para el usuario
@@ -23,7 +24,7 @@ interface Usuario {
 
 @Component({
   selector: 'app-gestion-usuarios',
-  imports: [CommonModule, SidebarComponent, ReactiveFormsModule],
+  imports: [CommonModule, SidebarComponent, ReactiveFormsModule, FormsModule],
   templateUrl: './gestion-usuarios.html',
   styleUrls: ['./gestion-usuarios.scss']
 })
@@ -42,6 +43,15 @@ export class GestionUsuarios {
   usuarioActual: Usuario | null = null; // Usuario seleccionado para editar/eliminar
 
   formularioUsuario: FormGroup;
+
+  // Filtros visuales
+  filtroEmail: string = '';
+  filtroRol: string = '';
+  filtroEstado: string = '';
+
+  // Ordenación de la tabla
+  ordenCampo: string = 'username'; // Campo actual de ordenación
+  ordenAsc: boolean = true;        // true = ascendente, false = descendente
 
   constructor(private fb: FormBuilder) {
     this.formularioUsuario = this.fb.group({
@@ -184,5 +194,40 @@ export class GestionUsuarios {
 
   toggleEstado(usuario: Usuario) {
     // Aquí irá la lógica para activar/desactivar usuario
+  }
+
+  // Método para aplicar los filtros y la ordenación
+  async aplicarFiltros() {
+    // Construye la query string con filtros y orden
+    const params = new URLSearchParams();
+    if (this.filtroEmail) params.append('email', this.filtroEmail);
+    if (this.filtroRol) params.append('rol', this.filtroRol);
+    if (this.filtroEstado) params.append('estado', this.filtroEstado);
+    if (this.ordenCampo) params.append('ordering', (this.ordenAsc ? '' : '-') + this.ordenCampo);
+
+    const url = environment.apiBaseUrl + 'gestion-usuarios' + (params.toString() ? '?' + params.toString() : '');
+    const res = await fetch(url);
+    if (res.status === 200) {
+      this.usuarios = await res.json();
+    }
+  }
+
+  // Método para reiniciar los filtros
+  reiniciarFiltros() {
+    this.filtroEmail = '';
+    this.filtroRol = '';
+    this.filtroEstado = '';
+    this.aplicarFiltros();
+  }
+
+  // Cambia el campo y sentido de ordenación
+  ordenarPor(campo: string) {
+    if (this.ordenCampo === campo) {
+      this.ordenAsc = !this.ordenAsc; // Alterna asc/desc
+    } else {
+      this.ordenCampo = campo;
+      this.ordenAsc = true; // Por defecto ascendente al cambiar de campo
+    }
+    this.aplicarFiltros();
   }
 }

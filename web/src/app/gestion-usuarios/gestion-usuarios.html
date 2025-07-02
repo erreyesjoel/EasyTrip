@@ -14,14 +14,76 @@
         Crear usuario
       </button>
     </div>
+
+    <!-- Filtros para la tabla de usuarios -->
+    <div class="filtros-usuarios-outer">
+      <div class="filtros-usuarios-barra">
+        <input type="text" class="input-filtro-usuarios" [(ngModel)]="filtroEmail" placeholder="Email">
+        <select class="input-filtro-usuarios" [(ngModel)]="filtroRol">
+          <option value="">Rol</option>
+          <option *ngFor="let rol of roles" [value]="rol.value">{{ rol.label }}</option>
+        </select>
+        <select class="input-filtro-usuarios" [(ngModel)]="filtroEstado">
+          <option value="">Estado</option>
+          <option value="activo">Activo</option>
+          <option value="inactivo">Inactivo</option>
+        </select>
+        <button type="button" class="btn-usuarios-lupa" (click)="aplicarFiltros()" title="Filtrar">
+          <!-- SVG lupa -->
+          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <circle cx="11" cy="11" r="7" stroke-width="2"/>
+            <line x1="16.5" y1="16.5" x2="21" y2="21" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button type="button" class="btn-usuarios-reiniciar" (click)="reiniciarFiltros()" title="Reiniciar filtros">
+          <!-- SVG reinicio -->
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path d="M4 4v5h5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20 20v-5h-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5.07 19A9 9 0 1 1 12 21a9 9 0 0 1-6.93-2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
     <div class="tabla-container">
       <table class="tabla-usuarios">
         <thead>
           <tr>
-            <th>Username</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Email</th>
+            <th (click)="ordenarPor('username')">
+              Username
+              <span *ngIf="ordenCampo === 'username'">
+                <svg *ngIf="ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8"/>
+                </svg>
+                <svg *ngIf="!ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M16 16l-4-4-4 4m8-8V4m0 16v-4"/>
+                </svg>
+              </span>
+            </th>
+            <th (click)="ordenarPor('first_name')">
+              Nombre
+              <span *ngIf="ordenCampo === 'first_name'">
+                <svg *ngIf="ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8"/>
+                </svg>
+                <svg *ngIf="!ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M16 16l-4-4-4 4m8-8V4m0 16v-4"/>
+                </svg>
+              </span>
+            </th>
+            <th (click)="ordenarPor('last_name')">
+              Apellido
+              <span *ngIf="ordenCampo === 'last_name'">
+                <svg *ngIf="ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8"/>
+                </svg>
+                <svg *ngIf="!ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M16 16l-4-4-4 4m8-8V4m0 16v-4"/>
+                </svg>
+              </span>
+            </th>
+            <th>Correo Electrónico</th>
             <th>Rol</th>
             <th>Estado</th>
             <th>Fecha de alta</th>
