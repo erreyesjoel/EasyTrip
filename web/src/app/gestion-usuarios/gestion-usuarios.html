@@ -52,35 +52,35 @@
           <tr>
             <th (click)="ordenarPor('username')">
               Username
-              <span *ngIf="ordenCampo === 'username'">
-                <svg *ngIf="ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8"/>
-                </svg>
-                <svg *ngIf="!ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M16 16l-4-4-4 4m8-8V4m0 16v-4"/>
-                </svg>
+              <span class="icono-orden"
+                    [ngClass]="{
+                      'activo-asc': ordenCampo === 'username' && ordenAsc,
+                      'activo-desc': ordenCampo === 'username' && !ordenAsc
+                    }">
+                <svg class="arriba" viewBox="0 0 14 8"><path d="M2 6L7 2L12 6"/></svg>
+                <svg class="abajo" viewBox="0 0 14 8"><path d="M2 2L7 6L12 2"/></svg>
               </span>
             </th>
             <th (click)="ordenarPor('first_name')">
               Nombre
-              <span *ngIf="ordenCampo === 'first_name'">
-                <svg *ngIf="ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8"/>
-                </svg>
-                <svg *ngIf="!ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M16 16l-4-4-4 4m8-8V4m0 16v-4"/>
-                </svg>
+              <span class="icono-orden"
+                    [ngClass]="{
+                      'activo-asc': ordenCampo === 'first_name' && ordenAsc,
+                      'activo-desc': ordenCampo === 'first_name' && !ordenAsc
+                    }">
+                <svg class="arriba" viewBox="0 0 14 8"><path d="M2 6L7 2L12 6"/></svg>
+                <svg class="abajo" viewBox="0 0 14 8"><path d="M2 2L7 6L12 2"/></svg>
               </span>
             </th>
             <th (click)="ordenarPor('last_name')">
               Apellido
-              <span *ngIf="ordenCampo === 'last_name'">
-                <svg *ngIf="ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8"/>
-                </svg>
-                <svg *ngIf="!ordenAsc" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M16 16l-4-4-4 4m8-8V4m0 16v-4"/>
-                </svg>
+              <span class="icono-orden"
+                    [ngClass]="{
+                      'activo-asc': ordenCampo === 'last_name' && ordenAsc,
+                      'activo-desc': ordenCampo === 'last_name' && !ordenAsc
+                    }">
+                <svg class="arriba" viewBox="0 0 14 8"><path d="M2 6L7 2L12 6"/></svg>
+                <svg class="abajo" viewBox="0 0 14 8"><path d="M2 2L7 6L12 2"/></svg>
               </span>
             </th>
             <th>Correo Electrónico</th>

@@ -81,6 +81,33 @@ app-sidebar {
   position: sticky;
   top: 0;
   z-index: 2;
+  cursor: pointer;
+  user-select: none;
+
+  .icono-orden {
+    display: inline-flex;
+    flex-direction: column;
+    margin-left: 6px;
+    vertical-align: middle;
+    width: 14px;
+    height: 18px;
+
+    svg {
+      display: block;
+      width: 14px;
+      height: 8px;
+      stroke: #fff;
+      fill: none;
+      opacity: 0.6;
+      transition: stroke 0.2s, opacity 0.2s;
+    }
+
+    &.activo-asc svg.arriba,
+    &.activo-desc svg.abajo {
+      stroke: #ffd700;
+      opacity: 1;
+    }
+  }
 }
 
 .tabla-usuarios tbody tr {

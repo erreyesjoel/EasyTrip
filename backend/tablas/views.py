@@ -546,6 +546,12 @@ def gestion_usuarios_tabla(request):
     elif estado == 'inactivo':
         usuarios = usuarios.filter(is_active=False)
 
+    # ordering es propio de Django, permite ordenar los resultados ascendentemente o descendentemente
+    # por un campo específico, por ejemplo: ?ordering=username
+    ordering = request.GET.get('ordering')
+    if ordering:
+        usuarios = usuarios.order_by(ordering)
+
     data = []
     for user in usuarios:
         data.append({

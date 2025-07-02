@@ -214,6 +214,8 @@ export class GestionUsuarios {
 
   // Método para reiniciar los filtros
   reiniciarFiltros() {
+    this.ordenCampo = 'username'; // Reinicia al campo por defecto
+    this.ordenAsc = true; // Reinicia a orden ascendente
     this.filtroEmail = '';
     this.filtroRol = '';
     this.filtroEstado = '';
