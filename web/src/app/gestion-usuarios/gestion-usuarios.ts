@@ -49,6 +49,7 @@ export class GestionUsuarios {
       first_name: [''],
       last_name: [''],
       email: [''],
+      password: [''], 
       rol: ['usuario']
     });
   }

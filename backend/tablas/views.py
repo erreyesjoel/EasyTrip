@@ -552,15 +552,17 @@ def crear_usuario(request):
         rol = data.get('rol', 'usuario')
         first_name = data.get('first_name', '')
         last_name = data.get('last_name', '')
-        password = data.get('password', '12345678')  # Puedes cambiar esto por un campo real si lo añades al modal
+        password = data.get('password')
 
         # Validaciones básicas
-        if not username or not email:
-            return Response({'error': 'Username y email son requeridos.'}, status=400)
+        if not username or not email or not password:
+            return Response({'error': 'Username, email y password son requeridos.'}, status=400)
         if User.objects.filter(username=username).exists():
             return Response({'error': 'El username ya existe.'}, status=400)
         if User.objects.filter(email=email).exists():
             return Response({'error': 'El email ya existe.'}, status=400)
+        if '@' not in email or '.' not in email:
+            return Response({'error': 'El email no es válido.'}, status=400)
 
         # Crea el usuario
         user = User.objects.create_user(
@@ -571,7 +573,34 @@ def crear_usuario(request):
             last_name=last_name,
             rol=rol
         )
-        return Response({'ok': True, 'mensaje': 'Usuario creado correctamente.'}, status=201)
+
+        # Enviar email de bienvenida
+        send_mail(
+            subject=f'Bienvenido a {settings.APP_NAME}',
+            message=(
+                f'¡Hola {first_name}!\n\n'
+                f'Tu cuenta en {settings.APP_NAME} ha sido creada correctamente.\n'
+                f'Tu nombre de usuario es: {username}\n'
+                f'Recuerda cambiar tu contraseña al iniciar sesión.\n\n'
+                '¡Gracias por registrarte!'
+            ),
+            from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
+            recipient_list=[email],
+            fail_silently=True
+        )
+
+        return Response({
+            'ok': True,
+            'mensaje': 'Usuario creado correctamente.',
+            'usuario': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'rol': user.rol
+            }
+        }, status=201)
     return Response({'error': 'Método no permitido'}, status=405)
 
 # api para editar un usuario
