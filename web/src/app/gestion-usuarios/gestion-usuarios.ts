@@ -39,8 +39,10 @@ export class GestionUsuarios {
 
   modalUsuarioAbierto = false; // Controla la visibilidad del modal de crear/editar
   modalEliminarUsuarioAbierto = false; // Controla la visibilidad del modal de eliminar
+  modalEstadoUsuarioAbierto = false; // Controla la visibilidad del modal de cambiar estado
   modoCreacionUsuario = false; // true = crear, false = editar
   usuarioActual: Usuario | null = null; // Usuario seleccionado para editar/eliminar
+  usuarioEstadoActual: any = null; // Usuario seleccionado para cambiar estado
 
   formularioUsuario: FormGroup;
 
@@ -190,6 +192,29 @@ export class GestionUsuarios {
         alert(error.error || 'Error al eliminar usuario');
       }
     }
+  }
+
+  // Abre el modal para cambiar estado de usuario
+  abrirModalEstadoUsuario(usuario: any) {
+    this.usuarioEstadoActual = usuario;
+    this.modalEstadoUsuarioAbierto = true;
+  }
+
+  // Cierra el modal de cambiar estado de usuario
+  cerrarModalEstadoUsuario() {
+    this.modalEstadoUsuarioAbierto = false;
+    this.usuarioEstadoActual = null;
+  }
+
+  // Confirma el cambio de estado de un usuario
+  confirmarCambioEstadoUsuario() {
+    // Aquí llamas a tu API para cambiar el estado (alta/baja)
+    // Por ejemplo:
+    // this.usuarioService.cambiarEstado(this.usuarioEstadoActual.id, !this.usuarioEstadoActual.is_active).subscribe(...)
+    // Tras éxito:
+    this.usuarioEstadoActual.is_active = !this.usuarioEstadoActual.is_active;
+    this.cerrarModalEstadoUsuario();
+    // Opcional: recarga la lista de usuarios
   }
 
   toggleEstado(usuario: Usuario) {
