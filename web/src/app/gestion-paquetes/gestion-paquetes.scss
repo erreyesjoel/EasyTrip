@@ -176,7 +176,10 @@ body, :host {
   transform: translate(-50%, -50%);
   background: white;
   width: 90%;
-  max-width: 500px;
+  max-width: 800px; // Más ancho
+  min-width: 400px;
+  min-height: 0;
+  height: auto;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   z-index: 1001;
@@ -209,6 +212,9 @@ body, :host {
 
 .modal-body {
   padding: 20px;
+  // Limita la altura máxima y permite scroll si es necesario
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 .form-group {
@@ -642,3 +648,57 @@ select {
     background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
   }
 }
+
+// MODAL MÁS ANCHO Y FORMULARIO EN DOS COLUMNAS
+.modal-editar {
+  max-width: 800px; // Más ancho
+  min-width: 400px;
+  min-height: 0;
+  height: auto;
+}
+
+.modal-body {
+  padding: 20px;
+  // Limita la altura máxima y permite scroll si es necesario
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+// Agrupa los campos del formulario en dos columnas en pantallas grandes
+form[formGroup] {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 32px;
+  align-items: start;
+
+  // Que la descripción y las imágenes ocupen las dos columnas
+  .form-group {
+    margin-bottom: 0;
+    &:nth-child(2), // Descripción
+    &:nth-child(7)  // Imágenes
+    {
+      grid-column: 1 / 3;
+    }
+  }
+  .modal-footer {
+    grid-column: 1 / 3;
+    margin-top: 18px;
+  }
+}
+
+// Responsive: en pantallas pequeñas, vuelve a una sola columna
+@media (max-width: 700px) {
+  form[formGroup] {
+    grid-template-columns: 1fr;
+    gap: 14px 0;
+    .form-group, .modal-footer {
+      grid-column: 1 / 2 !important;
+    }
+  }
+  .modal-editar {
+    max-width: 98vw;
+    min-width: 0;
+  }
+}
+
+// Mantén los estilos de los inputs, tipografía, colores y focus como ya tienes
