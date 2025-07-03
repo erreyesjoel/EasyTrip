@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common'; // <-- IMPORTA ESTO
 import { Header } from './header/header';
 import { Hero } from './hero/hero';
 import { Footer } from './footer/footer';
+import { MostrarPaquetes } from './mostrar-paquetes/mostrar-paquetes';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, Header, Hero, Footer], // <-- AGREGA CommonModule AQUÍ
+  imports: [CommonModule, RouterOutlet, Header, Hero, Footer, MostrarPaquetes], // <-- AGREGA CommonModule AQUÍ
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
