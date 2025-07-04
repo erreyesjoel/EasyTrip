@@ -95,3 +95,18 @@
 .btn-detalles:hover {
   background: darken(vars.$verde-esmeralda, 10%);
 }
+
+.titulo-paquete-card {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: bold;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  z-index: 2;
+  max-width: 60%;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  background: rgba(0,0,0,0.18); padding: 6px 14px; border-radius: 12px;
+}
