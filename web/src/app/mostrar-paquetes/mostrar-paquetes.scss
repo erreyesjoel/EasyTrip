@@ -1,0 +1,37 @@
+.container-paquetes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  padding: 2rem;
+  min-height: 120vh; // Fuerza que el contenido sea más alto que la pantalla
+}
+
+.paquete-container {
+  flex: 1 1 calc(33.333% - 1.5rem); /* Tres columnas */
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.imagen-container {
+  position: relative;
+  width: 220px;      // Fijo, no crece a lo ancho
+  height: 350px;     // Más alto, efecto "caída"
+  overflow: hidden;
+  border-radius: 40px;
+  display: flex;
+  align-items: flex-start; // Arriba
+  justify-content: flex-start; // Izquierda
+}
+
+.imagen-paquete {
+  width: 220px;      // Igual que el contenedor
+  height: 350px;     // Igual que el contenedor
+  object-fit: contain;
+  display: block;
+  border-radius: 40px;
+  margin: 0;
+  padding: 0;
+  transition: transform 0.3s ease;
+}

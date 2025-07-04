@@ -22,7 +22,8 @@ export class MostrarPaquetes {
       const res = await fetch(environment.apiBaseUrl + 'paquetes?estado=activo');
       if (res.status === 200) {
         const paquetes = await res.json(); // convertimos la respuesta a JSON
-        console.log("Paquetes activos:", paquetes); // depuracion para probar, que funcione la peticion get a la api
+        this.mostrarPaquetesLanding = paquetes.slice(0, 3); // obtenemos los primeros 3 paquetes activos
+        console.log("Paquetes activos:", this.mostrarPaquetesLanding); // depuracion para probar, que funcione la peticion get a la api
       }
     } catch (error: any) {
       console.error('Error al cargar los paquetes:', error);
