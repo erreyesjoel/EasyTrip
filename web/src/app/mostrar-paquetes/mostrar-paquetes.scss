@@ -1,3 +1,6 @@
+@use '../../_variables' as vars;
+
+
 .container-paquetes {
   display: flex;
   flex-wrap: wrap;
@@ -7,6 +10,14 @@
   min-height: 120vh; // Fuerza que el contenido sea más alto que la pantalla
 }
 
+.titulo-mostrar-paquetes-landing {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #333; // Color del texto
+    }
+    
 .paquete-container {
   flex: 1 1 calc(33.333% - 1.5rem); /* Tres columnas */
   border-radius: 8px;
@@ -16,18 +27,18 @@
 
 .imagen-container {
   position: relative;
-  width: 220px;      // Fijo, no crece a lo ancho
-  height: 350px;     // Más alto, efecto "caída"
+  width: 320px;      // Más ancho
+  height: 420px;
   overflow: hidden;
   border-radius: 40px;
   display: flex;
-  align-items: flex-start; // Arriba
-  justify-content: flex-start; // Izquierda
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .imagen-paquete {
-  width: 220px;      // Igual que el contenedor
-  height: 350px;     // Igual que el contenedor
+  width: 320px;      // Igual que el contenedor
+  height: 420px;
   object-fit: contain;
   display: block;
   border-radius: 40px;
