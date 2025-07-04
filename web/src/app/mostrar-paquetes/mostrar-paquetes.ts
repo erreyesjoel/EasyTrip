@@ -16,6 +16,7 @@ interface Paquete {
   duracion_dias: number;
   estado: string;
   imagenes: ImagenesPaquete[];
+  cupo_maximo: number;
 }
 
 @Component({
