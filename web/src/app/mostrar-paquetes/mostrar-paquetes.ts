@@ -64,16 +64,14 @@ export class MostrarPaquetes {
 
         this.paquetesLanding = paquetes.slice(0, 3); // obtenemos los primeros 3 paquetes activos
 
-       this.paquetesLanding.forEach((paquete: Paquete) => {
-  paquete.imagenes = paquete.imagenes.map((img: ImagenesPaquete) => {
-    const urlCorregida = this.corregirUrl(img.imagen_url);
-    console.log('URL imagen corregida:', urlCorregida);
-    return {
-      ...img,
-      imagen_url: urlCorregida
-    };
-  });
-});
+        this.paquetesLanding.forEach((paquete: Paquete) => {
+          paquete.imagenes = paquete.imagenes
+            .map((img: ImagenesPaquete) => ({
+              ...img,
+              imagen_url: this.corregirUrl(img.imagen_url)
+            }))
+            .slice(0, 3); // <-- solo las primeras 3 imágenes
+        });
 
         // Inicializamos el índice de imagen actual para cada paquete en 0
         this.imagenActual = this.paquetesLanding.map(() => 0);
