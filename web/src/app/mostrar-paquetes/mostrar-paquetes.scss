@@ -27,8 +27,8 @@
 
 .imagen-container {
   position: relative;
-  width: 320px;      // Más ancho
-  height: 420px;
+  width: 350px;      // Más ancho
+  height: 480px;     // Más alto
   overflow: hidden;
   border-radius: 40px;
   display: flex;
@@ -37,12 +37,61 @@
 }
 
 .imagen-paquete {
-  width: 320px;      // Igual que el contenedor
-  height: 420px;
+  width: 350px;      // Igual que el contenedor
+  height: 480px;
   object-fit: contain;
   display: block;
   border-radius: 40px;
   margin: 0;
   padding: 0;
   transition: transform 0.3s ease;
+}
+
+.precio-badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 10px 22px;
+  border-radius: 22px;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  letter-spacing: 0.5px;
+}
+
+.acciones-paquete {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 70%;
+  z-index: 3;
+}
+
+.btn-reservar,
+.btn-detalles {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-radius: 22px;
+  font-size: 1.1rem;
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.btn-reservar:hover,
+.btn-detalles:hover {
+  background: darken(vars.$verde-esmeralda, 10%);
 }
