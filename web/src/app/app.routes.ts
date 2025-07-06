@@ -1,16 +1,24 @@
 import { Routes } from '@angular/router';
 import { Hero } from './hero/hero';
+import { MostrarPaquetes } from './mostrar-paquetes/mostrar-paquetes';
 import { IniciarSesion } from './iniciar-sesion/iniciar-sesion';
-import { DashboardComponent } from './dashboard/dashboard';import { AdminGuard } from './guards/admin.guard';
+import { DashboardComponent } from './dashboard/dashboard';
+import { AdminGuard } from './guards/admin.guard';
 import { GestionPaquetes } from './gestion-paquetes/gestion-paquetes';
-import { GestionUsuarios } from './gestion-usuarios/gestion-usuarios'; // importa el componente
+import { GestionUsuarios } from './gestion-usuarios/gestion-usuarios';
+import { DetallesPaquete } from './detalles-paquete/detalles-paquete';
 
 export const routes: Routes = [
-  { path: '', component: Hero },
+  {
+    path: '',
+    component: Hero,
+    children: [
+      { path: '', component: MostrarPaquetes }
+    ]
+  },
   { path: 'iniciarSesion', component: IniciarSesion },
-  // La ruta 'dashboard' solo es accesible para usuarios con rol administrador gracias a AdminGuard
   { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] },
   { path: 'gestion-paquetes', component: GestionPaquetes, canActivate: [AdminGuard] },
-  { path: 'usuarios', component: GestionUsuarios, canActivate: [AdminGuard] }, // <-- NUEVA RUTA
-
+  { path: 'usuarios', component: GestionUsuarios, canActivate: [AdminGuard] },
+  { path: 'detalles-paquete/:id', component: DetallesPaquete }, // sin guard para acceso público
 ];

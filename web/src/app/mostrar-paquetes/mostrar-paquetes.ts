@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router'; // <---- import RouterModule
 
 interface ImagenesPaquete {
   id: number;
@@ -21,7 +22,7 @@ interface Paquete {
 
 @Component({
   selector: 'app-mostrar-paquetes',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './mostrar-paquetes.html',
   styleUrl: './mostrar-paquetes.scss'
 })
