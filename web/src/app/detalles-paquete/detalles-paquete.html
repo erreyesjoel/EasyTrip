@@ -1,1 +1,24 @@
-<p>detalles-paquete works!</p>
+<div *ngIf="cargando" class="detalles-cargando">Cargando...</div>
+<div *ngIf="!cargando && paquete" class="detalles-paquete">
+  <h1 class="titulo">{{ paquete.nombre }}</h1>
+  <div class="carrusel-scroll">
+    <div class="carrusel-inner">
+      <div class="carrusel-img" *ngFor="let img of paquete.imagenes">
+        <img [src]="img.imagen_url" [alt]="img.descripcion || paquete.nombre" />
+        <div class="img-desc" *ngIf="img.descripcion">{{ img.descripcion }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="info-paquete">
+    <p class="descripcion">{{ paquete.descripcion }}</p>
+    <ul class="detalles-lista">
+      <li><b>Precio:</b> {{ paquete.precio_base }} €</li>
+      <li><b>Duración:</b> {{ paquete.duracion_dias }} días</li>
+      <li><b>Cupo máximo:</b> {{ paquete.cupo_maximo }}</li>
+      <li><b>Estado:</b> {{ paquete.estado }}</li>
+    </ul>
+  </div>
+</div>
+<div *ngIf="!cargando && !paquete" class="detalles-error">
+  No se encontró el paquete.
+</div>

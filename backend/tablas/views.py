@@ -686,3 +686,30 @@ def obtener_roles_usuario(request):
     for value, label in User._meta.get_field('rol').choices:
         roles.append({'value': value, 'label': label})
     return Response(roles)
+
+# api get para detalles paquete en el frontend
+
+@api_view(['GET'])
+def obtener_paquete_por_id(request, paquete_id):
+    try:
+        paquete = PaqueteTuristico.objects.get(id=paquete_id)
+        imagenes_data = []
+        for imagen in paquete.imagenes.all():
+            imagenes_data.append({
+                'id': imagen.id,
+                'descripcion': imagen.descripcion,
+                'imagen_url': imagen.imagen_url,
+            })
+        paquete_data = {
+            'id': paquete.id,
+            'nombre': paquete.nombre,
+            'descripcion': paquete.descripcion,
+            'precio_base': float(paquete.precio_base),
+            'duracion_dias': paquete.duracion_dias,
+            'cupo_maximo': paquete.cupo_maximo,
+            'estado': paquete.estado,
+            'imagenes': imagenes_data
+        }
+        return Response(paquete_data)
+    except PaqueteTuristico.DoesNotExist:
+        return Response({'error': 'Paquete no encontrado'}, status=status.HTTP_404_NOT_FOUND)
