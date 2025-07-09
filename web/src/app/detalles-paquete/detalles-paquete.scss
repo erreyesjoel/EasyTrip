@@ -212,6 +212,57 @@
   margin: 4rem 0;
 }
 
+.info-texto {
+  font-size: 1.13rem;
+  line-height: 1.7;
+  color: #234;
+  letter-spacing: 0.01em;
+  background: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 2px 8px rgba(30,136,229,0.04);
+  padding: 1.2rem 1.5rem 1.2rem 1.5rem;
+}
+
+.info-texto .titulo {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #1976d2;
+  margin-bottom: 1.1rem;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.info-texto .descripcion {
+  font-size: 1.13rem;
+  color: #444;
+  margin-bottom: 1.1rem;
+  line-height: 1.6;
+}
+
+.info-texto .detalles-lista {
+  font-size: 1.08rem;
+  color: #1976d2;
+  gap: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.info-texto .detalles-lista li {
+  margin-bottom: 0.3rem;
+  border-radius: 0.6rem;
+  padding: 0.45rem 1rem 0.45rem 0.8rem;
+  color: #1976d2;
+  font-weight: 500;
+  list-style: none;
+}
+
+.info-texto .detalles-lista b {
+  color: #245c47;
+  font-weight: 700;
+}
+
 // Animaciones (igual que antes)
 .fade-in {
   animation: fadeInScale 0.4s cubic-bezier(.4,0,.2,1);

@@ -30,14 +30,16 @@
     </div>
   </div>
   <div class="info-col slide-in">
-    <h1 class="titulo">{{ paquete.nombre }}</h1>
-    <p class="descripcion">{{ paquete.descripcion }}</p>
-    <ul class="detalles-lista">
-      <li><b>Precio:</b> {{ paquete.precio_base }} €</li>
-      <li><b>Duración:</b> {{ paquete.duracion_dias }} días</li>
-      <li><b>Cupo máximo:</b> {{ paquete.cupo_maximo }}</li>
-      <li><b>Estado:</b> {{ paquete.estado }}</li>
-    </ul>
+    <div class="info-texto">
+      <h1 class="titulo">{{ paquete.nombre }}</h1>
+      <p class="descripcion">{{ paquete.descripcion }}</p>
+      <ul class="detalles-lista">
+        <li><b>Precio:</b> {{ paquete.precio_base }} €</li>
+        <li><b>Duración:</b> {{ paquete.duracion_dias }} días</li>
+        <li><b>Cupo máximo:</b> {{ paquete.cupo_maximo }}</li>
+        <li><b>Estado:</b> {{ paquete.estado }}</li>
+      </ul>
+    </div>
   </div>
 </div>
 <div *ngIf="!cargando && !paquete" class="detalles-error">
