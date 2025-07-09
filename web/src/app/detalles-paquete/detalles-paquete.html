@@ -32,13 +32,13 @@
   <div class="info-col slide-in">
     <div class="info-texto">
       <h1 class="titulo">{{ paquete.nombre }}</h1>
-      <p class="descripcion">{{ paquete.descripcion }}</p>
-      <ul class="detalles-lista">
-        <li><b>Precio:</b> {{ paquete.precio_base }} €</li>
-        <li><b>Duración:</b> {{ paquete.duracion_dias }} días</li>
-        <li><b>Cupo máximo:</b> {{ paquete.cupo_maximo }}</li>
-        <li><b>Estado:</b> {{ paquete.estado }}</li>
-      </ul>
+      <p class="descripcion">
+        {{ paquete.descripcion }}<br><br>
+        Este viaje tiene una duración de <b>{{ paquete.duracion_dias }} días</b>, pensados para que disfrutes al máximo cada experiencia y cada destino incluido en el itinerario.<br><br>
+        El precio base es de <b>{{ paquete.precio_base }} €</b> por persona, una oportunidad perfecta para vivir una aventura inolvidable sin preocuparte por los detalles.<br><br>
+        El grupo está limitado a <b>{{ paquete.cupo_maximo }} plazas</b>, asegurando un ambiente cómodo y exclusivo para todos los viajeros. <br><br>
+        El paquete está <b [ngStyle]="{color: paquete.estado === 'Activo' ? '#2d7d5f' : '#888'}">{{ paquete.estado | lowercase }}</b>.
+      </p>
     </div>
   </div>
 </div>
