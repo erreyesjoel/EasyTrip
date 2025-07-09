@@ -13,7 +13,7 @@
   display: flex;
   gap: 4rem;
   max-width: 96vw;
-  margin: 0 auto;
+  margin: 30px; // Espacio alrededor, está bien si te gusta así
   background: vars.$gris-claro;
   border-radius: 2.2rem;
   box-shadow: 0 6px 32px rgba(30,136,229,0.10);
@@ -23,6 +23,7 @@
     flex-direction: column;
     padding: 2rem 0.5rem;
     gap: 2rem;
+    margin: 10px; 
   }
 }
 
