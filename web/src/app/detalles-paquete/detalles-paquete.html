@@ -1,15 +1,36 @@
 <div *ngIf="cargando" class="detalles-cargando">Cargando...</div>
-<div *ngIf="!cargando && paquete" class="detalles-paquete">
-  <h1 class="titulo">{{ paquete.nombre }}</h1>
-  <div class="carrusel-scroll">
-    <div class="carrusel-inner">
-      <div class="carrusel-img" *ngFor="let img of paquete.imagenes">
-        <img [src]="img.imagen_url" [alt]="img.descripcion || paquete.nombre" />
-        <div class="img-desc" *ngIf="img.descripcion">{{ img.descripcion }}</div>
+<div *ngIf="!cargando && paquete" class="detalles-paquete-grid">
+  <div class="carrusel-col">
+    <div class="carrusel-foto-wrapper fade-in">
+      <img
+        class="carrusel-foto"
+        [src]="paquete.imagenes[fotoActual]?.imagen_url"
+        [alt]="paquete.imagenes[fotoActual]?.descripcion || paquete.nombre"
+      />
+      <div class="carrusel-controles">
+        <button
+          class="carrusel-flecha"
+          (click)="cambiarFoto(-1)"
+          [disabled]="fotoActual === 0"
+          aria-label="Anterior"
+        >‹</button>
+        <span class="carrusel-contador">
+          {{ fotoActual + 1 }}/{{ paquete.imagenes.length }}
+        </span>
+        <button
+          class="carrusel-flecha"
+          (click)="cambiarFoto(1)"
+          [disabled]="fotoActual === paquete.imagenes.length - 1"
+          aria-label="Siguiente"
+        >›</button>
+      </div>
+      <div class="carrusel-desc" *ngIf="paquete.imagenes[fotoActual]?.descripcion">
+        {{ paquete.imagenes[fotoActual]?.descripcion }}
       </div>
     </div>
   </div>
-  <div class="info-paquete">
+  <div class="info-col slide-in">
+    <h1 class="titulo">{{ paquete.nombre }}</h1>
     <p class="descripcion">{{ paquete.descripcion }}</p>
     <ul class="detalles-lista">
       <li><b>Precio:</b> {{ paquete.precio_base }} €</li>

@@ -30,6 +30,7 @@ import { environment } from '../../environments/environment';
 export class DetallesPaquete implements OnInit {
   paquete: Paquete | null = null;
   cargando = true;
+  fotoActual = 0;
 
   constructor(private route: ActivatedRoute) {}
 
@@ -40,6 +41,12 @@ export class DetallesPaquete implements OnInit {
     }
   }
 
+  cambiarFoto(direccion: number) {
+    if (!this.paquete) return;
+    const total = this.paquete.imagenes.length;
+    this.fotoActual = Math.max(0, Math.min(this.fotoActual + direccion, total - 1));
+  }
+
   corregirUrl(url: string): string {
     if (url.startsWith('http')) return url;
     const urlObj = new URL(environment.apiBaseUrl);
@@ -47,28 +54,23 @@ export class DetallesPaquete implements OnInit {
     return url.startsWith('/') ? base + url : base + '/' + url;
   }
 
-async cargarPaquete(id: string) {
-  try {
-    const res = await fetch(environment.apiBaseUrl + 'paquetes/' + id);
-    console.log('Status:', res.status);
-    const text = await res.text();
-    console.log('Respuesta cruda:', text);
-
-    if (res.ok) {
-      const paquete = JSON.parse(text);
-      paquete.imagenes = (paquete.imagenes || []).map((img: ImagenesPaquete) => ({
-        ...img,
-        imagen_url: this.corregirUrl(img.imagen_url)
-      }));
-      console.log('Paquete cargado:', paquete);
-      this.paquete = paquete;
-    } else {
+  async cargarPaquete(id: string) {
+    try {
+      const res = await fetch(environment.apiBaseUrl + 'paquetes/' + id);
+      if (res.ok) {
+        const paquete = await res.json();
+        paquete.imagenes = (paquete.imagenes || []).map((img: ImagenesPaquete) => ({
+          ...img,
+          imagen_url: this.corregirUrl(img.imagen_url)
+        }));
+        this.paquete = paquete;
+        this.fotoActual = 0;
+      } else {
+        this.paquete = null;
+      }
+    } catch (e) {
       this.paquete = null;
     }
-  } catch (e) {
-    console.error('Error al cargar el paquete:', e);
-    this.paquete = null;
+    this.cargando = false;
   }
-  this.cargando = false;
-}
 }
