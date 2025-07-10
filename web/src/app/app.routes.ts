@@ -7,6 +7,7 @@ import { AdminGuard } from './guards/admin.guard';
 import { GestionPaquetes } from './gestion-paquetes/gestion-paquetes';
 import { GestionUsuarios } from './gestion-usuarios/gestion-usuarios';
 import { DetallesPaquete } from './detalles-paquete/detalles-paquete';
+import { Reserva } from './reserva/reserva';
 
 export const routes: Routes = [
   {
@@ -21,4 +22,5 @@ export const routes: Routes = [
   { path: 'gestion-paquetes', component: GestionPaquetes, canActivate: [AdminGuard] },
   { path: 'usuarios', component: GestionUsuarios, canActivate: [AdminGuard] },
   { path: 'detalles-paquete/:id', component: DetallesPaquete }, // sin guard para acceso público
+  { path: 'reserva/:id', component: Reserva }
 ];
