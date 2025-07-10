@@ -212,3 +212,24 @@
     stroke: #fff;
   }
 }
+
+.imagenes-badge-inferior {
+  position: absolute;
+  right: 22px;
+  bottom: 49px;
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 500;
+  padding: 7px 14px 7px 10px;
+  border-radius: 18px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+
+  svg {
+    stroke: #fff;
+  }
+}

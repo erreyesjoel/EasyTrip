@@ -31,6 +31,10 @@ export class DetallesPaquete implements OnInit {
   paquete: Paquete | null = null;
   cargando = true;
   fotoActual = 0;
+  predeterminadaUrl = (() => {
+    const urlObj = new URL(environment.apiBaseUrl);
+    return `${urlObj.protocol}//${urlObj.host}/static/img/paquetePredeterminada.webp`;
+  })();
 
   constructor(private route: ActivatedRoute) {}
 

@@ -4,8 +4,15 @@
     <div class="carrusel-foto-wrapper fade-in">
       <img
         class="carrusel-foto"
+        *ngIf="paquete.imagenes.length > 0"
         [src]="paquete.imagenes[fotoActual]?.imagen_url"
         [alt]="paquete.imagenes[fotoActual]?.descripcion || paquete.nombre"
+      />
+      <img
+        class="carrusel-foto"
+        *ngIf="paquete.imagenes.length === 0"
+        [src]="predeterminadaUrl"
+        [alt]="paquete.nombre"
       />
       <div class="carrusel-controles">
         <button
