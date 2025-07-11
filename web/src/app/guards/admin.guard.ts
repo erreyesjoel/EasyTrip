@@ -16,6 +16,6 @@ export const AdminGuard: CanActivateFn = async () => {
       }
     }
   } catch {}
-  router.navigate(['/']);
+  router.navigate(['/dashboard']);
   return false;
 };
