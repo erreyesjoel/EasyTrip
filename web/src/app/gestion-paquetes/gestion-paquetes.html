@@ -5,7 +5,7 @@
      El botón abre un modal para crear un nuevo paquete (evento abrirModalCrear) -->
     <div class="header-gestion-paquetes">
       <h2 class="titulo-pagina">Gestión de Paquetes</h2>
-      <button class="crear-paquete-btn" (click)="abrirModalCrear()">
+      <button class="crear-paquete-btn" (click)="abrirModalCrear()" *ngIf="usuario?.rol === 'administrador'">
         <span class="icono-crear">
           <!-- Icono Plus Circle -->
           <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -88,8 +88,8 @@
           <p class="descripcion-paquete">{{ paquete.descripcion }}</p>
         </div>
         <div class="acciones-paquete">
-          <button class="editar-paquete" (click)="abrirModal(paquete)">Editar</button> <!-- Botón para que se abra el modal editar el paquete -->
-          <button class="eliminar-paquete" (click)="abrirModalEliminar(paquete)">Eliminar</button> <!-- Botón para que se abra el modal de confirmación de eliminación del paquete -->
+          <button class="editar-paquete" (click)="abrirModal(paquete)" *ngIf="usuario?.rol === 'administrador'">Editar</button> <!-- Botón para que se abra el modal editar el paquete -->
+          <button class="eliminar-paquete" (click)="abrirModalEliminar(paquete)" *ngIf="usuario?.rol === 'administrador'">Eliminar</button> <!-- Botón para que se abra el modal de confirmación de eliminación del paquete -->
         </div>
       </div>
     </div>

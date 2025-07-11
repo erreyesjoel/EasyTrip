@@ -11,6 +11,14 @@ interface ImagenPaquete {
   imagen_url: string;
 }
 
+interface Usuario {
+  id: number;
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  rol: string; // 'administrador', 'agente', etc.
+}
 // Interfaz para manejar los paquetes que vienen del backend (API)
 interface PaqueteApi {
   id: number;
@@ -52,6 +60,8 @@ export class GestionPaquetes implements OnInit {
   
   // URL de la imagen predeterminada
   imagenPredeterminada: string;
+
+  usuario: Usuario | null = null; // Usuario autenticado, puede ser null si no hay sesión iniciada
 
   // Datos de ejemplo y para mantener el tipo
   paquetes: PaqueteTuristico[] = []; // Array para todos los paquetes
@@ -103,9 +113,27 @@ export class GestionPaquetes implements OnInit {
     });
   }
 
+  // peticion a api usuario, que nos devuelve el rol (lo mas importante)
+  // para saber si el usuario es administrador o agente, y mostrar los botones de editar y eliminar
+  // si es rol administrador, se muestran los botones de crear, editar, y eliminar paquete
+  // si es agente, solo podrá filtrar y visualizar paquetes, pero no crear, editar ni eliminar.
+  async verificarUsuario() {
+    try {
+      const apiBaseUrl = (window as any)['NG_APP_API_BASE_URL'];
+      const res = await fetch(apiBaseUrl + 'usuario/', { credentials: 'include' });
+      if (res.ok) {
+        this.usuario = await res.json();
+        console.log('Usuario es:', this.usuario);
+      }
+    } catch {
+      this.usuario = null;
+    }
+  }
+
   // Este método se ejecutará cuando se inicialice el componente
   ngOnInit(): void {
     this.cargarPaquete();
+    this.verificarUsuario();
   }
 
   // Método para asegurarnos de que las URLs de imágenes usen el dominio correcto

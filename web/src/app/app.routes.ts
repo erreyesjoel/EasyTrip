@@ -24,7 +24,7 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AdminOrAgenteGuard] },
 
   // Exclusivo para administradores
-  { path: 'gestion-paquetes', component: GestionPaquetes, canActivate: [AdminGuard] },
+  { path: 'gestion-paquetes', component: GestionPaquetes, canActivate: [AdminOrAgenteGuard] },
   { path: 'usuarios', component: GestionUsuarios, canActivate: [AdminGuard] },
 
   // Rutas públicas
