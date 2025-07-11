@@ -212,7 +212,7 @@ export class IniciarSesion implements OnInit {
         const userRes = await fetch(`${apiBaseUrl}usuario/`, { credentials: 'include' });
         if (userRes.ok) {
           const usuario = await userRes.json();
-          if (usuario.rol === 'administrador') {
+          if (usuario.rol === 'administrador' || usuario.rol === 'agente') {
             window.location.href = '/dashboard';
           } else {
             window.location.href = '/';

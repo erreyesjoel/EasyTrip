@@ -4,6 +4,7 @@ import { MostrarPaquetes } from './mostrar-paquetes/mostrar-paquetes';
 import { IniciarSesion } from './iniciar-sesion/iniciar-sesion';
 import { DashboardComponent } from './dashboard/dashboard';
 import { AdminGuard } from './guards/admin.guard';
+import { AdminOrAgenteGuard } from './guards/admin-or-agente.guard';
 import { GestionPaquetes } from './gestion-paquetes/gestion-paquetes';
 import { GestionUsuarios } from './gestion-usuarios/gestion-usuarios';
 import { DetallesPaquete } from './detalles-paquete/detalles-paquete';
@@ -18,9 +19,15 @@ export const routes: Routes = [
     ]
   },
   { path: 'iniciarSesion', component: IniciarSesion },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] },
+
+  // Ruta accesible para administradores o agentes
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AdminOrAgenteGuard] },
+
+  // Exclusivo para administradores
   { path: 'gestion-paquetes', component: GestionPaquetes, canActivate: [AdminGuard] },
   { path: 'usuarios', component: GestionUsuarios, canActivate: [AdminGuard] },
-  { path: 'detalles-paquete/:id', component: DetallesPaquete }, // sin guard para acceso público
+
+  // Rutas públicas
+  { path: 'detalles-paquete/:id', component: DetallesPaquete },
   { path: 'reserva/:id', component: Reserva }
 ];

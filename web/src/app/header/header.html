@@ -1,4 +1,4 @@
-<header class="main-header">
+<header class="main-header" *ngIf="usuario?.rol !== 'agente'">
   <div class="container">
     <span class="logo-titulo-texto">EasyTrip</span>
     <nav>
@@ -6,7 +6,7 @@
       <a *ngIf="!usuario || usuario?.rol === 'cliente'" routerLink="/paquetes">Paquetes</a>
       <a *ngIf="!usuario || usuario?.rol === 'cliente'" routerLink="/reservas">Reservas</a>
       <a *ngIf="!usuario || usuario?.rol === 'cliente'" routerLink="/contacto">Contacto</a>
-      <a *ngIf="usuario?.rol === 'administrador'" routerLink="/dashboard">Dashboard</a>
+      <a *ngIf="usuario?.rol === 'administrador' || usuario?.rol === 'agente'" routerLink="/dashboard">Dashboard</a>
       <ng-container *ngIf="usuario">
         <div class="usuario-dropdown" [class.abierto]="menuAbierto">
           <span class="saludo-usuario" title="{{ usuario.username }}" (click)="toggleMenu()" tabindex="0">
