@@ -9,7 +9,6 @@ class CustomUser(AbstractUser):
     ROL_CHOICES = [
         ('cliente','Cliente'),
         ('agente', 'Agente'),
-        ('recepcionista','Recepcionista'),
         ('administrador','Administrador'),
     ]
     rol = models.CharField(max_length=20, choices=ROL_CHOICES, default='cliente')
