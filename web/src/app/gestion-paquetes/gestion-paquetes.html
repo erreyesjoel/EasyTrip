@@ -141,6 +141,9 @@
         <div class="form-group">
           <label for="estado">Estado:</label>
           <select id="estado" formControlName="estado" class="form-input">
+            <!-- Opciones de estado, se ponen "a mano", porque son solo visibles
+             lo que importa es lo que pasamos en la request de la api, ya que en la respuesta
+              nos devuelve el estado del paquete (los estados que tengamos en base de datos) -->
             <option value="activo">Activo</option>
             <option value="inactivo">Inactivo</option>
           </select>
