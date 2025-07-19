@@ -1,1 +1,9 @@
-<p>reserva works!</p>
+<div class="reserva-container">
+  <span class="paquete-titulo">{{ paquete?.nombre }}</span>
+  <form class="reserva-form">
+    <input type="text" [(ngModel)]="nombre" name="nombre" required class="input-reserva" placeholder="Nombre">
+    <input type="text" [(ngModel)]="apellido" name="apellido" required class="input-reserva" placeholder="Apellido">
+    <input type="email" [(ngModel)]="email" name="email" required class="input-reserva" placeholder="Correo electrónico">
+    <button type="submit" class="btn-reservar">Reservar</button>
+  </form>
+</div>

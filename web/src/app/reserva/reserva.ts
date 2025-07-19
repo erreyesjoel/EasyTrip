@@ -1,22 +1,31 @@
 import { Component } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; // <---- import RouterModule
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms'; // <--- IMPORTANTE
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-reserva',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule], // <--- AGREGA FormsModule AQUÍ
   templateUrl: './reserva.html',
   styleUrl: './reserva.scss'
 })
-
 export class Reserva {
- constructor(private route: ActivatedRoute) {}
- ngOnInit() {
-   const id = this.route.snapshot.paramMap.get('id');
-   // Usa el id para cargar los datos del paquete o la lógica de reserva
-   console.log(`ID del paquete a reservar: ${id}`);
-   // Aquí podrías llamar a un servicio para obtener los detalles del paquete y mostrar un formulario de reserva
- }
+  paquete = {
+    nombre: 'Aventura en Cancún',
+    descripcion: 'Disfruta de 5 días y 4 noches en Cancún con todo incluido.',
+    duracion_dias: 5,
+    precio_base: 1200
+  };
+  nombre: string = '';
+  apellido: string = '';
+  email: string = '';
+  fechaReservada: Date | null = null;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log(`ID del paquete a reservar: ${id}`);
+  }
 }
