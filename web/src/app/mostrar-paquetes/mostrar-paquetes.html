@@ -4,7 +4,7 @@
     <div class="imagen-container">
       <span class="precio-badge">{{ paquete.precio_base }} €</span>
       <div class="acciones-paquete-top">
-        <a class="btn-reservar" [routerLink]="['/reserva', paquete.id]" title="Reservar ya">
+        <a class="btn-reservar" [routerLink]="['/reserva', paquete.id, paquete.nombre]" title="Reservar ya">
           <!-- Icono calendario/reserva -->
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <rect x="3" y="5" width="18" height="16" rx="3" stroke-width="1.7"/>

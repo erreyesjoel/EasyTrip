@@ -1,22 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // <--- IMPORTANTE
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-reserva',
-  imports: [CommonModule, RouterModule, FormsModule], // <--- AGREGA FormsModule AQUÍ
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './reserva.html',
   styleUrl: './reserva.scss'
 })
 export class Reserva {
-  paquete = {
-    nombre: 'Aventura en Cancún',
-    descripcion: 'Disfruta de 5 días y 4 noches en Cancún con todo incluido.',
-    duracion_dias: 5,
-    precio_base: 1200
-  };
+  paquete: { id: string | null, nombre: string | null } = { id: null, nombre: null };
   nombre: string = '';
   apellido: string = '';
   email: string = '';
@@ -26,6 +21,7 @@ export class Reserva {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log(`ID del paquete a reservar: ${id}`);
+    const nombre = this.route.snapshot.paramMap.get('nombre');
+    this.paquete = { id, nombre };
   }
 }

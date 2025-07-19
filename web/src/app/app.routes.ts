@@ -29,5 +29,5 @@ export const routes: Routes = [
 
   // Rutas públicas
   { path: 'detalles-paquete/:id', component: DetallesPaquete },
-  { path: 'reserva/:id', component: Reserva }
+  { path: 'reserva/:id/:nombre', component: Reserva }
 ];
