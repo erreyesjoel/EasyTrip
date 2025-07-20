@@ -734,10 +734,15 @@ def reservar_paquete_por_id(request, paquete_id):
     except PaqueteTuristico.DoesNotExist:
         return Response({'error': 'Paquete no encontrado.'}, status=404)
 
+    # buscar agentes activos
+    agentes = User.objects.filter(rol='agente', is_active=True)
+    agente_gestor = random.choice(agentes) if agentes.exists() else None
+
     # Crear reserva
     reserva = Reserva.objects.create(
         usuario=usuario,
         paquete_turistico=paquete,
-        fecha_reservada=fecha_reservada
+        fecha_reservada=fecha_reservada,
+        usuario_gestor=agente_gestor
     )
     return Response({'mensaje': 'Reserva creada correctamente.', 'reserva_id': reserva.id}, status=201)
