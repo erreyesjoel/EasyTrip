@@ -18,7 +18,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
 from datetime import timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import PaqueteTuristico, ImagenPaquete
+from .models import PaqueteTuristico, ImagenPaquete, Reserva
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import parser_classes
 from django.core.exceptions import ValidationError
@@ -713,3 +713,31 @@ def obtener_paquete_por_id(request, paquete_id):
         return Response(paquete_data)
     except PaqueteTuristico.DoesNotExist:
         return Response({'error': 'Paquete no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+@api_view(['POST'])
+def reservar_paquete_por_id(request, paquete_id):
+    data = request.data
+    email = data.get('email')
+    fecha_reservada = data.get('fecha_reservada')  # formato: 'YYYY-MM-DD'
+
+    if not all([email, fecha_reservada]):
+        return Response({'error': 'Faltan datos requeridos.'}, status=400)
+
+    # Buscar usuario
+    try:
+        usuario = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({'error': 'Usuario no encontrado.'}, status=404)
+
+    # Buscar paquete
+    try:
+        paquete = PaqueteTuristico.objects.get(id=paquete_id)
+    except PaqueteTuristico.DoesNotExist:
+        return Response({'error': 'Paquete no encontrado.'}, status=404)
+
+    # Crear reserva
+    reserva = Reserva.objects.create(
+        usuario=usuario,
+        paquete_turistico=paquete,
+        fecha_reservada=fecha_reservada
+    )
+    return Response({'mensaje': 'Reserva creada correctamente.', 'reserva_id': reserva.id}, status=201)
