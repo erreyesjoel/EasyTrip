@@ -9,6 +9,7 @@ import { GestionPaquetes } from './gestion-paquetes/gestion-paquetes';
 import { GestionUsuarios } from './gestion-usuarios/gestion-usuarios';
 import { DetallesPaquete } from './detalles-paquete/detalles-paquete';
 import { Reserva } from './reserva/reserva';
+import { GestionReservas } from './gestion-reservas/gestion-reservas';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,7 @@ export const routes: Routes = [
 
   // Exclusivo para administradores
   { path: 'gestion-paquetes', component: GestionPaquetes, canActivate: [AdminOrAgenteGuard] },
+  { path: 'gestion-reservas', component: GestionReservas, canActivate: [AdminOrAgenteGuard]},
   { path: 'usuarios', component: GestionUsuarios, canActivate: [AdminGuard] },
 
   // Rutas públicas
