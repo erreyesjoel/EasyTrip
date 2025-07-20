@@ -10,9 +10,9 @@ body, :host {
 .reserva-container {
   max-width: 650px;
   min-width: 450px;
-  min-height: 400px;
+  min-height: 350px; // antes 400px, para que el espacio extra se note más
   margin: 2rem auto;
-  padding: 2.5rem 3.5rem 2.5rem 3.5rem;
+  padding: 3.5rem 3.5rem 1.2rem 3.5rem;
   background: #fff;
   border-radius: 32px;
   box-shadow: 0 8px 32px rgba(25, 118, 210, 0.10), 0 2px 8px rgba(0,0,0,0.08);
@@ -20,6 +20,16 @@ body, :host {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.label-fecha {
+  width: 100%;
+  font-size: 1.05rem;
+  color: #888;
+  margin-bottom: -1rem;
+  margin-top: -0.5rem;
+  text-align: center;
+  padding-left: 0.2rem;
 }
 
 .paquete-titulo {
@@ -42,6 +52,7 @@ body, :host {
   width: 100%;
   max-width: 420px;
   align-items: center;
+  padding-bottom: 4rem; // más espacio abajo
 }
 
 .input-reserva {
@@ -66,17 +77,17 @@ body, :host {
   background: vars.$verde-esmeralda;
   color: #fff;
   border: none;
-  border-radius: 12px;
+  border-radius: 20px;
   padding: 1.1rem 0;
   font-size: 1.18rem;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   margin-top: 0.5rem;
+  margin-bottom: 2.5rem; // mucho más espacio debajo del botón
   box-shadow: 0 2px 8px rgba(39, 174, 96, 0.10);
   letter-spacing: 0.5px;
   width: 100%;
-  border-radius: 20px;
   max-width: 320px;
   align-self: center;
 }
