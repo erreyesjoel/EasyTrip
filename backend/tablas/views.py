@@ -728,12 +728,18 @@ def reservar_paquete_por_id(request, paquete_id):
     except User.DoesNotExist:
         return Response({'error': 'Usuario no encontrado.'}, status=404)
 
+
     # Buscar paquete
     try:
         paquete = PaqueteTuristico.objects.get(id=paquete_id)
     except PaqueteTuristico.DoesNotExist:
         return Response({'error': 'Paquete no encontrado.'}, status=404)
 
+    # validacion, si el paquete está inactivo, no se puede reservar
+    # error 403 Forbidden
+    if paquete.estado == 'inactivo':
+        return Response({'error': 'Paquete inactivo.'}, status=403)
+    
     # buscar agentes activos
     agentes = User.objects.filter(rol='agente', is_active=True)
     agente_gestor = random.choice(agentes) if agentes.exists() else None
