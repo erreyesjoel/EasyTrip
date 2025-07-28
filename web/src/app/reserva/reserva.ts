@@ -44,6 +44,8 @@ export class Reserva {
     if (res.status === 201) {
       alert('Reserva creada correctamente');
       console.log('Reserva creada correctamente:', this.email);
+      this.email = ''; // Limpiar el campo de email
+      this.fechaReservada = null; // Limpiar la fecha reservada
     } else {
       console.log(environment.apiBaseUrl + 'crear-reserva/' + this.paquete.id + '/');
       console.log('ID del paquete:', this.paquete.id);
