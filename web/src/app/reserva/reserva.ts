@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-reserva',
@@ -23,5 +24,30 @@ export class Reserva {
     const id = this.route.snapshot.paramMap.get('id');
     const nombre = this.route.snapshot.paramMap.get('nombre');
     this.paquete = { id, nombre };
+  }
+
+  async reservarPaqueteId() {
+    // llamar a la api para reservar el paquete por id
+    const res = await fetch(environment.apiBaseUrl + 'crear-reserva/' + this.paquete.id + '/', {
+      method: 'POST', // metodo POST para crear la reserva
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      // cuerpo de la peticion, se envia el nombre, apellido, email y fecha reservada
+      body: JSON.stringify({
+        nombre: this.nombre,
+        apellido: this.apellido,
+        email: this.email,
+        fecha_reservada: this.fechaReservada
+      })
+    });
+    if (res.status === 201) {
+      alert('Reserva creada correctamente');
+      console.log('Reserva creada correctamente:', this.email);
+    } else {
+      console.log(environment.apiBaseUrl + 'crear-reserva/' + this.paquete.id + '/');
+      console.log('ID del paquete:', this.paquete.id);
+      console.log('Error al crear la reserva');
+    }
   }
 }
