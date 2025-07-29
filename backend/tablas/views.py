@@ -766,6 +766,8 @@ def reservas_gestion(request):
             'id': reserva.id,
             'usuario': reserva.usuario.email,
             'paquete': reserva.paquete_turistico.nombre,
+            # usuario gestor, cogemos el email, y si no tiene la reserva usuario gestor, null
+            'usuario_gestor': reserva.usuario_gestor.email if reserva.usuario_gestor else None,
             'fecha_reservada': reserva.fecha_reservada,
             'estado': reserva.estado,
         })
