@@ -1,0 +1,37 @@
+@use '../../_variables' as vars;
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  margin: 10px 35px 35px 35px; // margen superior reducido
+  padding: 5px 32px 40px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+app-sidebar {
+  flex: 0 0 240px;
+  min-width: 220px;
+  background: #fff;
+}
+
+.header-gestion-reservas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 0 24px; // igual que el padding lateral de .main-content
+}
+
+.titulo-pagina-reservas {
+  font-size: vars.$font-size-xxxl;
+  font-weight: bold;
+  color: vars.$verde-esmeralda;
+  text-align: left;
+  margin: 10px;
+}
