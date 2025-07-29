@@ -752,3 +752,21 @@ def reservar_paquete_por_id(request, paquete_id):
         usuario_gestor=agente_gestor
     )
     return Response({'mensaje': 'Reserva creada correctamente.', 'reserva_id': reserva.id}, status=201)
+
+# api get, para mostrar todas las reservas, en el panel de administración (gestion)
+@api_view(['GET'])
+def reservas_gestion(request):
+    # Obtener todas las reservas
+    reservas = Reserva.objects.all()
+    # agregar datos de reservas a la lista
+    reservas_data = []
+    # bucle for, para iterar sobre las reservas
+    for reserva in reservas:
+        reservas_data.append({
+            'id': reserva.id,
+            'usuario': reserva.usuario.email,
+            'paquete': reserva.paquete_turistico.nombre,
+            'fecha_reservada': reserva.fecha_reservada,
+            'estado': reserva.estado,
+        })
+    return Response(reservas_data)
