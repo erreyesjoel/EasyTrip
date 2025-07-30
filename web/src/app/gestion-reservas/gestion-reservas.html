@@ -23,7 +23,9 @@
             <td>{{ reserva.id }}</td>
             <td class="textos-largos-reservas">{{ reserva.usuario }}</td>
             <td class="textos-largos-reservas">{{ reserva.paquete }}</td>
-            <td class="textos-largos-reservas">{{ reserva.usuario_gestor ? reserva.usuario_gestor : 'Pendiente de asignar' }}</td>
+            <td class="textos-largos-reservas">
+              {{ reserva.usuario_gestor ? reserva.usuario_gestor : 'Sin gestor asignado' }}
+            </td>
             <td>{{ reserva.fecha_reservada | date:'yyyy-MM-dd' }}</td>
             <td>
               <span class="badge-estado-reserva" [ngClass]="reserva.estado === 'confirmada' ? 'estado-activo-reserva' : 'estado-inactivo-reserva'">
@@ -31,7 +33,7 @@
               </span>
             </td>
             <td>
-              <button class="icon-btn-reserva" title="Editar">
+              <button class="icon-btn-reserva" title="Asignar gestor" (click)="abrirModalAsignar(reserva)">
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
                 </svg>
@@ -47,5 +49,29 @@
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+
+<!-- Modal para asignar gestor -->
+<div class="modal-backdrop" *ngIf="modalAsignarAbierto" (click)="cerrarModalAsignar()"></div>
+<div class="modal-editar" *ngIf="modalAsignarAbierto">
+  <div class="modal-header">
+    <h3>Asignar gestor a la reserva</h3>
+    <button class="cerrar-modal" (click)="cerrarModalAsignar()">×</button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="guardarAsignacion()">
+      <div class="form-group">
+        <label for="agente">Selecciona un agente:</label>
+        <select id="agente" [(ngModel)]="agenteSeleccionado" name="agente" required class="form-input">
+          <option value="" disabled selected>Selecciona agente</option>
+          <option *ngFor="let agente of agentes" [value]="agente.email">{{ agente.nombre }} ({{ agente.email }})</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancelar" (click)="cerrarModalAsignar()">Cancelar</button>
+        <button type="submit" class="btn-guardar" [disabled]="!agenteSeleccionado">Asignar</button>
+      </div>
+    </form>
   </div>
 </div>

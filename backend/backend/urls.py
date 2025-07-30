@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from tablas.views import editar_paquete, ejemplo_get, eliminar_paquete, obtener_paquetes, registro_usuario, crear_paquete, enviar_codigo_verificacion, verificar_codigo, enviar_codigo_recuperacion, cambiar_password_con_codigo, gestion_usuarios_tabla, crear_usuario, editar_usuario, eliminar_usuario, obtener_roles_usuario, obtener_paquete_por_id, reservar_paquete_por_id, reservas_gestion
+from tablas.views import editar_paquete, ejemplo_get, eliminar_paquete, obtener_paquetes, registro_usuario, crear_paquete, enviar_codigo_verificacion, verificar_codigo, enviar_codigo_recuperacion, cambiar_password_con_codigo, gestion_usuarios_tabla, crear_usuario, editar_usuario, eliminar_usuario, obtener_roles_usuario, obtener_paquete_por_id, reservar_paquete_por_id, reservas_gestion, usuarios_agentes, asignar_gestor_reserva
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from tablas.views import CustomTokenObtainPairView, usuario_actual, logout_view
 from django.conf import settings
@@ -46,6 +46,8 @@ urlpatterns = [
     path('api/paquetes/<int:paquete_id>/', obtener_paquete_por_id, name='obtener_paquete_por_id'),
     path('api/crear-reserva/<int:paquete_id>/', reservar_paquete_por_id, name='crear_reserva'),  # Asumiendo que crear_paquete maneja reservas
     path('api/gestion-reservas/', reservas_gestion, name='reservas_gestion'),
+    path('api/usuarios-agentes/', usuarios_agentes, name='usuarios-agentes'),
+    path('api/asignar-gestor-reserva/<int:reserva_id>/', asignar_gestor_reserva, name='asignar_gestor_reserva'),
 ]
 
 # Solo en desarrollo: sirve archivos media desde MEDIA_URL

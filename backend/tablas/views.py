@@ -772,3 +772,38 @@ def reservas_gestion(request):
             'estado': reserva.estado,
         })
     return Response(reservas_data)
+
+# api para devolver los agentes activos
+@api_view(['GET'])
+def usuarios_agentes(request):
+    agentes = User.objects.filter(rol='agente', is_active=True)
+    data = [
+        {
+            'email': agente.email,
+            'nombre': f"{agente.first_name} {agente.last_name}".strip() or agente.username
+        }
+        for agente in agentes
+    ]
+    return Response(data)
+
+# api patch para "edtiar" una reserva (api para consumir en gestion)
+
+@api_view(['PATCH'])
+def asignar_gestor_reserva(request, reserva_id):
+    try:
+        reserva = Reserva.objects.get(id=reserva_id)
+    except Reserva.DoesNotExist:
+        return Response({'error': 'Reserva no encontrada.'}, status=status.HTTP_404_NOT_FOUND)
+
+    email = request.data.get('usuario_gestor')
+    if not email:
+        return Response({'error': 'Email de gestor requerido.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        gestor = User.objects.get(email=email, rol='agente', is_active=True)
+    except User.DoesNotExist:
+        return Response({'error': 'Gestor no encontrado o inactivo.'}, status=status.HTTP_404_NOT_FOUND)
+
+    reserva.usuario_gestor = gestor
+    reserva.save()
+    return Response({'mensaje': 'Gestor asignado correctamente.'}, status=status.HTTP_200_OK)
