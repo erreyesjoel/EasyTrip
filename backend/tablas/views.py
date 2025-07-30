@@ -756,11 +756,36 @@ def reservar_paquete_por_id(request, paquete_id):
 # api get, para mostrar todas las reservas, en el panel de administración (gestion)
 @api_view(['GET'])
 def reservas_gestion(request):
-    # Obtener todas las reservas
-    reservas = Reserva.objects.all()
-    # agregar datos de reservas a la lista
+    """
+    Devuelve la lista de reservas, permitiendo filtrar por:
+      - usuario (email)
+      - paquete (nombre)
+      - estado
+      - fecha_reservada
+      - usuario_gestor (email)
+    Parámetros de query string:
+      usuario, paquete, estado, fecha_reservada, usuario_gestor
+    """
+    # Diccionario de lambdas para construir los filtros dinámicamente
+    filtros_map = {
+        'usuario': lambda v: {'usuario__email__icontains': v},
+        'paquete': lambda v: {'paquete_turistico__nombre__icontains': v},
+        'estado': lambda v: {'estado': v},
+        'fecha_reservada': lambda v: {'fecha_reservada': v},
+        'usuario_gestor': lambda v: {'usuario_gestor__email__icontains': v},
+    }
+    filtros = {}
+    # Recorremos cada posible filtro y lo añadimos si está presente en la query string
+    for key, filter_func in filtros_map.items():
+        value = request.GET.get(key)
+        if value not in [None, '']:
+            filtros.update(filter_func(value))
+
+    # Filtramos las reservas según los filtros construidos
+    reservas = Reserva.objects.filter(**filtros).order_by('-fecha_creacion')
+
+    # Serializamos los datos manualmente para devolver solo lo necesario
     reservas_data = []
-    # bucle for, para iterar sobre las reservas
     for reserva in reservas:
         reservas_data.append({
             'id': reserva.id,
@@ -771,6 +796,7 @@ def reservas_gestion(request):
             'fecha_reservada': reserva.fecha_reservada,
             'estado': reserva.estado,
         })
+    # Devolvemos la respuesta en formato JSON
     return Response(reservas_data)
 
 # api para devolver los agentes activos
