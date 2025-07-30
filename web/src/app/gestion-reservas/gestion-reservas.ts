@@ -29,6 +29,13 @@ export class GestionReservas {
   reservaSeleccionada: Reserva | null = null;
   agenteSeleccionado: string = '';
 
+  // Variables de filtro (deben estar aquí)
+  filtroEstado: string = '';
+  filtroCliente: string = '';
+  filtroPaquete: string = '';
+  filtroGestor: string = '';
+  filtroFecha: string = '';
+
   // ngOnInit porque se utiliza para inicializar la carga de datos al inicio del componente
   // nada mas renderizar el componente, llamamos de forma asincrona a la funcion obtenerReservas
   async ngOnInit() {

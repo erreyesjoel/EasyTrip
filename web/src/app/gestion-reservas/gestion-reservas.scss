@@ -382,6 +382,102 @@ app-sidebar {
   }
 }
 
+.filtros-reservas-outer {
+  width: 95%;
+  max-width: 1470px;
+  margin: 0 0 24px 5px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 18px 24px 10px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.filtros-reservas-barra {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 18px;
+  justify-content: flex-start;
+  background: none;
+  margin: 0;
+  padding: 0;
+  min-height: 48px;
+
+  .input-filtro-reservas {
+    flex: 1 1 0;
+    min-width: 227px;
+    max-width: 100%;
+    width: 100%;
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    padding: 8px 14px;
+    background: #fff;
+    color: vars.$gris-oscuro;
+    transition: border 0.2s, box-shadow 0.2s;
+    outline: none;
+
+    &:focus {
+      border-color: vars.$verde-esmeralda;
+      box-shadow: 0 0 0 2px rgba(vars.$verde-esmeralda, 0.13);
+    }
+  }
+}
+
+.btn-reservas-lupa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid vars.$verde-esmeralda;
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+  svg {
+    stroke: #fff;
+  }
+  &:hover {
+    background: darken(vars.$verde-esmeralda, 10%);
+    border-color: darken(vars.$verde-esmeralda, 10%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    svg { stroke: #fff; }
+  }
+}
+
+.btn-reservas-reiniciar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid vars.$verde-esmeralda;
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+  margin-left: 0;
+  svg {
+    stroke: #fff;
+  }
+  &:hover {
+    background: darken(vars.$verde-esmeralda, 10%);
+    border-color: darken(vars.$verde-esmeralda, 10%);
+    svg { stroke: #fff; }
+  }
+}
+
 @media (max-width: 1100px) {
   .tabla-usuarios {
     max-width: 100%;
