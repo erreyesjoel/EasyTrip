@@ -842,3 +842,39 @@ def asignar_gestor_reserva(request, reserva_id):
 
     reserva.save()
     return Response({'mensaje': 'Reserva actualizada correctamente.'}, status=200)
+
+# api para crear reserva desde panel gestion (administracion y agente)
+@api_view(['POST'])
+def crear_reserva(request):
+    data = request.data
+    email = data.get('email')
+    paquete_id = data.get('paquete_id')
+    fecha_reservada = data.get('fecha_reservada')
+    estado = data.get('estado', 'pendiente')
+
+    if not all([email, paquete_id, fecha_reservada, estado]):
+        return Response({'error': 'Faltan datos obligatorios.'}, status=400)
+
+    # Buscar usuario, si no existe lo crea como invitado
+    usuario, created = User.objects.get_or_create(
+        email=email,
+        defaults={'username': email.split('@')[0], 'is_active': True}
+    )
+
+    # Buscar paquete
+    try:
+        paquete = PaqueteTuristico.objects.get(id=paquete_id)
+    except PaqueteTuristico.DoesNotExist:
+        return Response({'error': 'Paquete no encontrado.'}, status=404)
+
+    if paquete.estado != 'activo':
+        return Response({'error': 'El paquete no está activo.'}, status=403)
+
+    reserva = Reserva.objects.create(
+        usuario=usuario,
+        paquete_turistico=paquete,
+        fecha_reservada=fecha_reservada,
+        estado=estado
+    )
+
+    return Response({'mensaje': 'Reserva creada correctamente.', 'reserva_id': reserva.id}, status=201)

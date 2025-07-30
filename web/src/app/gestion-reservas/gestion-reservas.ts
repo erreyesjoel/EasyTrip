@@ -13,6 +13,7 @@ interface Reserva {
   paquete: string;
 }
 
+
 @Component({
   selector: 'app-gestion-reservas',
   imports: [SidebarComponent, CommonModule, FormsModule],
@@ -39,11 +40,16 @@ export class GestionReservas {
   modalEditarAbierto = false;
   reservaEditada: Reserva | null = null;
 
+  modalCrearReservaAbierto = false;
+  nuevaReserva = { email: '', paquete_id: '', fecha_reservada: '', estado: 'pendiente' };
+  paquetes: { id: number, nombre: string }[] = [];
+
   // ngOnInit porque se utiliza para inicializar la carga de datos al inicio del componente
   // nada mas renderizar el componente, llamamos de forma asincrona a la funcion obtenerReservas
   async ngOnInit() {
     await this.obtenerReservas();
     await this.obtenerAgentes();
+    await this.obtenerPaquetes();
   }
 
   async obtenerReservas(): Promise<void> {
@@ -150,4 +156,38 @@ async guardarEdicion() {
   }
 }
 
+abrirModalCrearReserva() {
+  this.nuevaReserva = { email: '', paquete_id: '', fecha_reservada: '', estado: 'pendiente' };
+  this.modalCrearReservaAbierto = true;
+}
+
+cerrarModalCrearReserva() {
+  this.modalCrearReservaAbierto = false;
+}
+
+async guardarNuevaReserva() {
+  const res = await fetch(environment.apiBaseUrl + 'crear-reserva-gestion/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: this.nuevaReserva.email,
+      paquete_id: this.nuevaReserva.paquete_id,
+      fecha_reservada: this.nuevaReserva.fecha_reservada,
+      estado: this.nuevaReserva.estado
+    })
+  });
+  if (res.status === 201 || res.status === 200) {
+    await this.obtenerReservas();
+    this.cerrarModalCrearReserva();
+  }
+}
+async obtenerPaquetes() {
+  const res = await fetch(environment.apiBaseUrl + 'paquetes/');
+  if (res.status === 200) {
+    const data = await res.json();
+    // Filtra solo los activos
+    this.paquetes = data.filter((p: any) => p.estado === 'activo');
+    console.log('Paquetes activos:', this.paquetes);
+  }
+}
 }

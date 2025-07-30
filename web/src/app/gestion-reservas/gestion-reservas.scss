@@ -478,6 +478,49 @@ app-sidebar {
   }
 }
 
+.crear-reserva-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 97%;
+  margin-top: 0;
+  margin-bottom: 5px;
+  padding: 0 24px;
+  position: relative;
+  top: -38px;
+  z-index: 1;
+}
+
+.crear-reserva-btn {
+  display: flex;
+  gap: 8px;
+  background-color: vars.$verde-esmeralda;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 18px;
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+  &:hover {
+    background: darken(vars.$verde-esmeralda, 10%);
+    box-shadow: 0 2px 8px rgba(39,174,96,0.10);
+  }
+
+  .icono-crear-reserva {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    svg {
+      stroke: #fff;
+    }
+  }
+}
+
 @media (max-width: 1100px) {
   .tabla-usuarios {
     max-width: 100%;
