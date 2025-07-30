@@ -813,23 +813,32 @@ def usuarios_agentes(request):
     return Response(data)
 
 # api patch para "edtiar" una reserva (api para consumir en gestion)
-
+# asignar gestor (agente) o actualizar el estado de la reserva
 @api_view(['PATCH'])
 def asignar_gestor_reserva(request, reserva_id):
     try:
         reserva = Reserva.objects.get(id=reserva_id)
     except Reserva.DoesNotExist:
-        return Response({'error': 'Reserva no encontrada.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Reserva no encontrada.'}, status=404)
 
+    # Actualizar gestor si se envía
     email = request.data.get('usuario_gestor')
-    if not email:
-        return Response({'error': 'Email de gestor requerido.'}, status=status.HTTP_400_BAD_REQUEST)
+    if email:
+        try:
+            gestor = User.objects.get(email=email)
+            reserva.usuario_gestor = gestor
+        except User.DoesNotExist:
+            return Response({'error': 'Gestor no encontrado.'}, status=404)
 
-    try:
-        gestor = User.objects.get(email=email, rol='agente', is_active=True)
-    except User.DoesNotExist:
-        return Response({'error': 'Gestor no encontrado o inactivo.'}, status=status.HTTP_404_NOT_FOUND)
+    # Actualizar estado si se envía
+    estado = request.data.get('estado')
+    if estado:
+        reserva.estado = estado
 
-    reserva.usuario_gestor = gestor
+    # Actualizar fecha si se envía
+    fecha_reservada = request.data.get('fecha_reservada')
+    if fecha_reservada:
+        reserva.fecha_reservada = fecha_reservada
+
     reserva.save()
-    return Response({'mensaje': 'Gestor asignado correctamente.'}, status=status.HTTP_200_OK)
+    return Response({'mensaje': 'Reserva actualizada correctamente.'}, status=200)

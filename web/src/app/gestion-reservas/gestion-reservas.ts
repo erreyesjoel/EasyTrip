@@ -36,6 +36,9 @@ export class GestionReservas {
   filtroGestor: string = '';
   filtroFecha: string = '';
 
+  modalEditarAbierto = false;
+  reservaEditada: Reserva | null = null;
+
   // ngOnInit porque se utiliza para inicializar la carga de datos al inicio del componente
   // nada mas renderizar el componente, llamamos de forma asincrona a la funcion obtenerReservas
   async ngOnInit() {
@@ -118,6 +121,33 @@ reiniciarFiltros() {
   this.filtroFecha = '';
   this.aplicarFiltros();
 }
-// ...existing code...
+
+abrirModalEditar(reserva: Reserva) {
+  // Clona la reserva para edición
+  this.reservaEditada = { ...reserva };
+  this.modalEditarAbierto = true;
+}
+
+cerrarModalEditar() {
+  this.modalEditarAbierto = false;
+  this.reservaEditada = null;
+}
+
+async guardarEdicion() {
+  if (!this.reservaEditada) return; // Evita el error si es null
+
+  const res = await fetch(environment.apiBaseUrl + `asignar-gestor-reserva/${this.reservaEditada.id}/`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      estado: this.reservaEditada.estado,
+      fecha_reservada: this.reservaEditada.fecha_reservada
+    })
+  });
+  if (res.status === 200) {
+    await this.obtenerReservas();
+    this.cerrarModalEditar();
+  }
+}
 
 }
