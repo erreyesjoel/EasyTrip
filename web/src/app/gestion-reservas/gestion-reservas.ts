@@ -96,4 +96,28 @@ export class GestionReservas {
     }
   }
 
+async aplicarFiltros() {
+  const params: string[] = [];
+  if (this.filtroCliente) params.push(`usuario=${encodeURIComponent(this.filtroCliente)}`);
+  if (this.filtroPaquete) params.push(`paquete=${encodeURIComponent(this.filtroPaquete)}`);
+  if (this.filtroGestor) params.push(`usuario_gestor=${encodeURIComponent(this.filtroGestor)}`);
+  if (this.filtroEstado) params.push(`estado=${encodeURIComponent(this.filtroEstado)}`);
+  if (this.filtroFecha) params.push(`fecha_reservada=${encodeURIComponent(this.filtroFecha)}`);
+  const query = params.length ? '?' + params.join('&') : '';
+  const res = await fetch(environment.apiBaseUrl + 'gestion-reservas/' + query);
+  if (res.status === 200) {
+    this.reservas = await res.json();
+  }
+}
+
+reiniciarFiltros() {
+  this.filtroCliente = '';
+  this.filtroPaquete = '';
+  this.filtroGestor = '';
+  this.filtroEstado = '';
+  this.filtroFecha = '';
+  this.aplicarFiltros();
+}
+// ...existing code...
+
 }
