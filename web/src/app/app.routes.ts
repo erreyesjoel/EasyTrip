@@ -10,6 +10,7 @@ import { GestionUsuarios } from './gestion-usuarios/gestion-usuarios';
 import { DetallesPaquete } from './detalles-paquete/detalles-paquete';
 import { Reserva } from './reserva/reserva';
 import { GestionReservas } from './gestion-reservas/gestion-reservas';
+import { Paquetes } from './paquetes/paquetes';
 
 export const routes: Routes = [
   {
@@ -31,5 +32,6 @@ export const routes: Routes = [
 
   // Rutas públicas
   { path: 'detalles-paquete/:id', component: DetallesPaquete },
-  { path: 'reserva/:id/:nombre', component: Reserva }
+  { path: 'reserva/:id/:nombre', component: Reserva },
+  { path: 'paquetes', component: Paquetes }, // ruta para ver todos los paquetes
 ];
