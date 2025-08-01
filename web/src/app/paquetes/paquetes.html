@@ -1,1 +1,33 @@
-<p>paquetes works!</p>
+<div class="paquetes-container">
+  <div class="paquetes-header">
+    <h2 class="section-title">Nuestros Paquetes</h2>
+    <p class="section-subtitle">Descubre las mejores experiencias que tenemos para ti</p>
+  </div>
+  
+  <div class="paquetes-grid">
+    <div class="paquete-card" *ngFor="let paquete of paquetes">
+      <div class="card-image-container">
+        <img [src]="getImagenPrincipal(paquete)" alt="Imagen paquete" class="paquete-img">
+        <div class="image-overlay"></div>
+      </div>
+      
+      <div class="card-content">
+        <h3 class="paquete-titulo">{{ paquete.nombre }}</h3>
+        <div class="card-actions">
+          <a [routerLink]="['/detalles-paquete', paquete.id]" class="btn-detalles">
+            <span>Ver detalles</span>
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Estado de carga -->
+  <div class="loading-state" *ngIf="paquetes.length === 0">
+    <div class="loading-spinner"></div>
+    <p>Cargando paquetes...</p>
+  </div>
+</div>
