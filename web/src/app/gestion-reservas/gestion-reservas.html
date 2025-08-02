@@ -1,0 +1,196 @@
+<div class="admin-layout">
+  <app-sidebar></app-sidebar>
+  <div class="main-content">
+    <h2 class="titulo-pagina-reservas">Gestión de Reservas</h2>
+    <div class="crear-reserva-container">
+      <button class="crear-reserva-btn" (click)="abrirModalCrearReserva()">
+        <span class="icono-crear-reserva">
+          <!-- Icono Plus Circle -->
+          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <circle cx="12" cy="12" r="9" stroke-width="1.5"/>
+            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8"/>
+          </svg>
+        </span>
+        Crear reserva
+      </button>
+    </div>
+    <div class="filtros-reservas-outer">
+      <div class="filtros-reservas-barra">
+        <input type="text" class="input-filtro-reservas" [(ngModel)]="filtroCliente" placeholder="Cliente">
+        <input type="text" class="input-filtro-reservas" [(ngModel)]="filtroPaquete" placeholder="Paquete">
+        <input type="text" class="input-filtro-reservas" [(ngModel)]="filtroGestor" placeholder="Gestor">
+        <select class="input-filtro-reservas" [(ngModel)]="filtroEstado">
+          <option value="">Estado</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="confirmada">Confirmada</option>
+          <option value="pagada">Pagada</option>
+          <option value="cancelada">Cancelada</option>
+        </select>
+        <input type="date" class="input-filtro-reservas" [(ngModel)]="filtroFecha" placeholder="Fecha reservada">
+        <button type="button" class="btn-reservas-lupa" (click)="aplicarFiltros()" title="Filtrar">
+          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <circle cx="11" cy="11" r="7" stroke-width="2"/>
+            <line x1="16.5" y1="16.5" x2="21" y2="21" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button type="button" class="btn-reservas-reiniciar" (click)="reiniciarFiltros()" title="Reiniciar filtros">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path d="M4 4v5h5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20 20v-5h-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5.07 19A9 9 0 1 1 12 21a9 9 0 0 1-6.93-2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="tabla-reservas-container">
+      <table class="tabla-reservas">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Paquete</th>
+            <th>Gestor</th>
+            <th>Fecha reservada</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reserva of reservas">
+            <td>{{ reserva.id }}</td>
+            <td class="textos-largos-reservas">{{ reserva.usuario }}</td>
+            <td class="textos-largos-reservas">{{ reserva.paquete }}</td>
+            <td class="textos-largos-reservas">
+              {{ reserva.usuario_gestor ? reserva.usuario_gestor : 'Sin gestor asignado' }}
+            </td>
+            <td>{{ reserva.fecha_reservada | date:'yyyy-MM-dd' }}</td>
+            <td>
+              <span class="badge-estado-reserva" [ngClass]="reserva.estado === 'confirmada' ? 'estado-activo-reserva' : 'estado-inactivo-reserva'">
+                {{ reserva.estado | titlecase }}
+              </span>
+            </td>
+            <td>
+              <button class="icon-btn-reserva" title="Asignar gestor" (click)="abrirModalAsignar(reserva)">
+                <!-- Icono usuario/agente -->
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <circle cx="12" cy="8" r="4" stroke-width="1.7"/>
+                  <path stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M4 20c0-3.5 3.5-6 8-6s8 2.5 8 6"/>
+                </svg>
+              </button>
+              <button class="icon-btn-reserva" title="Editar reserva" (click)="abrirModalEditar(reserva)">
+                <!-- SVG lápiz para editar reserva -->
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M12 20h9"/>
+                  <path stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+                </svg>
+              </button>
+              <button class="icon-btn-reserva" title="Cancelar">
+                <!-- SVG papelera -->
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <rect x="5" y="7" width="14" height="12" rx="2" stroke-width="1.7"/>
+                  <path stroke-width="1.7" stroke-linecap="round" d="M9 11v4M15 11v4M3 7h18M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1z"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para asignar gestor -->
+<div class="modal-backdrop" *ngIf="modalAsignarAbierto" (click)="cerrarModalAsignar()"></div>
+<div class="modal-editar" *ngIf="modalAsignarAbierto">
+  <div class="modal-header">
+    <h3>Asignar gestor a la reserva</h3>
+    <button class="cerrar-modal" (click)="cerrarModalAsignar()">×</button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="guardarAsignacion()">
+      <div class="form-group">
+        <label for="agente">Selecciona un agente:</label>
+        <select id="agente" [(ngModel)]="agenteSeleccionado" name="agente" required class="form-input">
+          <option value="" disabled selected>Selecciona agente</option>
+          <option *ngFor="let agente of agentes" [value]="agente.email">{{ agente.nombre }} ({{ agente.email }})</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancelar" (click)="cerrarModalAsignar()">Cancelar</button>
+        <button type="submit" class="btn-guardar" [disabled]="!agenteSeleccionado">Asignar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal para editar reserva -->
+<div class="modal-backdrop" *ngIf="modalEditarAbierto && reservaEditada" (click)="cerrarModalEditar()"></div>
+<div class="modal-editar" *ngIf="modalEditarAbierto && reservaEditada">
+  <div class="modal-header">
+    <h3>Editar reserva</h3>
+    <button class="cerrar-modal" (click)="cerrarModalEditar()">×</button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="guardarEdicion()">
+      <div class="form-group">
+        <label for="estado">Estado:</label>
+        <select id="estado" [(ngModel)]="reservaEditada.estado" name="estado" class="form-input">
+          <option value="pendiente">Pendiente</option>
+          <option value="confirmada">Confirmada</option>
+          <option value="pagada">Pagada</option>
+          <option value="cancelada">Cancelada</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="fecha">Fecha reservada:</label>
+        <input id="fecha" type="date" [(ngModel)]="reservaEditada.fecha_reservada" name="fecha" class="form-input">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancelar" (click)="cerrarModalEditar()">Cancelar</button>
+        <button type="submit" class="btn-guardar">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal para crear reserva -->
+<div class="modal-backdrop" *ngIf="modalCrearReservaAbierto" (click)="cerrarModalCrearReserva()"></div>
+<div class="modal-editar" *ngIf="modalCrearReservaAbierto">
+  <div class="modal-header">
+    <h3>Crear reserva</h3>
+    <button class="cerrar-modal" (click)="cerrarModalCrearReserva()">×</button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="guardarNuevaReserva()">
+      <div class="form-group">
+        <label for="cliente">Cliente (email):</label>
+        <input id="cliente" type="email" [(ngModel)]="nuevaReserva.email" name="cliente" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label for="paquete">Paquete:</label>
+        <select id="paquete" [(ngModel)]="nuevaReserva.paquete_id" name="paquete" class="form-input" required>
+          <option value="" disabled selected>Selecciona paquete</option>
+          <option *ngFor="let paquete of paquetes" [value]="paquete.id">{{ paquete.nombre }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="fecha">Fecha reservada:</label>
+        <input id="fecha" type="date" [(ngModel)]="nuevaReserva.fecha_reservada" name="fecha" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label for="estado">Estado:</label>
+        <select id="estado" [(ngModel)]="nuevaReserva.estado" name="estado" class="form-input" required>
+          <option value="pendiente">Pendiente</option>
+          <option value="confirmada">Confirmada</option>
+          <option value="pagada">Pagada</option>
+          <option value="cancelada">Cancelada</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancelar" (click)="cerrarModalCrearReserva()">Cancelar</button>
+        <button type="submit" class="btn-guardar" [disabled]="!nuevaReserva.email || !nuevaReserva.paquete_id || !nuevaReserva.fecha_reservada || !nuevaReserva.estado">Crear</button>
+      </div>
+    </form>
+  </div>
+</div>

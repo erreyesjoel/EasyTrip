@@ -1,14 +1,36 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
+import { MostrarPaquetes } from '../mostrar-paquetes/mostrar-paquetes';
 
 // hero ts
 @Component({
   selector: 'app-hero',
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
-  standalone: true
+  standalone: true,
+  imports: [MostrarPaquetes] // Importamos MostrarPaquetes para usarlo en el template
 })
 export class Hero implements AfterViewInit {
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
+
+  constructor(private router: Router) {
+    this.checkAdminRedirect();
+  }
+
+  async checkAdminRedirect() {
+    try {
+      const res = await fetch(environment.apiBaseUrl + 'usuario/', {
+        credentials: 'include'
+      });
+      if (res.ok) {
+        const usuario = await res.json();
+        if (usuario.rol === 'administrador') {
+          this.router.navigate(['/dashboard']);
+        }
+      }
+    } catch {}
+  }
 
   ngAfterViewInit() {
     if (this.heroVideo && this.heroVideo.nativeElement) {

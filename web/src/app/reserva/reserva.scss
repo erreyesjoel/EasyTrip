@@ -1,0 +1,97 @@
+@use '../../_variables' as vars;
+
+body, :host {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reserva-container {
+  max-width: 650px;
+  min-width: 450px;
+  min-height: 350px; // antes 400px, para que el espacio extra se note más
+  margin: 2rem auto;
+  padding: 3.5rem 3.5rem 1.2rem 3.5rem;
+  background: #fff;
+  border-radius: 32px;
+  box-shadow: 0 8px 32px rgba(25, 118, 210, 0.10), 0 2px 8px rgba(0,0,0,0.08);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.label-fecha {
+  width: 100%;
+  font-size: 1.05rem;
+  color: #888;
+  margin-bottom: -1rem;
+  margin-top: -0.5rem;
+  text-align: center;
+  padding-left: 0.2rem;
+}
+
+.paquete-titulo {
+  color: vars.$verde-esmeralda;
+  font-weight: 700;
+  font-size: 2.2rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.2rem;
+  margin-top: 0.2rem;
+  text-align: center;
+  max-width: 90%;
+  word-break: break-word;
+}
+
+.reserva-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 420px;
+  align-items: center;
+  padding-bottom: 4rem; // más espacio abajo
+}
+
+.input-reserva {
+  width: 100%;
+  padding: 1.1rem 1.3rem;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 14px;
+  font-size: 1.18rem;
+  background: #f7fafc;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.04);
+}
+
+.input-reserva:focus {
+  border-color: vars.$verde-esmeralda;
+  box-shadow: 0 0 0 3px rgba(vars.$verde-esmeralda, 0.13);
+  background: #fff;
+}
+
+.btn-reservar {
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 1.1rem 0;
+  font-size: 1.18rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-top: 0.5rem;
+  margin-bottom: 2.5rem; // mucho más espacio debajo del botón
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.10);
+  letter-spacing: 0.5px;
+  width: 100%;
+  max-width: 320px;
+  align-self: center;
+}
+
+.btn-reservar:hover {
+  background: darken(vars.$verde-esmeralda, 10%);
+}

@@ -1,0 +1,623 @@
+@use '../../_variables' as vars;
+
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.cabecera-usuarios {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; // el botón y el título quedan arriba alineados
+  width: 100%;
+  padding: 0 24px;
+  margin-bottom: 24px;
+}
+
+.titulo-pagina-usuarios {
+  font-size: vars.$font-size-xxxl;
+  font-weight: bold;
+  color: vars.$verde-esmeralda;
+  margin: 20px 0 0 0;
+  text-align: left;
+}
+
+app-sidebar {
+  flex: 0 0 240px;
+  min-width: 220px;
+  background: #fff;
+}
+
+.main-content {
+  flex: 1;
+  margin: 10px 35px 35px 35px; // margen superior reducido
+  padding: 5px 32px 40px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.tabla-container {
+  margin-left: 5px; // o el valor que prefieras
+}
+
+.tabla-usuarios {
+  width: 100%;
+  min-width: 1550px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px 0 rgba(60, 72, 88, 0.08);
+  overflow-x: auto;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 1.05rem;
+  color: #333;
+}
+
+.tabla-usuarios thead tr {
+  background: vars.$verde-esmeralda;
+}
+
+.tabla-usuarios th, .tabla-usuarios td {
+  padding: 16px 18px;
+  text-align: left;
+}
+
+// Para que los textos largos se corten con puntos suspensivos
+// puedes usar la clase .textos-largos en los <td> correspondientes
+.textos-largos {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tabla-usuarios th {
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border-bottom: 2px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  cursor: pointer;
+  user-select: none;
+
+  .icono-orden {
+    display: inline-flex;
+    flex-direction: column;
+    margin-left: 6px;
+    vertical-align: middle;
+    width: 14px;
+    height: 18px;
+
+    svg {
+      display: block;
+      width: 14px;
+      height: 8px;
+      stroke: #fff; // <-- siempre blanco
+      fill: none;
+      opacity: 1;   // <-- siempre opacas
+      transition: stroke 0.2s, opacity 0.2s;
+    }
+
+    &.activo-asc svg.arriba,
+    &.activo-desc svg.abajo {
+      stroke: #ffffff; // <-- también blanco cuando está activo
+      opacity: 1;
+    }
+  }
+}
+
+.tabla-usuarios tbody tr {
+  transition: background 0.2s;
+}
+
+.tabla-usuarios tbody tr:hover {
+  background: #f0f6ff;
+}
+
+.tabla-usuarios td {
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.badge-estado {
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+  padding: 6px 18px;
+  border-radius: 16px;
+  font-size: 1em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border: 1.5px solid transparent;
+  box-shadow: 0 1px 4px 0 rgba(60, 72, 88, 0.07);
+  user-select: none;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+}
+
+.estado-activo {
+  background: #e8f5e9;
+  color: #218838;
+  border-color: #b7e0c2;
+}
+
+.estado-inactivo {
+  background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+  color: #771005;
+  border-color: #d1d5db;
+}
+
+.btn-editar,
+.btn-baja,
+.btn-activar,
+.btn-eliminar {
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 1em;
+  font-weight: 500;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-editar {
+  background: linear-gradient(90deg, #4f8cff 0%, #6ed0fa 100%);
+  color: #fff;
+}
+.btn-editar:hover {
+  background: #357ae8;
+}
+
+.btn-baja {
+  background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
+  color: #fff;
+}
+.btn-baja:hover {
+  background: #e74c3c;
+}
+
+.btn-activar {
+  background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+  color: #fff;
+}
+.btn-activar:hover {
+  background: #27ae60;
+}
+
+.btn-eliminar {
+  background: linear-gradient(90deg, #e53935 0%, #e35d5b 100%);
+  color: #fff;
+}
+.btn-eliminar:hover {
+  background: #b71c1c;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  padding: 7px;
+  margin-right: 6px;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    stroke: #4f8cff;
+    transition: stroke 0.18s;
+  }
+
+  &:hover {
+    background: #e3f0ff;
+    box-shadow: 0 2px 8px rgba(79,140,255,0.10);
+    svg { stroke: #357ae8; }
+  }
+
+  &:last-child {
+    margin-right: 0;
+    svg { stroke: #e53935; }
+    &:hover svg { stroke: #b71c1c; }
+  }
+}
+
+.filtros-usuarios-outer {
+  width: 95%;
+  max-width: 1470px;
+  margin: 0 0 24px 5px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 18px 24px 10px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.filtros-usuarios-barra {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 18px;
+  justify-content: flex-start;
+  background: none;
+  margin: 0;
+  padding: 0;
+  min-height: 48px;
+
+  .input-filtro-usuarios {
+    flex: 1 1 0;
+    min-width: 260px;
+    max-width: 100%;
+    width: 100%;
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    padding: 8px 14px;
+    background: #fff;
+    color: vars.$gris-oscuro;
+    transition: border 0.2s, box-shadow 0.2s;
+    outline: none;
+
+    &:focus {
+      border-color: vars.$verde-esmeralda;
+      box-shadow: 0 0 0 2px rgba(vars.$verde-esmeralda, 0.13);
+    }
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    padding: 8px 14px;
+    background: #fff;
+    color: vars.$gris-oscuro;
+    min-width: 227px;
+    transition: border 0.2s, box-shadow 0.2s;
+    outline: none;
+
+    &:focus {
+      border-color: vars.$verde-esmeralda;
+      box-shadow: 0 0 0 2px rgba(vars.$verde-esmeralda, 0.13);
+    }
+  }
+}
+
+.btn-usuarios-lupa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid vars.$verde-esmeralda;
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+  svg {
+    stroke: #fff;
+  }
+  &:hover {
+    background: darken(vars.$verde-esmeralda, 10%);
+    border-color: darken(vars.$verde-esmeralda, 10%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    svg { stroke: #fff; }
+  }
+}
+
+.btn-usuarios-reiniciar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid vars.$verde-esmeralda;
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+  margin-left: 0;
+  svg {
+    stroke: #fff;
+  }
+  &:hover {
+    background: darken(vars.$verde-esmeralda, 10%);
+    border-color: darken(vars.$verde-esmeralda, 10%);
+    svg { stroke: #fff; }
+  }
+}
+
+@media (max-width: 1100px) {
+  .tabla-usuarios {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .tabla-usuarios th, .tabla-usuarios td {
+    padding: 10px 8px;
+    font-size: 0.98rem;
+  }
+  .titulo-pagina {
+    font-size: 1.3rem;
+  }
+  .main-content {
+    padding: 24px 4px;
+  }
+}
+
+// Estilos para el modal (idénticos a gestión de paquetes)
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-editar {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  padding: 0;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: vars.$verde-esmeralda;
+  color: white;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .cerrar-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.7rem;
+    cursor: pointer;
+    padding: 0 8px;
+    line-height: 1;
+  }
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: vars.$gris-oscuro;
+    letter-spacing: 0.5px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background-color: #fff;
+    box-sizing: border-box;
+    &:focus {
+      outline: none;
+      border-color: vars.$verde-esmeralda;
+      box-shadow: 0 0 0 2px rgba(39,174,96,0.08);
+    }
+  }
+  select.form-input {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23555' viewBox='0 0 12 12'%3E%3Cpath d='M3.5 5l2.5 2.5L8.5 5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    &::-ms-expand { display: none; }
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  &.footer-eliminar {
+    justify-content: center;
+  }
+  .botones-confirmacion {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+button {
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .btn-cancelar {
+    background: #e0e0e0;
+    color: #333;
+    &:hover {
+      background: #d1d5db;
+      color: #111;
+      box-shadow: 0 2px 8px rgba(60,72,88,0.08);
+    }
+  }
+  .btn-guardar {
+    background: vars.$verde-esmeralda;
+    color: #fff;
+    &:hover {
+      background: darken(vars.$verde-esmeralda, 10%);
+      box-shadow: 0 2px 8px rgba(39,174,96,0.10);
+    }
+    &:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+  }
+  .btn-eliminar {
+    background: vars.$rojo-primario;
+    color: #fff;
+    &:hover {
+      background: darken(vars.$rojo-primario, 10%);
+      box-shadow: 0 2px 8px rgba(231,76,60,0.10);
+    }
+  }
+}
+
+.modal-confirmar {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  padding: 0;
+}
+
+.mensaje-eliminar {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: vars.$gris-oscuro;
+}
+
+.advertencia-eliminar {
+  font-size: 14px;
+  color: vars.$rojo-primario;
+  margin-bottom: 24px;
+}
+
+.header-gestion-usuarios {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 0 24px;
+}
+
+.crear-usuario-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 97%;
+  margin-top: 0;
+  margin-bottom: 5px;
+  padding: 0 24px;
+  position: relative;
+  top: -38px; // ajusta este valor para alinear el botón con la parte superior del título
+  z-index: 1;
+}
+
+.crear-usuario-btn {
+  display: flex;
+  gap: 8px;
+  background-color: vars.$verde-esmeralda;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 18px;
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+  &:hover {
+    background-color: darken(vars.$verde-esmeralda, 10%);
+  }
+
+  .icono-crear-usuario {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.modal-confirmar-estado {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modal-confirmar-estado .modal-header {
+  justify-content: center;
+  padding: 22px 20px 12px 20px;
+  position: relative;
+  h3 {
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+  }
+  .cerrar-modal {
+    position: absolute;
+    right: 18px;
+    top: 18px;
+  }
+}
+
+.modal-confirmar-estado .modal-body {
+  padding: 24px 24px 0 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-confirmar-estado .modal-footer.footer-eliminar {
+  padding: 18px 0 18px 0;
+  gap: 24px;
+  .botones-confirmacion, & {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    width: 100%;
+  }
+}
+

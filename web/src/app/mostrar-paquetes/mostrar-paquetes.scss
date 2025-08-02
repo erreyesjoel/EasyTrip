@@ -1,0 +1,235 @@
+@use '../../_variables' as vars;
+
+
+.container-paquetes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 3.5rem;
+  padding: 2rem 1vw 2rem 12vw; // antes: 8vw, ahora 12vw para más desplazamiento a la derecha
+  min-height: 120vh;
+  box-sizing: border-box;
+  max-width: 100vw;
+}
+
+
+.titulo-mostrar-paquetes-landing {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #333; // Color del texto
+    }
+    
+.paquete-container {
+  flex: 1 1 440px;
+  max-width: 440px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  min-width: 360px; // opcional, para responsividad
+}
+
+.imagen-container {
+  position: relative;
+  width: 440px;
+  height: 600px;
+  overflow: hidden;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08);
+}
+
+.imagen-paquete {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; // Cambia a cover para que siempre llene el espacio
+  display: block;
+  border-radius: 40px;
+  margin: 0;
+  padding: 0;
+  background: #f3f3f3; // Gris claro para el fondo de la imagen
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+
+
+.precio-badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 10px 22px;
+  border-radius: 22px;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  letter-spacing: 0.5px;
+}
+
+.acciones-paquete {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 70%;
+  z-index: 3;
+}
+
+.acciones-paquete-top {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 5;
+}
+
+.btn-reservar,
+.btn-detalles {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: auto;
+  min-width: 0;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 18px;
+  font-size: 1rem;
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+  svg {
+    stroke: #fff;
+    margin-right: 2px;
+  }
+}
+
+.btn-reservar:hover,
+.btn-detalles:hover {
+  background: darken(vars.$verde-esmeralda, 10%);
+}
+
+.titulo-paquete-card {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: bold;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  z-index: 2;
+  max-width: 60%;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  background: rgba(0,0,0,0.18); 
+  padding: 6px 14px; 
+  border-radius: 12px;
+
+  white-space: nowrap;   // No permite saltos de línea
+  overflow: hidden;      // Oculta el texto que se sale del recuadro
+  // No pongas text-overflow: ellipsis;
+}
+.titulo-paquete-card-inferior {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: bold;
+  padding: 14px 32px 10px 32px; // más padding horizontal
+  background: linear-gradient(0deg, vars.$verde-esmeralda 80%, rgba(0,0,0,0.10) 100%);
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  max-width: 92%; // menos ancho para que no llegue a los bordes
+  margin: 0 auto; // centra el título dentro del contenedor
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  z-index: 3;
+  box-shadow: 0 6px 24px 0 rgba(39,174,96,0.18), 0 2px 8px rgba(0,0,0,0.10);
+  letter-spacing: 0.5px;
+}
+
+.flecha-carrusel {
+  background: rgba(0,0,0,0.25);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 22px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.flecha-izquierda { left: 8px; }
+.flecha-derecha { right: 8px; }
+.flecha-carrusel:hover { background: rgba(0,0,0,0.45); }
+
+.cupo-badge-inferior {
+  position: absolute;
+  left: 22px;
+  bottom: 49px;
+  background: rgba(vars.$verde-esmeralda, 0.85); // si tu preprocesador lo permite
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 500;
+  padding: 7px 14px 7px 10px;
+  border-radius: 18px;
+  z-index: 4; // por encima del título
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+
+  svg {
+    stroke: #fff;
+  }
+}
+
+.imagenes-badge-inferior {
+  position: absolute;
+  right: 22px;
+  bottom: 49px;
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 500;
+  padding: 7px 14px 7px 10px;
+  border-radius: 18px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+
+  svg {
+    stroke: #fff;
+  }
+}

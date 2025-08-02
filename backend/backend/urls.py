@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from tablas.views import ejemplo_get, registro_usuario, enviar_codigo_verificacion, verificar_codigo, enviar_codigo_recuperacion, cambiar_password_con_codigo
+from tablas.views import editar_paquete, ejemplo_get, eliminar_paquete, obtener_paquetes, registro_usuario, crear_paquete, enviar_codigo_verificacion, verificar_codigo, enviar_codigo_recuperacion, cambiar_password_con_codigo, gestion_usuarios_tabla, crear_usuario, editar_usuario, eliminar_usuario, obtener_roles_usuario, obtener_paquete_por_id, reservar_paquete_por_id, reservas_gestion, usuarios_agentes, asignar_gestor_reserva, crear_reserva
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from tablas.views import CustomTokenObtainPairView, usuario_actual, logout_view
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,5 +34,26 @@ urlpatterns = [
     path('api/cambiar-password/', cambiar_password_con_codigo, name='cambiar_password_con_codigo'),
     path('api/usuario/', usuario_actual, name='usuario_actual'),
     path('api/logout/', logout_view, name='logout_view'),
+    path('api/paquetes/', obtener_paquetes, name='obtener_paquetes'),
+    path('api/crear-paquete/', crear_paquete, name='crear_paquete'),
+    path('api/editar-paquete/<int:paquete_id>/', editar_paquete, name='editar_paquete'),  # Para editar un paquete
+    path('api/eliminar-paquete/<int:paquete_id>/', eliminar_paquete, name='eliminar_paquete'),  # Para eliminar un paquete
+    path('api/gestion-usuarios/', gestion_usuarios_tabla, name='gestion_usuarios_tabla'),
+    path('api/crear-usuario/', crear_usuario, name='crear_usuario'),
+    path('api/editar-usuario/<int:user_id>/', editar_usuario, name='editar_usuario'),
+    path('api/eliminar-usuario/<int:user_id>/', eliminar_usuario, name='eliminar_usuario'),
+    path('api/roles-usuario/', obtener_roles_usuario, name='obtener_roles_usuario'),
+    path('api/paquetes/<int:paquete_id>/', obtener_paquete_por_id, name='obtener_paquete_por_id'),
+    path('api/crear-reserva/<int:paquete_id>/', reservar_paquete_por_id, name='crear_reserva'),  # Asumiendo que crear_paquete maneja reservas
+    path('api/gestion-reservas/', reservas_gestion, name='reservas_gestion'),
+    path('api/usuarios-agentes/', usuarios_agentes, name='usuarios-agentes'),
+    path('api/asignar-gestor-reserva/<int:reserva_id>/', asignar_gestor_reserva, name='asignar_gestor_reserva'),
+    path('api/crear-reserva-gestion/', crear_reserva, name='crear_reserva'),
+
 ]
 
+# Solo en desarrollo: sirve archivos media desde MEDIA_URL
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Configuración para servir archivos estáticos (predeterminados) SOLO EN PRODUCCION, COMO MEDIA_URL
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

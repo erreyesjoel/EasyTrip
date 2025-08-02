@@ -136,6 +136,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Directorios adicionales donde Django buscará archivos estáticos
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# Directorio donde se recopilarán todos los archivos estáticos en producción
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -175,3 +183,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# Configuración para archivos multimedia (imágenes, documentos, etc.)
+# MEDIA_URL es la URL base para acceder a los archivos subidos por los usuarios.
+# MEDIA_ROOT es la ruta absoluta en el sistema de archivos donde se guardarán estos archivos.
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

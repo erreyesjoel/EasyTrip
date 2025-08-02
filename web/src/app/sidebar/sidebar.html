@@ -1,0 +1,113 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <div class="logo">
+      <!-- Heroicons: Building Office -->
+      <span class="icon-logo">
+        <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+            d="M3.75 21V5.25A2.25 2.25 0 0 1 6 3h12a2.25 2.25 0 0 1 2.25 2.25V21M3.75 21h16.5M3.75 21v-2.25A2.25 2.25 0 0 1 6 16.5h12a2.25 2.25 0 0 1 2.25 2.25V21" />
+        </svg>
+      </span>
+      <span class="logo-text" *ngIf="!isCollapsed">Dashboard</span>
+    </div>
+    <button class="toggle-btn" (click)="toggleSidebar()" type="button">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path *ngIf="!isCollapsed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        <path *ngIf="isCollapsed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a [routerLink]="'/dashboard'" routerLinkActive="active" class="nav-link">
+          <!-- Heroicons: Chart Bar -->
+          <svg class="nav-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2M9 17V9m6 8V5" />
+          </svg>
+          <span class="nav-text" *ngIf="!isCollapsed">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="'/gestion-reservas'" routerLinkActive="active" class="nav-link">
+          <!-- Heroicons: Calendar -->
+          <svg class="nav-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <rect width="18" height="18" x="3" y="4" rx="2" stroke-width="1.5" />
+            <path stroke-width="1.5" stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18" />
+          </svg>
+          <span class="nav-text" *ngIf="!isCollapsed">Reservas</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="'/usuarios'" routerLinkActive="active" class="nav-link" *ngIf="usuario?.rol === 'administrador'">
+          <!-- Heroicons: Users -->
+          <svg class="nav-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              d="M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" />
+          </svg>
+          <span class="nav-text" *ngIf="!isCollapsed">Usuarios</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="'/gestion-paquetes'" routerLinkActive="active" class="nav-link">
+          <!-- Heroicons: Briefcase -->
+          <svg class="nav-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <rect width="18" height="10" x="3" y="7" rx="2" stroke-width="1.5" />
+            <path stroke-width="1.5" stroke-linecap="round" d="M16 7V5a2 2 0 0 0-4 0v2" />
+          </svg>
+          <span class="nav-text" *ngIf="!isCollapsed">Paquetes</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="'/reportes'" routerLinkActive="active" class="nav-link">
+          <!-- Heroicons: Document Chart Bar -->
+          <svg class="nav-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              d="M9 17v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M7 17v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4" />
+            <rect width="18" height="18" x="3" y="3" rx="2" stroke-width="1.5" />
+          </svg>
+          <span class="nav-text" *ngIf="!isCollapsed">Reportes</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="'/configuracion'" routerLinkActive="active" class="nav-link">
+          <!-- Heroicons: Cog -->
+          <svg class="nav-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <circle cx="12" cy="12" r="3" stroke-width="1.5" />
+            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+          <span class="nav-text" *ngIf="!isCollapsed">Configuración</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-info" *ngIf="!isCollapsed && usuario">
+      <div class="user-avatar">
+        <!-- Heroicons: User Circle -->
+        <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <circle cx="12" cy="12" r="9" stroke-width="1.5"/>
+          <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+            d="M15.5 16.5a3.5 3.5 0 0 0-7 0"/>
+          <circle cx="12" cy="10" r="3" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="user-details">
+        <span class="user-name">{{ usuario.username }}</span>
+        <span class="user-role">{{ usuario.rol | titlecase }}</span>
+      </div>
+    </div>
+    <button class="logout-btn" title="Cerrar sesión" (click)="logout()">
+      <!-- Heroicons: Arrow Left On Rectangle -->
+      <svg class="logout-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+          d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6A2.25 2.25 0 0 0 5.25 5.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M18 12H9m0 0l3-3m-3 3l3 3" />
+      </svg>
+      <span *ngIf="!isCollapsed">Salir</span>
+    </button>
+  </div>
+</aside>
