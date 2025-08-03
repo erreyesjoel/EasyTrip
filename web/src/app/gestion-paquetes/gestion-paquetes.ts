@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar';
 import { environment } from '../../environments/environment';
+import { Notificaciones } from '../notificaciones/notificaciones';
 
 // Interfaz para manejar las imágenes que vienen del backend
 interface ImagenPaquete {
@@ -46,7 +47,7 @@ interface PaqueteTuristico {
 @Component({
   selector: 'app-gestion-paquetes',
   standalone: true,
-  imports: [SidebarComponent, CommonModule, ReactiveFormsModule],
+  imports: [SidebarComponent, CommonModule, ReactiveFormsModule, Notificaciones],
   templateUrl: './gestion-paquetes.html',
   styleUrl: './gestion-paquetes.scss'
 })
@@ -87,6 +88,9 @@ export class GestionPaquetes implements OnInit {
 
   // Nueva propiedad para la imagen ampliada
   imagenAmpliada: string | null = null;
+
+  // Referencia al componente de notificaciones
+  @ViewChild('notificaciones') notificacionesRef!: Notificaciones;
 
   constructor(private fb: FormBuilder) {
     // Configuramos la URL de la imagen predeterminada
@@ -295,46 +299,51 @@ export class GestionPaquetes implements OnInit {
   // si el formulario es válido, se guarda el paquete
   async guardarCambios(): Promise<void> {
     if (this.formularioPaquete.valid) {
-      // Usamos FormData para enviar imágenes y datos
-      const formData = new FormData();
-      formData.append('nombre', this.formularioPaquete.value.nombre);
-      formData.append('descripcion', this.formularioPaquete.value.descripcion);
-      formData.append('precio_base', this.formularioPaquete.value.precio);
-      formData.append('duracion_dias', this.formularioPaquete.value.duracion);
-      formData.append('cupo_maximo', this.formularioPaquete.value.cupo);
-      formData.append('estado', this.formularioPaquete.value.estado);
-
-      // Añadir imágenes nuevas (si hay)
-      this.imagenesPreview.forEach((img) => {
-        formData.append('imagenes', img.file);
-      });
-
-      // Añadir IDs de imágenes a eliminar (solo en edición)
-      if (!this.modoCreacion && this.imagenesEliminadas.length > 0) {
-        formData.append('imagenes_eliminar', JSON.stringify(this.imagenesEliminadas));
-      }
-
-      const urlObj = new URL(this.baseUrl);
-      const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
-      let endpoint = '';
-      let method: 'POST' | 'PUT' = 'POST';
-
-      if (this.modoCreacion) {
-        endpoint = `${baseUrlCorrecta}/api/crear-paquete/`;
-        method = 'POST';
-      } else {
-        endpoint = `${baseUrlCorrecta}/api/editar-paquete/${this.paqueteActual.id}/`;
-        method = 'PUT';
-      }
-
       try {
-        const res = await fetch(endpoint, {
-          method,
-          body: formData
+        // Usamos FormData para enviar imágenes y datos
+        const formData = new FormData();
+        formData.append('nombre', this.formularioPaquete.value.nombre);
+        formData.append('descripcion', this.formularioPaquete.value.descripcion);
+        formData.append('precio_base', this.formularioPaquete.value.precio);
+        formData.append('duracion_dias', this.formularioPaquete.value.duracion);
+        formData.append('cupo_maximo', this.formularioPaquete.value.cupo);
+        formData.append('estado', this.formularioPaquete.value.estado);
+
+        // Añadir imágenes nuevas (si hay)
+        this.imagenesPreview.forEach((img) => {
+          formData.append('imagenes', img.file);
         });
-        if (!res.ok) throw new Error('Error al guardar el paquete');
-        await this.cargarPaquete();
-        this.cerrarModal();
+
+        // Añadir IDs de imágenes a eliminar (solo en edición)
+        if (!this.modoCreacion && this.imagenesEliminadas.length > 0) {
+          formData.append('imagenes_eliminar', JSON.stringify(this.imagenesEliminadas));
+        }
+
+        const urlObj = new URL(this.baseUrl);
+        const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
+        let endpoint = '';
+        let method: 'POST' | 'PUT' = 'POST';
+
+        if (this.modoCreacion) {
+          endpoint = `${baseUrlCorrecta}/api/crear-paquete/`;
+          method = 'POST';
+        } else {
+          endpoint = `${baseUrlCorrecta}/api/editar-paquete/${this.paqueteActual.id}/`;
+          method = 'PUT';
+        }
+
+        try {
+          const res = await fetch(endpoint, {
+            method,
+            body: formData
+          });
+          if (!res.ok) throw new Error('Error al guardar el paquete');
+          this.notificacionesRef.mostrar('¡Paquete guardado con éxito!', 'success');
+          this.cerrarModal();
+          await this.cargarPaquete();
+        } catch (error) {
+          this.notificacionesRef.mostrar('Error al guardar el paquete', 'error');
+        }
       } catch (error) {
         console.error('Error al guardar el paquete:', error);
       }

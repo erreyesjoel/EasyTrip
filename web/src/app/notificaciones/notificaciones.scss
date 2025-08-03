@@ -1,0 +1,40 @@
+/* filepath: /home/joel-erreyes/docsjoel/proyectos personales/EasyTrip/web/src/app/notificaciones/notificaciones.scss */
+
+/* Gracias a esto
+las notificaciones se muestran en la esquina superior derecha
+*/
+.notificaciones-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notificacion {
+  min-width: 200px;
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  opacity: 0;
+  animation: fadeInOut 3s forwards;
+}
+
+.notificacion.success {
+  background: #2ecc40;
+}
+
+.notificacion.error {
+  background: #e74c3c;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-20px);}
+  10% { opacity: 1; transform: translateY(0);}
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-20px);}
+}
