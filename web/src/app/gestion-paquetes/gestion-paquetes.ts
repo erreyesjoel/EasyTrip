@@ -338,11 +338,21 @@ export class GestionPaquetes implements OnInit {
             body: formData
           });
           if (!res.ok) throw new Error('Error al guardar el paquete');
-          this.notificacionesRef.mostrar('¡Paquete guardado con éxito!', 'success');
+          // Mensaje personalizado según si es creación o edición
+          if (this.modoCreacion) {
+            this.notificacionesRef.mostrar(`¡Paquete ${this.formularioPaquete.value.nombre} creado con éxito!`, 'success');
+          } else {
+            this.notificacionesRef.mostrar(`¡Paquete ${this.paqueteActual.nombre} editado con éxito!`, 'success');
+          }
           this.cerrarModal();
           await this.cargarPaquete();
         } catch (error) {
-          this.notificacionesRef.mostrar('Error al guardar el paquete', 'error');
+          // Mensaje de error también personalizado
+          if (this.modoCreacion) {
+            this.notificacionesRef.mostrar('Error al crear el paquete', 'error');
+          } else {
+            this.notificacionesRef.mostrar(`Error al editar el paquete ${this.paqueteActual.nombre}`, 'error');
+          }
         }
       } catch (error) {
         console.error('Error al guardar el paquete:', error);
@@ -383,8 +393,11 @@ export class GestionPaquetes implements OnInit {
         }
       });
 
+      // si la respuesta NO es exitosa
       if (!res.ok) {
         throw new Error('Error al eliminar el paquete');
+      } else { // SI la respuesta es exitosa, mostramos la notificacion, paqueteActual, ya que lo estamos "editando"
+        this.notificacionesRef.mostrar(`¡Paquete ${this.paqueteActual.nombre} eliminado con éxito!`, 'success');
       }
 
       const data = await res.json();
