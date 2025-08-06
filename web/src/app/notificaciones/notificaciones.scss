@@ -21,7 +21,8 @@ las notificaciones se muestran en la esquina superior derecha
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   opacity: 0;
-  animation: fadeInOut 3s forwards;
+  transform: translateX(40px);
+  animation: slideFadeInOut 3s forwards;
 }
 
 .notificacion.success {
@@ -32,9 +33,26 @@ las notificaciones se muestran en la esquina superior derecha
   background: #e74c3c;
 }
 
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translateY(-20px);}
-  10% { opacity: 1; transform: translateY(0);}
-  90% { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-20px);}
+/* Animación personalizada para mostrar y ocultar la notificación */
+@keyframes slideFadeInOut {
+  0% {
+    /* Al inicio: invisible y desplazada a la derecha */
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  10% {
+    /* Aparece y se coloca en su sitio */
+    opacity: 1;
+    transform: translateX(0);
+  }
+  90% {
+    /* Permanece visible y en su sitio la mayor parte del tiempo */
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    /* Al final: se desvanece y se desplaza de nuevo a la derecha */
+    opacity: 0;
+    transform: translateX(40px);
+  }
 }
