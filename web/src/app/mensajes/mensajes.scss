@@ -1,4 +1,7 @@
 /* filepath: web/src/app/mensajes/mensajes.scss */
+
+@use '../../variables' as vars;
+
 .mensaje-error {
   display: flex;
   margin: auto;
@@ -22,4 +25,17 @@
   border-radius: 13px;
   margin-bottom: 5px;
   max-width: 275px;
+}
+
+/* mensaje de error, para formularios debajo de los inputs
+(texto pequeño en rojo) */
+.mensaje-error-form {
+  color: vars.$errores-formularios;
+  font-size: 13px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  font-weight: 500;
+  text-align: left;
+  padding-left: 2px;
 }

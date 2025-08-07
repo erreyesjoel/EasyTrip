@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { SidebarComponent } from '../sidebar/sidebar';
 import { environment } from '../../environments/environment';
 import { Notificaciones } from '../notificaciones/notificaciones';
+import { MensajesComponent } from '../mensajes/mensajes';
+import { validarFormulariosPaquete } from '../../form-validations';
 
 // Interfaz para manejar las imágenes que vienen del backend
 interface ImagenPaquete {
@@ -47,7 +49,7 @@ interface PaqueteTuristico {
 @Component({
   selector: 'app-gestion-paquetes',
   standalone: true,
-  imports: [SidebarComponent, CommonModule, ReactiveFormsModule, Notificaciones],
+  imports: [SidebarComponent, CommonModule, ReactiveFormsModule, Notificaciones, MensajesComponent],
   templateUrl: './gestion-paquetes.html',
   styleUrl: './gestion-paquetes.scss'
 })
@@ -91,6 +93,8 @@ export class GestionPaquetes implements OnInit {
 
   // Referencia al componente de notificaciones
   @ViewChild('notificaciones') notificacionesRef!: Notificaciones;
+
+  erroresForm: { [campo: string]: string } = {};
 
   constructor(private fb: FormBuilder) {
     // Configuramos la URL de la imagen predeterminada
@@ -508,4 +512,25 @@ reiniciarFiltros(): void {
   (document.querySelector('#filtroCupo') as HTMLInputElement).value = '';
   this.filtrarPaquetes();
 }
+
+actualizarErroresForm() {
+  const valores = {
+    nombre: this.formularioPaquete.get('nombre')?.value,
+    descripcion: this.formularioPaquete.get('descripcion')?.value,
+    precio_base: this.formularioPaquete.get('precio')?.value,
+    duracion_dias: this.formularioPaquete.get('duracion')?.value,
+    cupo_maximo: this.formularioPaquete.get('cupo')?.value
+  };
+  const mensajes = validarFormulariosPaquete(valores);
+  this.erroresForm = {};
+  mensajes.forEach(msg => {
+    if (msg.includes('nombre')) this.erroresForm['nombre'] = msg;
+    if (msg.includes('descripción')) this.erroresForm['descripcion'] = msg;
+    if (msg.includes('precio')) this.erroresForm['precio'] = msg;
+    if (msg.includes('duración')) this.erroresForm['duracion'] = msg;
+    if (msg.includes('cupo')) this.erroresForm['cupo'] = msg;
+  });
+}
+
+// Llama a actualizarErroresForm() en cada input y en guardarCambios()
 }
