@@ -12,8 +12,8 @@ class PaqueteTuristico(models.Model):
         ('inactivo', 'Inactivo'),
     ]
 
-    nombre = models.CharField(max_length=35)
-    descripcion = models.TextField()
+    nombre = models.CharField(max_length=30)
+    descripcion = models.TextField(max_length=40)
     precio_base = models.DecimalField(max_digits=10, decimal_places=2)
     duracion_dias = models.PositiveIntegerField()
     cupo_maximo = models.PositiveIntegerField()

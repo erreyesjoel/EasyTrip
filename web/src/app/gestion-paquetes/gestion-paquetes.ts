@@ -353,7 +353,7 @@ export class GestionPaquetes implements OnInit {
         } catch (error) {
           // Mensaje de error también personalizado
           if (this.modoCreacion) {
-            this.notificacionesRef.mostrar('Error al crear el paquete', 'error');
+            this.notificacionesRef.mostrar(`Error al crear el paquete ${this.formularioPaquete.value.nombre}`, 'error');
           } else {
             this.notificacionesRef.mostrar(`Error al editar el paquete ${this.paqueteActual.nombre}`, 'error');
           }
@@ -519,7 +519,8 @@ actualizarErroresForm() {
     descripcion: this.formularioPaquete.get('descripcion')?.value,
     precio_base: this.formularioPaquete.get('precio')?.value,
     duracion_dias: this.formularioPaquete.get('duracion')?.value,
-    cupo_maximo: this.formularioPaquete.get('cupo')?.value
+    cupo_maximo: this.formularioPaquete.get('cupo')?.value,
+    imagenes: this.imagenesPreview.map(img => img.file) 
   };
   const mensajes = validarFormulariosPaquete(valores);
   this.erroresForm = {};
@@ -529,6 +530,8 @@ actualizarErroresForm() {
     if (msg.includes('precio')) this.erroresForm['precio'] = msg;
     if (msg.includes('duración')) this.erroresForm['duracion'] = msg;
     if (msg.includes('cupo')) this.erroresForm['cupo'] = msg;
+    if (msg.includes('imagen')) this.erroresForm['imagenes'] = msg; // <-- Añade esto
+
   });
 }
 

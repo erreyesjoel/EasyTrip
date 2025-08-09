@@ -148,6 +148,8 @@
         <div class="form-group">
           <label for="imagenes">Imágenes del paquete (opcional):</label>
           <input type="file" id="imagenes" (change)="onImagenesSeleccionadas($event)" multiple accept="image/*">
+          <!-- Mensaje de error para imagenes -->
+          <app-mensajes *ngIf="erroresForm['imagenes']" [tipo]="'error-form'" [mensaje]="erroresForm['imagenes']"></app-mensajes>
           <div class="preview-imagenes">
             <div class="preview-imagen" *ngFor="let img of imagenesPreview; let i = index">
       <img [src]="img.url" [alt]="'Imagen ' + (i+1)">
