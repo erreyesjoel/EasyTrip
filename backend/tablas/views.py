@@ -795,6 +795,7 @@ def reservas_gestion(request):
             'usuario_gestor': reserva.usuario_gestor.email if reserva.usuario_gestor else None,
             'fecha_reservada': reserva.fecha_reservada,
             'estado': reserva.estado,
+            'fecha_creacion': reserva.fecha_creacion
         })
     # Devolvemos la respuesta en formato JSON
     return Response(reservas_data)

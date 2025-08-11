@@ -52,6 +52,7 @@
             <th>Paquete</th>
             <th>Gestor</th>
             <th>Fecha reservada</th>
+            <th>Fecha creación</th> <!-- Nueva columna -->
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -65,6 +66,7 @@
               {{ reserva.usuario_gestor ? reserva.usuario_gestor : 'Sin gestor asignado' }}
             </td>
             <td>{{ reserva.fecha_reservada | date:'yyyy-MM-dd' }}</td>
+            <td>{{ reserva.fecha_creacion | date:'yyyy-MM-dd HH:mm' }}</td> <!-- Nueva columna -->
             <td>
               <span class="badge-estado-reserva" [ngClass]="reserva.estado === 'confirmada' ? 'estado-activo-reserva' : 'estado-inactivo-reserva'">
                 {{ reserva.estado | titlecase }}

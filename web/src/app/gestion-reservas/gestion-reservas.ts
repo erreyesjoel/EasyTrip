@@ -11,6 +11,7 @@ interface Reserva {
   usuario: string;
   usuario_gestor: string;
   paquete: string;
+  fecha_creacion: string; // Añadido para mostrar la fecha de creación
 }
 
 
