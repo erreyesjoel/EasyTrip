@@ -51,6 +51,10 @@ export class GestionReservas {
 
   @ViewChild('notificaciones') notificacionesRef!: Notificaciones;
 
+  // por defecto, para que hoy sea la fecha actual, en formato YYYY-MM-DD
+  // esto en el input de fecha
+  hoy: string = new Date().toISOString().slice(0, 10);
+
   // ngOnInit porque se utiliza para inicializar la carga de datos al inicio del componente
   // nada mas renderizar el componente, llamamos de forma asincrona a la funcion obtenerReservas
   async ngOnInit() {

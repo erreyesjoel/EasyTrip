@@ -66,6 +66,12 @@ class Reserva(models.Model):
     class Meta:
         db_table = 'reserva'
 
+    # validacion para la fecha de reserva
+    # que no sea en el pasado
+    def clean(self):
+        super().clean()
+        if self.fecha_reservada < datetime.date.today():
+            raise ValidationError({'fecha_reservada': 'No puedes reservar una fecha pasada.'})
 
 class CodigoVerificacion(models.Model):
     TIPO_CHOICES = [
