@@ -13,6 +13,7 @@ interface Reserva {
   usuario_gestor: string;
   paquete: string;
   fecha_creacion: string; // Añadido para mostrar la fecha de creación
+  duracion_dias: number;
 }
 
 
@@ -145,6 +146,13 @@ abrirModalEditar(reserva: Reserva) {
 cerrarModalEditar() {
   this.modalEditarAbierto = false;
   this.reservaEditada = null;
+}
+
+getFechaFin(reserva: Reserva): string {
+  if (!reserva.fecha_reservada || !reserva.duracion_dias) return '';
+  const inicio = new Date(reserva.fecha_reservada);
+  inicio.setDate(inicio.getDate() + reserva.duracion_dias);
+  return inicio.toISOString().slice(0, 10); // yyyy-MM-dd
 }
 
 async guardarEdicion() {
