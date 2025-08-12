@@ -31,6 +31,7 @@ class Reserva(models.Model):
         ('confirmada', 'Confirmada'),
         ('pagada', 'Pagada'),
         ('cancelada', 'Cancelada'),
+        ('finalizada', 'Finalizada'),
     ]
 
     # Relación con el usuario que hace la reserva (cliente).
@@ -43,7 +44,7 @@ class Reserva(models.Model):
     paquete_turistico = models.ForeignKey(
         PaqueteTuristico, on_delete=models.CASCADE, related_name='reservas'
     )
-
+    
     # Fecha para la que se hace la reserva.
     fecha_reservada = models.DateField()
 
