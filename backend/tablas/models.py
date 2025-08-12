@@ -12,8 +12,8 @@ class PaqueteTuristico(models.Model):
         ('inactivo', 'Inactivo'),
     ]
 
-    nombre = models.CharField(max_length=35)
-    descripcion = models.TextField()
+    nombre = models.CharField(max_length=30)
+    descripcion = models.TextField(max_length=40)
     precio_base = models.DecimalField(max_digits=10, decimal_places=2)
     duracion_dias = models.PositiveIntegerField()
     cupo_maximo = models.PositiveIntegerField()
@@ -31,6 +31,7 @@ class Reserva(models.Model):
         ('confirmada', 'Confirmada'),
         ('pagada', 'Pagada'),
         ('cancelada', 'Cancelada'),
+        ('finalizada', 'Finalizada'),
     ]
 
     # Relación con el usuario que hace la reserva (cliente).
@@ -43,7 +44,7 @@ class Reserva(models.Model):
     paquete_turistico = models.ForeignKey(
         PaqueteTuristico, on_delete=models.CASCADE, related_name='reservas'
     )
-
+    
     # Fecha para la que se hace la reserva.
     fecha_reservada = models.DateField()
 
@@ -65,6 +66,12 @@ class Reserva(models.Model):
     class Meta:
         db_table = 'reserva'
 
+    # validacion para la fecha de reserva
+    # que no sea en el pasado
+    def clean(self):
+        super().clean()
+        if self.fecha_reservada < datetime.date.today():
+            raise ValidationError({'fecha_reservada': 'No puedes reservar una fecha pasada.'})
 
 class CodigoVerificacion(models.Model):
     TIPO_CHOICES = [

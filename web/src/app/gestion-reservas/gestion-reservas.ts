@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { SidebarComponent} from '../sidebar/sidebar';
 import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Notificaciones } from '../notificaciones/notificaciones'; // importar componente
 
 interface Reserva {
   id: number;
@@ -11,12 +12,14 @@ interface Reserva {
   usuario: string;
   usuario_gestor: string;
   paquete: string;
+  fecha_creacion: string; // Añadido para mostrar la fecha de creación
+  duracion_dias: number;
 }
 
 
 @Component({
   selector: 'app-gestion-reservas',
-  imports: [SidebarComponent, CommonModule, FormsModule],
+  imports: [SidebarComponent, CommonModule, FormsModule, Notificaciones], 
   templateUrl: './gestion-reservas.html',
   styleUrl: './gestion-reservas.scss'
 })
@@ -42,7 +45,15 @@ export class GestionReservas {
 
   modalCrearReservaAbierto = false;
   nuevaReserva = { email: '', paquete_id: '', fecha_reservada: '', estado: 'pendiente' };
+  // ARRAY DE PAQUETES
+  // importante para mostrar el nombre del paquete en las notificaciones
   paquetes: { id: number, nombre: string }[] = [];
+
+  @ViewChild('notificaciones') notificacionesRef!: Notificaciones;
+
+  // por defecto, para que hoy sea la fecha actual, en formato YYYY-MM-DD
+  // esto en el input de fecha
+  hoy: string = new Date().toISOString().slice(0, 10);
 
   // ngOnInit porque se utiliza para inicializar la carga de datos al inicio del componente
   // nada mas renderizar el componente, llamamos de forma asincrona a la funcion obtenerReservas
@@ -76,6 +87,8 @@ export class GestionReservas {
     body: JSON.stringify({ usuario_gestor: agenteEmail })
   });
   if (res.status === 200) {
+    // notificacion success
+    this.notificacionesRef.mostrar(`${agenteEmail} gestionará la reserva ${this.reservaSeleccionada?.id}`, 'success');
     await this.obtenerReservas(); // Recarga la lista
   }
 }
@@ -139,6 +152,13 @@ cerrarModalEditar() {
   this.reservaEditada = null;
 }
 
+getFechaFin(reserva: Reserva): string {
+  if (!reserva.fecha_reservada || !reserva.duracion_dias) return '';
+  const inicio = new Date(reserva.fecha_reservada);
+  inicio.setDate(inicio.getDate() + reserva.duracion_dias);
+  return inicio.toISOString().slice(0, 10); // yyyy-MM-dd
+}
+
 async guardarEdicion() {
   if (!this.reservaEditada) return; // Evita el error si es null
 
@@ -151,6 +171,7 @@ async guardarEdicion() {
     })
   });
   if (res.status === 200) {
+    this.notificacionesRef.mostrar(`Reserva ${this.reservaEditada.id} editada con éxito`, 'success');
     await this.obtenerReservas();
     this.cerrarModalEditar();
   }
@@ -177,8 +198,16 @@ async guardarNuevaReserva() {
     })
   });
   if (res.status === 201 || res.status === 200) {
+    // buscamos el paquete por ID, de el array de paquetes
+    const paquete = this.paquetes.find(p => String(p.id) === this.nuevaReserva.paquete_id);
+    // asi obtenemos el nombre
+    const nombrePaquete = paquete ? paquete.nombre : '';
+    // notificacion de exito, ponemos 'success', para hacerlo bien, asi esta en el componente
+    this.notificacionesRef.mostrar(`Reserva creada con exito para ${nombrePaquete}`, 'success');
     await this.obtenerReservas();
     this.cerrarModalCrearReserva();
+  } else {
+    this.notificacionesRef.mostrar('Error al crear la reserva', 'error')
   }
 }
 async obtenerPaquetes() {

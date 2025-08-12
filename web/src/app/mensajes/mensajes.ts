@@ -6,9 +6,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './mensajes.html',
   styleUrls: ['./mensajes.scss'],
   standalone: true,
-  imports: [CommonModule] // Importamos CommonModule para usar directivas comunes como ngIf, ngFor, etc.
+  imports: [CommonModule]
 })
 export class MensajesComponent {
-  @Input() tipo: 'error' | 'exito' = 'exito';
+  // para "definir" el tipo de mensaje
+  @Input() tipo: 'error' | 'exito' | 'error-form' = 'exito';
   @Input() mensaje: string = '';
 }

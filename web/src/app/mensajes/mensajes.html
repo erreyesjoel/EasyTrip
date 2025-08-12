@@ -1,3 +1,8 @@
-<div *ngIf="mensaje" [ngClass]="tipo === 'error' ? 'mensaje-error' : 'mensaje-exito'">
+<!-- Mensaje de error de formulario, pequeño y en rojo -->
+<div *ngIf="mensaje && tipo === 'error-form'" class="mensaje-error-form">
+  {{ mensaje }}
+</div>
+<!-- Mensaje general de éxito o error, este lo uso para el login  -->
+<div *ngIf="mensaje && (tipo === 'error' || tipo === 'exito')" [ngClass]="tipo === 'error' ? 'mensaje-error' : 'mensaje-exito'">
   {{ mensaje }}
 </div>

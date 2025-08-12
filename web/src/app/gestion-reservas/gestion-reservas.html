@@ -1,4 +1,5 @@
 <div class="admin-layout">
+  <app-notificaciones #notificaciones></app-notificaciones>
   <app-sidebar></app-sidebar>
   <div class="main-content">
     <h2 class="titulo-pagina-reservas">Gestión de Reservas</h2>
@@ -52,6 +53,8 @@
             <th>Paquete</th>
             <th>Gestor</th>
             <th>Fecha reservada</th>
+            <th>Fecha creación</th> <!-- Nueva columna -->
+            <th>Fecha fin</th> <!-- Nueva columna -->
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -65,6 +68,8 @@
               {{ reserva.usuario_gestor ? reserva.usuario_gestor : 'Sin gestor asignado' }}
             </td>
             <td>{{ reserva.fecha_reservada | date:'yyyy-MM-dd' }}</td>
+            <td>{{ reserva.fecha_creacion | date:'yyyy-MM-dd HH:mm' }}</td> <!-- Nueva columna -->
+            <td>{{ getFechaFin(reserva) }}</td> <!-- Nueva columna -->
             <td>
               <span class="badge-estado-reserva" [ngClass]="reserva.estado === 'confirmada' ? 'estado-activo-reserva' : 'estado-inactivo-reserva'">
                 {{ reserva.estado | titlecase }}
@@ -140,6 +145,7 @@
           <option value="confirmada">Confirmada</option>
           <option value="pagada">Pagada</option>
           <option value="cancelada">Cancelada</option>
+          <option value="finalizada">Finalizada</option>
         </select>
       </div>
       <div class="form-group">
@@ -176,7 +182,7 @@
       </div>
       <div class="form-group">
         <label for="fecha">Fecha reservada:</label>
-        <input id="fecha" type="date" [(ngModel)]="nuevaReserva.fecha_reservada" name="fecha" class="form-input" required>
+        <input id="fecha" type="date" [(ngModel)]="nuevaReserva.fecha_reservada" name="fecha" class="form-input" required [min]="hoy">
       </div>
       <div class="form-group">
         <label for="estado">Estado:</label>
