@@ -579,11 +579,10 @@ def crear_usuario(request):
         rol = data.get('rol', 'usuario')
         first_name = data.get('first_name', '')
         last_name = data.get('last_name', '')
-        password = data.get('password')
 
         # Validaciones básicas
-        if not username or not email or not password:
-            return Response({'error': 'Username, email y password son requeridos.'}, status=400)
+        if not username or not email:
+            return Response({'error': 'Username y email son requeridos.'}, status=400)
         if User.objects.filter(username=username).exists():
             return Response({'error': 'El username ya existe.'}, status=400)
         if User.objects.filter(email=email).exists():
@@ -595,7 +594,6 @@ def crear_usuario(request):
         user = User.objects.create_user(
             username=username,
             email=email,
-            password=password,
             first_name=first_name,
             last_name=last_name,
             rol=rol

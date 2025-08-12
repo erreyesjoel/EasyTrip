@@ -61,7 +61,6 @@ export class GestionUsuarios {
       first_name: [''],
       last_name: [''],
       email: [''],
-      password: [''], 
       rol: ['usuario']
     });
   }
@@ -131,9 +130,7 @@ export class GestionUsuarios {
       // Si es creación
       // Recoge los datos del formulario
       const datos = this.formularioUsuario.value;
-      // Puedes añadir un campo de password si lo deseas
-      // datos.password = '12345678';
-
+      
       // Llama a la API para crear el usuario
       const res = await fetch(environment.apiBaseUrl + 'crear-usuario/', {
         method: 'POST',
