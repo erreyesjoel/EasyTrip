@@ -879,3 +879,23 @@ def crear_reserva(request):
     )
 
     return Response({'mensaje': 'Reserva creada correctamente.', 'reserva_id': reserva.id}, status=201)
+
+@api_view(['PATCH'])
+def definicion_password(request, user_id):
+    try:
+     # cogemos el usuario, si no existe devolvemos error
+     user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'Id del usuario no existente'}, status=404)
+    # definicion de contraseña si el usuario no tiene 
+    password = request.data.get('password') 
+    # si el usuario NO tiene password, y el campo esta totalmente vacio ("")
+    # definirá su contraseña
+    if user.password in [None, ""] or not user.has_usable_password():
+        user.set_password(password)
+        user.save()
+        return Response({'mensaje': 'Contraseña definida correctamente.'}, status=200)
+    # SI el usuario ya tiene password, y el campo no esta vacio
+    # le dira error, que ya tiene password definido
+    else:
+        return Response({'error': 'El usuario ya tiene una contraseña definida.'}, status=400)
