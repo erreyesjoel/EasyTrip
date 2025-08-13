@@ -569,6 +569,8 @@ def gestion_usuarios_tabla(request):
 
 # api para crear un usuario
 # Se usa el modelo User de Django para crear un nuevo usuario
+# api para crear un usuario
+# Se usa el modelo User de Django para crear un nuevo usuario
 @api_view(['POST'])
 def crear_usuario(request):
     if request.method == 'POST':
@@ -598,22 +600,22 @@ def crear_usuario(request):
             last_name=last_name,
             rol=rol
         )
-
-        # Enviar email de bienvenida
+        # Genera el token seguro
+        token = default_token_generator.make_token(user)
+        enlace = f'{settings.FRONTEND_URL}definir-password?user_id={user.id}&token={token}'
         send_mail(
             subject=f'Bienvenido a {settings.APP_NAME}',
             message=(
                 f'¡Hola {first_name}!\n\n'
                 f'Tu cuenta en {settings.APP_NAME} ha sido creada correctamente.\n'
-                f'Tu nombre de usuario es: {username}\n'
-                f'Recuerda cambiar tu contraseña al iniciar sesión.\n\n'
+                f'Tu nombre de usuario es: {username}\n\n'
+                f'Por favor define tu contraseña en el siguiente enlace:\n{enlace}\n\n'
                 '¡Gracias por registrarte!'
             ),
             from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
             recipient_list=[email],
             fail_silently=True
         )
-
         return Response({
             'ok': True,
             'mensaje': 'Usuario creado correctamente.',
@@ -882,20 +884,16 @@ def crear_reserva(request):
 
 @api_view(['PATCH'])
 def definicion_password(request, user_id):
+    token = request.data.get('token')
     try:
-     # cogemos el usuario, si no existe devolvemos error
-     user = User.objects.get(id=user_id)
+        user = User.objects.get(id=user_id)
     except User.DoesNotExist:
         return Response({'error': 'Id del usuario no existente'}, status=404)
-    # definicion de contraseña si el usuario no tiene 
-    password = request.data.get('password') 
-    # si el usuario NO tiene password, y el campo esta totalmente vacio ("")
-    # definirá su contraseña
-    if user.password in [None, ""] or not user.has_usable_password():
-        user.set_password(password)
-        user.save()
-        return Response({'mensaje': 'Contraseña definida correctamente.'}, status=200)
-    # SI el usuario ya tiene password, y el campo no esta vacio
-    # le dira error, que ya tiene password definido
-    else:
+    if user.has_usable_password():
         return Response({'error': 'El usuario ya tiene una contraseña definida.'}, status=400)
+    if not default_token_generator.check_token(user, token):
+        return Response({'error': 'Token inválido o expirado.'}, status=400)
+    password = request.data.get('password')
+    user.set_password(password)
+    user.save()
+    return Response({'mensaje': 'Contraseña definida correctamente.'}, status=200)

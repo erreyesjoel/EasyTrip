@@ -189,3 +189,5 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 # MEDIA_ROOT es la ruta absoluta en el sistema de archivos donde se guardarán estos archivos.
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+FRONTEND_URL = env('FRONTEND_URL')
