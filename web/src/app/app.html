@@ -1,3 +1,3 @@
-<app-header *ngIf="!esAdmin"></app-header>
+<app-header *ngIf="!esAdmin && mostrarHeaderFooter()"></app-header>
 <router-outlet></router-outlet>
-<app-footer *ngIf="!esAdmin"></app-footer>
+<app-footer *ngIf="!esAdmin && mostrarHeaderFooter()"></app-footer>

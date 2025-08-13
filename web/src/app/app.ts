@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { CommonModule } from '@angular/common'; // <-- IMPORTA ESTO
+import { Router, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { Header } from './header/header';
 import { Hero } from './hero/hero';
 import { Footer } from './footer/footer';
@@ -8,7 +8,7 @@ import { MostrarPaquetes } from './mostrar-paquetes/mostrar-paquetes';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, Header, Hero, Footer, MostrarPaquetes], // <-- AGREGA CommonModule AQUÍ
+  imports: [CommonModule, RouterOutlet, Header, Hero, Footer, MostrarPaquetes],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -16,6 +16,8 @@ export class App implements OnInit {
   protected title = 'web';
   usuario: any = null;
   cargando = true;
+
+  constructor(private router: Router) {}
 
   async ngOnInit() {
     await this.cargarUsuario();
@@ -43,5 +45,12 @@ export class App implements OnInit {
 
   get esAdmin() {
     return this.usuario && (this.usuario.rol?.toLowerCase?.() === 'administrador');
+  }
+
+  mostrarHeaderFooter(): boolean {
+    // Oculta header/footer solo en la ruta /definir-password
+    const ocultarEn = ['/definir-password'];
+    // Si la ruta actual está en la lista, no mostrar header/footer
+    return !ocultarEn.includes(this.router.url.split('?')[0]);
   }
 }
