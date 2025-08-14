@@ -11,6 +11,7 @@ import { DetallesPaquete } from './detalles-paquete/detalles-paquete';
 import { Reserva } from './reserva/reserva';
 import { GestionReservas } from './gestion-reservas/gestion-reservas';
 import { Paquetes } from './paquetes/paquetes';
+import { DefinirPassword } from './definir-password/definir-password';
 
 export const routes: Routes = [
   {
@@ -34,4 +35,5 @@ export const routes: Routes = [
   { path: 'detalles-paquete/:id', component: DetallesPaquete },
   { path: 'reserva/:id/:nombre', component: Reserva },
   { path: 'paquetes', component: Paquetes }, // ruta para ver todos los paquetes
+  { path: 'definir-password', component: DefinirPassword },
 ];
