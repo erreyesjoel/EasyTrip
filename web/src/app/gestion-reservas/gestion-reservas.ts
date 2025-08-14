@@ -4,6 +4,8 @@ import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Notificaciones } from '../notificaciones/notificaciones'; // importar componente
+import { validacionFormatoEmail } from '../../form-validations'; // Importar la función de validación
+import { MensajesComponent } from '../mensajes/mensajes';
 
 interface Reserva {
   id: number;
@@ -19,7 +21,7 @@ interface Reserva {
 
 @Component({
   selector: 'app-gestion-reservas',
-  imports: [SidebarComponent, CommonModule, FormsModule, Notificaciones], 
+  imports: [SidebarComponent, CommonModule, FormsModule, Notificaciones, MensajesComponent], 
   templateUrl: './gestion-reservas.html',
   styleUrl: './gestion-reservas.scss'
 })
@@ -186,7 +188,20 @@ cerrarModalCrearReserva() {
   this.modalCrearReservaAbierto = false;
 }
 
+mensajeErrorForm: string = '';
+tipoMensajeForm: 'error' | 'exito' | 'error-form' | null = null;
+
 async guardarNuevaReserva() {
+  // Validar formato de email antes de enviar
+  // usamos la función de validación importada
+  if (!validacionFormatoEmail(this.nuevaReserva.email)) {
+    this.mensajeErrorForm = 'El email no tiene un formato válido';
+    this.tipoMensajeForm = 'error-form';
+    return;
+  }
+  this.mensajeErrorForm = '';
+  this.tipoMensajeForm = null;
+
   const res = await fetch(environment.apiBaseUrl + 'crear-reserva-gestion/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

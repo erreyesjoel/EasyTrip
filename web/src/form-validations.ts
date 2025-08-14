@@ -32,3 +32,9 @@ export function validarFormulariosPaquete(form: {
 
     return validacionesPaquetes.filter(rule => !rule.validacion).map(rule => rule.message);
 }
+
+export function validacionFormatoEmail(email: string): boolean {
+    // Expresión regular para validar el formato de email
+    const formatoEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return formatoEmail.test(email);
+}
