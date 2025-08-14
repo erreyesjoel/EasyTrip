@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
+import { MensajesComponent } from '../mensajes/mensajes';
 
 @Component({
   selector: 'app-definir-password',
   templateUrl: './definir-password.html',
   styleUrl: './definir-password.scss',
   standalone: true,
-  imports: [FormsModule] 
+  imports: [FormsModule, MensajesComponent]
 })
 export class DefinirPassword {
-  password = '';
-  confirmPassword = '';
+  password = ''; // input para la nueva contraseña
+  confirmPassword = ''; // input para la confirmación de la contraseña
+  mensajeError = '';
+  mensajeExito = '';
 
   getParamsFromUrl(): { user_id: string, token: string } {
     const params = new URLSearchParams(window.location.search);
@@ -22,6 +25,10 @@ export class DefinirPassword {
   }
 
   async guardarPassword() {
+
+    this.mensajeError = '';
+    this.mensajeExito = '';
+    
     const { user_id, token } = this.getParamsFromUrl();
     console.log('Intentando enviar:', { user_id, token, password: this.password, confirmPassword: this.confirmPassword });
 
@@ -29,8 +36,10 @@ export class DefinirPassword {
       console.log('Faltan datos');
       return;
     }
+
+    // hacer que las conraseñas coincidan
     if (this.password !== this.confirmPassword) {
-      console.log('Las contraseñas no coinciden');
+      this.mensajeError = 'Las contraseñas no coinciden';
       return;
     }
 
@@ -43,11 +52,17 @@ export class DefinirPassword {
           password: this.password
         })
       });
-      console.log('Respuesta HTTP:', res.status);
       const data = await res.json().catch(() => ({}));
-      console.log('Respuesta JSON:', data);
+      if (res.ok) {
+        this.mensajeExito = 'Contraseña definida correctamente.';
+        this.password = ''; // limpiar el campo de contraseña
+        this.confirmPassword = ''; // limpiar el campo de confirmación
+
+      } else {
+        this.mensajeError = data.error || 'Error al definir la contraseña.';
+      }
     } catch (err) {
-      console.error('Error en fetch:', err);
+      this.mensajeError = 'Error de red o servidor.';
     }
   }
 }
