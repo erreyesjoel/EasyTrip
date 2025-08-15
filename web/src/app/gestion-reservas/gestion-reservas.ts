@@ -188,8 +188,8 @@ cerrarModalCrearReserva() {
   this.modalCrearReservaAbierto = false;
 }
 
-mensajeErrorForm: string = '';
-tipoMensajeForm: 'error' | 'exito' | 'error-form' | null = null;
+mensajeErrorForm: string | undefined = undefined;
+tipoMensajeForm: 'error' | 'exito' | 'error-form' | undefined = undefined;
 
 async guardarNuevaReserva() {
   // Validar formato de email antes de enviar
@@ -199,8 +199,8 @@ async guardarNuevaReserva() {
     this.tipoMensajeForm = 'error-form';
     return;
   }
-  this.mensajeErrorForm = '';
-  this.tipoMensajeForm = null;
+  this.mensajeErrorForm = undefined;
+  this.tipoMensajeForm = undefined;
 
   const res = await fetch(environment.apiBaseUrl + 'crear-reserva-gestion/', {
     method: 'POST',
