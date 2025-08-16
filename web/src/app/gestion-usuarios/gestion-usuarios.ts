@@ -5,7 +5,9 @@ import { environment } from '../../environments/environment';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms'; 
-
+import { validacionFormatoEmail } from '../../form-validations';
+import { MensajesComponent } from '../mensajes/mensajes';
+import { Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 
 // Interfaz para el usuario
 // Representa la estructura de un usuario en el sistema
@@ -22,9 +24,15 @@ interface Usuario {
 
 }
 
+const emailFormatoValidator = (control: AbstractControl): ValidationErrors | null => {
+  const value = control.value;
+  if (!value) return null;
+  return validacionFormatoEmail(value) ? null : { formatoEmail: true };
+};
+
 @Component({
   selector: 'app-gestion-usuarios',
-  imports: [CommonModule, SidebarComponent, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, SidebarComponent, ReactiveFormsModule, FormsModule, MensajesComponent],
   templateUrl: './gestion-usuarios.html',
   styleUrls: ['./gestion-usuarios.scss']
 })
@@ -60,7 +68,7 @@ export class GestionUsuarios {
       username: [''],
       first_name: [''],
       last_name: [''],
-      email: [''],
+      email: ['', [Validators.required, emailFormatoValidator]],
       rol: ['usuario']
     });
   }
@@ -127,6 +135,7 @@ export class GestionUsuarios {
   // Guardar usuario (solo visual/funcional)
   async guardarUsuario() {
     if (this.modoCreacionUsuario) {
+      
       // Si es creación
       // Recoge los datos del formulario
       const datos = this.formularioUsuario.value;
