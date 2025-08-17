@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms'; 
-import { validacionFormatoEmail } from '../../form-validations';
+import { validacionFormatoEmail, validarCrearUsuario } from '../../form-validations';
 import { MensajesComponent } from '../mensajes/mensajes';
 import { Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 
@@ -63,6 +63,8 @@ export class GestionUsuarios {
   // Ordenación de la tabla
   ordenCampo: string = 'username'; // Campo actual de ordenación
   ordenAsc: boolean = true;        // true = ascendente, false = descendente
+
+  mensajesErroresUsuario: string[] = [];
 
   constructor(private fb: FormBuilder) {
     this.formularioUsuario = this.fb.group({
@@ -135,13 +137,19 @@ export class GestionUsuarios {
 
   // Guardar usuario (solo visual/funcional)
   async guardarUsuario() {
+    // Llama a las validaciones antes de enviar a la API
+    const datos = this.formularioUsuario.value;
+    this.mensajesErroresUsuario = validarCrearUsuario(datos);
+
+    if (this.mensajesErroresUsuario.length > 0) {
+      // Si hay errores, no envía la petición y muestra los mensajes
+      return;
+    }
+
     if (this.modoCreacionUsuario) {
       
       // Si es creación
       // Recoge los datos del formulario
-      const datos = this.formularioUsuario.value;
-      
-      // Llama a la API para crear el usuario
       const res = await fetch(environment.apiBaseUrl + 'crear-usuario/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -157,7 +165,6 @@ export class GestionUsuarios {
       }
     } else if (this.usuarioActual) {
       // Editar usuario
-      const datos = this.formularioUsuario.value;
       const res = await fetch(environment.apiBaseUrl + 'editar-usuario/' + this.usuarioActual.id + '/', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -263,5 +270,16 @@ export class GestionUsuarios {
       this.ordenAsc = true; // Por defecto ascendente al cambiar de campo
     }
     this.aplicarFiltros();
+  }
+
+  // Método para obtener los mensajes de error de un campo específico
+  // y mostrarlos debajo de cada input
+  getErroresCampo(campo: string): string[] {
+    return this.mensajesErroresUsuario.filter(msg => msg.toLowerCase().includes(campo));
+  }
+
+  actualizarErroresUsuario() {
+    const datos = this.formularioUsuario.value;
+    this.mensajesErroresUsuario = validarCrearUsuario(datos);
   }
 }
