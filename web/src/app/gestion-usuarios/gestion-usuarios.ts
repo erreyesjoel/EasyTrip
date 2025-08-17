@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { validacionFormatoEmail, validarCrearUsuario } from '../../form-validations';
 import { MensajesComponent } from '../mensajes/mensajes';
 import { Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Notificaciones } from '../notificaciones/notificaciones'; // Importar componente de notificaciones
+import { ViewChild } from '@angular/core';
 
 // Interfaz para el usuario
 // Representa la estructura de un usuario en el sistema
@@ -33,12 +35,16 @@ const emailFormatoValidator = (control: AbstractControl): ValidationErrors | nul
 
 @Component({
   selector: 'app-gestion-usuarios',
-  imports: [CommonModule, SidebarComponent, ReactiveFormsModule, FormsModule, MensajesComponent],
+  imports: [CommonModule, SidebarComponent, ReactiveFormsModule, FormsModule, MensajesComponent, Notificaciones],
   templateUrl: './gestion-usuarios.html',
   styleUrls: ['./gestion-usuarios.scss']
 })
 
 export class GestionUsuarios {
+
+  // viewChild para acceder al componente de notificaciones
+
+  @ViewChild('notificaciones') notificacionesRef!: Notificaciones;
 
   // cuando se "renderiza el componente", se hara peticion a la api gestion-usuarios
   // por eso ngOnInit porque es el ciclo de vida del componente que se ejecuta al inicializar
@@ -156,12 +162,14 @@ export class GestionUsuarios {
         body: JSON.stringify(datos)
       });
       if (res.status === 201) {
+
         // Recarga la tabla de usuarios
         await this.cargarUsuarios();
+        this.notificacionesRef.mostrar(`Usuario ${datos.username} creado correctamente`, 'success');
         this.cerrarModalUsuario();
       } else {
         const error = await res.json();
-        alert(error.error || 'Error al crear usuario');
+        this.notificacionesRef.mostrar(error.error || 'Error al crear usuario', 'error');
       }
     } else if (this.usuarioActual) {
       // Editar usuario
@@ -172,10 +180,11 @@ export class GestionUsuarios {
       });
       if (res.status === 200) {
         await this.cargarUsuarios();
+        this.notificacionesRef.mostrar(`Usuario ${this.usuarioActual.username} editado correctamente`, 'success');
         this.cerrarModalUsuario();
       } else {
         const error = await res.json();
-        alert(error.error || 'Error al editar usuario');
+        this.notificacionesRef.mostrar(error.error || 'Error al editar usuario', 'error');
       }
     }
   }
@@ -200,10 +209,11 @@ export class GestionUsuarios {
       });
       if (res.status === 200) {
         await this.cargarUsuarios();
+        this.notificacionesRef.mostrar(`Usuario ${this.usuarioActual.username} eliminado correctamente`, 'success');
         this.cerrarModalEliminarUsuario();
       } else {
         const error = await res.json();
-        alert(error.error || 'Error al eliminar usuario');
+        this.notificacionesRef.mostrar(error.error || 'Error al eliminar usuario', 'error');
       }
     }
   }
@@ -221,19 +231,43 @@ export class GestionUsuarios {
   }
 
   // Confirma el cambio de estado de un usuario
-  confirmarCambioEstadoUsuario() {
-    // Aquí llamas a tu API para cambiar el estado (alta/baja)
-    // Por ejemplo:
-    // this.usuarioService.cambiarEstado(this.usuarioEstadoActual.id, !this.usuarioEstadoActual.is_active).subscribe(...)
-    // Tras éxito:
-    this.usuarioEstadoActual.is_active = !this.usuarioEstadoActual.is_active;
-    this.cerrarModalEstadoUsuario();
-    // Opcional: recarga la lista de usuarios
-  }
+async confirmarCambioEstadoUsuario() {
+  // Aquí llamas a tu API para cambiar el estado (alta/baja)
+  if (!this.usuarioEstadoActual) return;
 
-  toggleEstado(usuario: Usuario) {
-    // Aquí irá la lógica para activar/desactivar usuario
+  // Prepara el nuevo estado (activo/inactivo)
+  const nuevoEstado = !this.usuarioEstadoActual.is_active;
+
+  // Guarda el username antes de cerrar el modal
+  const username = this.usuarioEstadoActual.username;
+
+  // Llama a la API PATCH para cambiar el estado en backend
+  const res = await fetch(
+    environment.apiBaseUrl + 'cambiar-estado-usuario/' + this.usuarioEstadoActual.id + '/',
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ is_active: nuevoEstado })
+    }
+  );
+
+  if (res.status === 200) {
+    // Tras éxito: recarga la lista de usuarios y muestra notificación
+    await this.cargarUsuarios();
+    this.cerrarModalEstadoUsuario();
+    this.notificacionesRef.mostrar(
+      nuevoEstado
+        ? `Usuario ${username} activado correctamente`
+        : `Usuario ${username} desactivado correctamente`,
+      'success'
+    );
+  } else {
+    // Si hay error, muestra notificación de error
+    const error = await res.json();
+    this.notificacionesRef.mostrar(error.error || 'Error al cambiar el estado del usuario', 'error');
+    this.cerrarModalEstadoUsuario();
   }
+}
 
   // Método para aplicar los filtros y la ordenación
   async aplicarFiltros() {
