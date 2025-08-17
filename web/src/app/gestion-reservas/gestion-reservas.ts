@@ -194,13 +194,14 @@ tipoMensajeForm: 'error' | 'exito' | 'error-form' | undefined = undefined;
 async guardarNuevaReserva() {
   // Validar formato de email antes de enviar
   // usamos la función de validación importada
-  if (!validacionFormatoEmail(this.nuevaReserva.email)) {
-    this.mensajeErrorForm = 'El email no tiene un formato válido';
-    this.tipoMensajeForm = 'error-form';
-    return;
-  }
-  this.mensajeErrorForm = undefined;
-  this.tipoMensajeForm = undefined;
+const resultado = validacionFormatoEmail(this.nuevaReserva.email);
+if (!resultado.validacion) {
+  this.mensajeErrorForm = resultado.message;
+  this.tipoMensajeForm = 'error-form';
+  return;
+}
+this.mensajeErrorForm = undefined;
+this.tipoMensajeForm = undefined;
 
   const res = await fetch(environment.apiBaseUrl + 'crear-reserva-gestion/', {
     method: 'POST',

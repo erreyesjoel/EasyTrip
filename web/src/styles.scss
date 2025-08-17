@@ -32,3 +32,9 @@ body {
 h1, h2, h3, h4, h5, h6, .logo-titulo-texto {
   font-family: 'Montserrat', Arial, Helvetica, sans-serif;
 }
+
+/* Contenedor para mensajes de validación de email
+para que haga un espacio, y no este tan "compacto" */
+.container-validacion-email {
+  margin-top: 8px;
+}

@@ -27,7 +27,8 @@ interface Usuario {
 const emailFormatoValidator = (control: AbstractControl): ValidationErrors | null => {
   const value = control.value;
   if (!value) return null;
-  return validacionFormatoEmail(value) ? null : { formatoEmail: true };
+  const resultado = validacionFormatoEmail(value);
+  return resultado.validacion ? null : { formatoEmail: resultado.message };
 };
 
 @Component({

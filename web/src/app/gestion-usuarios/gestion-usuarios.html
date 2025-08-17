@@ -168,14 +168,16 @@
       <div class="form-group">
         <label for="email">Email:</label>
         <input id="email" type="email" formControlName="email" class="form-input">
-        <app-mensajes
-          *ngIf="formularioUsuario.get('email')?.invalid && formularioUsuario.get('email')?.touched"
-          [tipo]="'error-form'"
-          [mensaje]="
-            formularioUsuario.get('email')?.errors?.['formatoEmail'] ? 'El email no tiene un formato válido' :
-            formularioUsuario.get('email')?.errors?.['required'] ? 'El email es obligatorio' : ''
-          ">
-        </app-mensajes>
+    <div class="container-validacion-email">
+      <app-mensajes
+        *ngIf="formularioUsuario.get('email')?.invalid && formularioUsuario.get('email')?.touched"
+        [tipo]="'error-form'"
+        [mensaje]="
+          formularioUsuario.get('email')?.errors?.['formatoEmail'] ? formularioUsuario.get('email')?.errors?.['formatoEmail'] :
+          formularioUsuario.get('email')?.errors?.['required'] ? 'El email es obligatorio' : ''
+        ">
+      </app-mensajes>
+    </div>
       </div>
       <div class="form-group">
         <label for="rol">Rol:</label>
