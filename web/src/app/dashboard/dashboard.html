@@ -1,44 +1,71 @@
 <div class="admin-layout">
-<app-sidebar></app-sidebar>
-  
+  <app-sidebar></app-sidebar>
   <main class="main-content">
     <section class="dashboard">
-      <h1 class="dashboard-title">Dashboard Administrador</h1>
-      <div class="dashboard-cards">
-        <div class="dashboard-card">
-          <h2 class="titulos-dashboard">Reservas actuales</h2>
-          <div class="card-content">
-            <span><strong>12</strong> reservas activas</span>
-            <a href="/reservas" class="boton-acceso-rapido">Ver reservas</a>
+      <h1 class="dashboard-title">Panel de Control</h1>
+      <div class="dashboard-summary">
+        <div class="summary-card gradient-blue">
+          <div class="icon-summary">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M8 17v-6a4 4 0 1 1 8 0v6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="5" y="17" width="14" height="4" rx="2" stroke-width="2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="summary-title">Usuarios</div>
+            <div class="summary-value">58</div>
+            <a href="/usuarios" class="summary-link">Gestionar</a>
           </div>
         </div>
-        <div class="dashboard-card">
-          <h2 class="titulos-dashboard">Reservas pendientes</h2>
-          <div class="card-content">
-            <span><strong>4</strong> pendientes</span>
-            <a href="/reservas?estado=pendiente" class="boton-acceso-rapido">Ver pendientes</a>
+        <div class="summary-card gradient-green">
+          <div class="icon-summary">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <rect x="3" y="7" width="18" height="13" rx="2" stroke-width="2"/>
+              <path d="M16 3v4M8 3v4" stroke-width="2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="summary-title">Reservas activas</div>
+            <div class="summary-value">12</div>
+            <a href="/reservas" class="summary-link">Ver reservas</a>
           </div>
         </div>
-        <div class="dashboard-card">
-          <h2 class="titulos-dashboard">Reservas confirmadas</h2>
-          <div class="card-content">
-            <span><strong>8</strong> confirmadas</span>
-            <a href="/reservas?estado=confirmada" class="boton-acceso-rapido">Ver confirmadas</a>
+        <div class="summary-card gradient-yellow">
+          <div class="icon-summary">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M12 8v4l3 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="summary-title">Pendientes</div>
+            <div class="summary-value">4</div>
+            <a href="/reservas?estado=pendiente" class="summary-link">Ver pendientes</a>
           </div>
         </div>
-        <div class="dashboard-card">
-          <h2 class="titulos-dashboard">Usuarios registrados</h2>
-          <div class="card-content">
-            <span><strong>58</strong> usuarios totales</span>
-            <a href="/usuarios" class="boton-acceso-rapido">Gestionar usuarios</a>
+        <div class="summary-card gradient-purple">
+          <div class="icon-summary">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <rect x="4" y="4" width="16" height="16" rx="4" stroke-width="2"/>
+              <path d="M8 12h8M12 8v8" stroke-width="2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="summary-title">Paquetes</div>
+            <div class="summary-value">7</div>
+            <a href="/paquetes" class="summary-link">Ver paquetes</a>
           </div>
         </div>
-        <div class="dashboard-card">
-          <h2 class="titulos-dashboard">Paquetes turísticos</h2>
-          <div class="card-content">
-            <span><strong>7</strong> paquetes disponibles</span>
-            <a href="/paquetes" class="boton-acceso-rapido">Ver paquetes</a>
-          </div>
+      </div>
+
+      <div class="dashboard-charts">
+        <div class="chart-card">
+          <h3>Reservas por estado</h3>
+          <img src="https://quickchart.io/chart?c={type:'doughnut',data:{labels:['Activas','Pendientes','Confirmadas'],datasets:[{data:[12,4,8],backgroundColor:['#4f8cff','#ffd166','#06d6a0']}]} }" alt="Reservas por estado" class="chart-img">
+        </div>
+        <div class="chart-card">
+          <h3>Usuarios registrados por mes</h3>
+          <img src="https://quickchart.io/chart?c={type:'bar',data:{labels:['Ene','Feb','Mar','Abr','May','Jun'],datasets:[{label:'Usuarios',data:[5,8,12,9,14,10],backgroundColor:'#4f8cff'}]}}" alt="Usuarios por mes" class="chart-img">
         </div>
       </div>
     </section>

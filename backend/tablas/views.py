@@ -23,6 +23,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import parser_classes
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.db.models import Count
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -911,3 +912,23 @@ def definicion_password(request, user_id):
     user.set_password(password)
     user.save()
     return Response({'mensaje': 'Contraseña definida correctamente.'}, status=200)
+
+# api get para saber el total de usuarios registrados
+# usando count() de Django
+# from django.db.models import Count
+@api_view(['GET'])
+def count_usuarios(request):
+    total_usuarios = User.objects.count()
+    activos = User.objects.filter(is_active=True).count()
+    inactivos = User.objects.filter(is_active=False).count()
+    agentes = User.objects.filter(rol='agente').count()
+    clientes = User.objects.filter(rol='cliente').count()
+    administradores = User.objects.filter(rol='administrador').count()
+    return Response({
+        'total': total_usuarios,
+        'activos': activos,
+        'inactivos': inactivos,
+        'agentes': agentes,
+        'clientes': clientes,
+        'administradores': administradores,
+    }, status=200)
