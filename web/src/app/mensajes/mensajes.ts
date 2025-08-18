@@ -10,6 +10,6 @@ import { CommonModule } from '@angular/common';
 })
 export class MensajesComponent {
   // para "definir" el tipo de mensaje
-  @Input() tipo: 'error' | 'exito' | 'error-form' = 'exito';
-  @Input() mensaje: string = '';
+  @Input() tipo: 'error' | 'exito' | 'error-form' | undefined = 'exito';  
+  @Input() mensaje: string | undefined = '';
 }

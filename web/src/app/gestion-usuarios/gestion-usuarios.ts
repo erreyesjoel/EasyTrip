@@ -5,7 +5,11 @@ import { environment } from '../../environments/environment';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms'; 
-
+import { validacionFormatoEmail, validarCrearUsuario } from '../../form-validations';
+import { MensajesComponent } from '../mensajes/mensajes';
+import { Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Notificaciones } from '../notificaciones/notificaciones'; // Importar componente de notificaciones
+import { ViewChild } from '@angular/core';
 
 // Interfaz para el usuario
 // Representa la estructura de un usuario en el sistema
@@ -22,14 +26,25 @@ interface Usuario {
 
 }
 
+const emailFormatoValidator = (control: AbstractControl): ValidationErrors | null => {
+  const value = control.value;
+  if (!value) return null;
+  const resultado = validacionFormatoEmail(value);
+  return resultado.validacion ? null : { formatoEmail: resultado.message };
+};
+
 @Component({
   selector: 'app-gestion-usuarios',
-  imports: [CommonModule, SidebarComponent, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, SidebarComponent, ReactiveFormsModule, FormsModule, MensajesComponent, Notificaciones],
   templateUrl: './gestion-usuarios.html',
   styleUrls: ['./gestion-usuarios.scss']
 })
 
 export class GestionUsuarios {
+
+  // viewChild para acceder al componente de notificaciones
+
+  @ViewChild('notificaciones') notificacionesRef!: Notificaciones;
 
   // cuando se "renderiza el componente", se hara peticion a la api gestion-usuarios
   // por eso ngOnInit porque es el ciclo de vida del componente que se ejecuta al inicializar
@@ -55,12 +70,14 @@ export class GestionUsuarios {
   ordenCampo: string = 'username'; // Campo actual de ordenación
   ordenAsc: boolean = true;        // true = ascendente, false = descendente
 
+  mensajesErroresUsuario: string[] = [];
+
   constructor(private fb: FormBuilder) {
     this.formularioUsuario = this.fb.group({
       username: [''],
       first_name: [''],
       last_name: [''],
-      email: [''],
+      email: ['', [Validators.required, emailFormatoValidator]],
       rol: ['usuario']
     });
   }
@@ -68,6 +85,16 @@ export class GestionUsuarios {
   async ngOnInit() {
     await this.cargarRoles();
     await this.cargarUsuarios();
+
+    // de esta forma nos aseguramos de que el formulario este limpio desde el inicio
+    // y que no tenga valores previos
+    this.formularioUsuario = this.fb.group({
+      username: [''],
+      first_name: [''],
+      last_name: [''],
+      email: ['', [Validators.required, emailFormatoValidator]],
+      rol: ['usuario']
+    });
   }
 
   /* Carga los usuarios desde la API 
@@ -122,32 +149,45 @@ export class GestionUsuarios {
   cerrarModalUsuario() {
     this.modalUsuarioAbierto = false;
     this.usuarioActual = null;
+    /* al cerrar el modal, limpiamos el formulario
+    de mensajes de error */
+    this.mensajesErroresUsuario = [];
   }
 
   // Guardar usuario (solo visual/funcional)
   async guardarUsuario() {
+    // Llama a las validaciones antes de enviar a la API
+    const datos = this.formularioUsuario.value;
+    this.mensajesErroresUsuario = validarCrearUsuario(datos);
+
+    if (this.mensajesErroresUsuario.length > 0) {
+      // Si hay errores, no envía la petición y muestra los mensajes
+      return;
+    }
+
     if (this.modoCreacionUsuario) {
+      
       // Si es creación
       // Recoge los datos del formulario
-      const datos = this.formularioUsuario.value;
-      
-      // Llama a la API para crear el usuario
       const res = await fetch(environment.apiBaseUrl + 'crear-usuario/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(datos)
       });
       if (res.status === 201) {
+
         // Recarga la tabla de usuarios
         await this.cargarUsuarios();
+        this.notificacionesRef.mostrar(`Usuario ${datos.username} creado correctamente`, 'success');
         this.cerrarModalUsuario();
       } else {
         const error = await res.json();
-        alert(error.error || 'Error al crear usuario');
+        // muestra error, pero de mensaje, no notifiaciones
+        // es porque queria mostrar la validacion de django, de 'este email ya existe'
+        this.mensajesErroresUsuario.push(error.error || 'Error al crear usuario');
       }
     } else if (this.usuarioActual) {
       // Editar usuario
-      const datos = this.formularioUsuario.value;
       const res = await fetch(environment.apiBaseUrl + 'editar-usuario/' + this.usuarioActual.id + '/', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -155,10 +195,11 @@ export class GestionUsuarios {
       });
       if (res.status === 200) {
         await this.cargarUsuarios();
+        this.notificacionesRef.mostrar(`Usuario ${this.usuarioActual.username} editado correctamente`, 'success');
         this.cerrarModalUsuario();
       } else {
         const error = await res.json();
-        alert(error.error || 'Error al editar usuario');
+        this.mensajesErroresUsuario.push(error.error || 'Error al editar usuario');
       }
     }
   }
@@ -183,10 +224,11 @@ export class GestionUsuarios {
       });
       if (res.status === 200) {
         await this.cargarUsuarios();
+        this.notificacionesRef.mostrar(`Usuario ${this.usuarioActual.username} eliminado correctamente`, 'success');
         this.cerrarModalEliminarUsuario();
       } else {
         const error = await res.json();
-        alert(error.error || 'Error al eliminar usuario');
+        this.notificacionesRef.mostrar(error.error || 'Error al eliminar usuario', 'error');
       }
     }
   }
@@ -204,19 +246,43 @@ export class GestionUsuarios {
   }
 
   // Confirma el cambio de estado de un usuario
-  confirmarCambioEstadoUsuario() {
-    // Aquí llamas a tu API para cambiar el estado (alta/baja)
-    // Por ejemplo:
-    // this.usuarioService.cambiarEstado(this.usuarioEstadoActual.id, !this.usuarioEstadoActual.is_active).subscribe(...)
-    // Tras éxito:
-    this.usuarioEstadoActual.is_active = !this.usuarioEstadoActual.is_active;
-    this.cerrarModalEstadoUsuario();
-    // Opcional: recarga la lista de usuarios
-  }
+async confirmarCambioEstadoUsuario() {
+  // Aquí llamas a tu API para cambiar el estado (alta/baja)
+  if (!this.usuarioEstadoActual) return;
 
-  toggleEstado(usuario: Usuario) {
-    // Aquí irá la lógica para activar/desactivar usuario
+  // Prepara el nuevo estado (activo/inactivo)
+  const nuevoEstado = !this.usuarioEstadoActual.is_active;
+
+  // Guarda el username antes de cerrar el modal
+  const username = this.usuarioEstadoActual.username;
+
+  // Llama a la API PATCH para cambiar el estado en backend
+  const res = await fetch(
+    environment.apiBaseUrl + 'cambiar-estado-usuario/' + this.usuarioEstadoActual.id + '/',
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ is_active: nuevoEstado })
+    }
+  );
+
+  if (res.status === 200) {
+    // Tras éxito: recarga la lista de usuarios y muestra notificación
+    await this.cargarUsuarios();
+    this.cerrarModalEstadoUsuario();
+    this.notificacionesRef.mostrar(
+      nuevoEstado
+        ? `Usuario ${username} activado correctamente`
+        : `Usuario ${username} desactivado correctamente`,
+      'success'
+    );
+  } else {
+    // Si hay error, muestra notificación de error
+    const error = await res.json();
+    this.notificacionesRef.mostrar(error.error || 'Error al cambiar el estado del usuario', 'error');
+    this.cerrarModalEstadoUsuario();
   }
+}
 
   // Método para aplicar los filtros y la ordenación
   async aplicarFiltros() {
@@ -253,5 +319,28 @@ export class GestionUsuarios {
       this.ordenAsc = true; // Por defecto ascendente al cambiar de campo
     }
     this.aplicarFiltros();
+  }
+
+  // Método para obtener los mensajes de error de un campo específico
+  // y mostrarlos debajo de cada input
+  getErroresCampo(campo: string): string[] {
+  if (campo === 'nombre') {
+    // Solo errores que realmente sean de nombre, no de usuario
+    return this.mensajesErroresUsuario.filter(msg =>
+      msg.toLowerCase().includes('nombre') &&
+      !msg.toLowerCase().includes('usuario')
+    );
+  }
+  if (campo === 'usuario') {
+    return this.mensajesErroresUsuario.filter(msg =>
+      msg.toLowerCase().includes('usuario')
+    );
+  }
+  return this.mensajesErroresUsuario.filter(msg => msg.toLowerCase().includes(campo));
+}
+
+  actualizarErroresUsuario() {
+    const datos = this.formularioUsuario.value;
+    this.mensajesErroresUsuario = validarCrearUsuario(datos);
   }
 }

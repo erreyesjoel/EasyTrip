@@ -250,6 +250,18 @@ export class GestionPaquetes implements OnInit {
   cerrarModal(): void {
     this.modalAbierto = false;
     this.modoCreacion = false;
+    this.formularioPaquete.reset({
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      duracion: 1,
+      cupo: 1,
+      estado: 'activo'
+    });
+    this.erroresForm = {}; // limpia los errores del formulario
+    this.imagenesPreview = [];
+    this.imagenesExistentes = [];
+    this.imagenesEliminadas = [];
   }
 
   // Abre el modal en modo creación

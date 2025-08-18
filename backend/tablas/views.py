@@ -586,7 +586,7 @@ def crear_usuario(request):
         if not username or not email:
             return Response({'error': 'Username y email son requeridos.'}, status=400)
         if User.objects.filter(username=username).exists():
-            return Response({'error': 'El username ya existe.'}, status=400)
+            return Response({'error': 'El usuario ya existe.'}, status=400)
         if User.objects.filter(email=email).exists():
             return Response({'error': 'El email ya existe.'}, status=400)
         if '@' not in email or '.' not in email:
@@ -629,6 +629,20 @@ def crear_usuario(request):
             }
         }, status=201)
     return Response({'error': 'Método no permitido'}, status=405)
+
+# api patch para cambiar estado de usuario, activo o no
+@api_view(['PATCH'])
+def cambiar_estado_usuario(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'Usuario no encontrado.'}, status=404)
+    is_active = request.data.get('is_active')
+    if is_active is None:
+        return Response({'error': 'Falta el campo is_active.'}, status=400)
+    user.is_active = bool(is_active)
+    user.save()
+    return Response({'mensaje': f'Usuario {"activado" if user.is_active else "desactivado"} correctamente.'}, status=200)
 
 # api para editar un usuario
 # api para editar un usuario
