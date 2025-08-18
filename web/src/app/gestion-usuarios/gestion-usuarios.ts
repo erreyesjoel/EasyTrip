@@ -85,6 +85,16 @@ export class GestionUsuarios {
   async ngOnInit() {
     await this.cargarRoles();
     await this.cargarUsuarios();
+
+    // de esta forma nos aseguramos de que el formulario este limpio desde el inicio
+    // y que no tenga valores previos
+    this.formularioUsuario = this.fb.group({
+      username: [''],
+      first_name: [''],
+      last_name: [''],
+      email: ['', [Validators.required, emailFormatoValidator]],
+      rol: ['usuario']
+    });
   }
 
   /* Carga los usuarios desde la API 
@@ -139,6 +149,9 @@ export class GestionUsuarios {
   cerrarModalUsuario() {
     this.modalUsuarioAbierto = false;
     this.usuarioActual = null;
+    /* al cerrar el modal, limpiamos el formulario
+    de mensajes de error */
+    this.mensajesErroresUsuario = [];
   }
 
   // Guardar usuario (solo visual/funcional)
@@ -169,7 +182,9 @@ export class GestionUsuarios {
         this.cerrarModalUsuario();
       } else {
         const error = await res.json();
-        this.notificacionesRef.mostrar(error.error || 'Error al crear usuario', 'error');
+        // muestra error, pero de mensaje, no notifiaciones
+        // es porque queria mostrar la validacion de django, de 'este email ya existe'
+        this.mensajesErroresUsuario.push(error.error || 'Error al crear usuario');
       }
     } else if (this.usuarioActual) {
       // Editar usuario
@@ -184,7 +199,7 @@ export class GestionUsuarios {
         this.cerrarModalUsuario();
       } else {
         const error = await res.json();
-        this.notificacionesRef.mostrar(error.error || 'Error al editar usuario', 'error');
+        this.mensajesErroresUsuario.push(error.error || 'Error al editar usuario');
       }
     }
   }
@@ -309,8 +324,20 @@ async confirmarCambioEstadoUsuario() {
   // Método para obtener los mensajes de error de un campo específico
   // y mostrarlos debajo de cada input
   getErroresCampo(campo: string): string[] {
-    return this.mensajesErroresUsuario.filter(msg => msg.toLowerCase().includes(campo));
+  if (campo === 'nombre') {
+    // Solo errores que realmente sean de nombre, no de usuario
+    return this.mensajesErroresUsuario.filter(msg =>
+      msg.toLowerCase().includes('nombre') &&
+      !msg.toLowerCase().includes('usuario')
+    );
   }
+  if (campo === 'usuario') {
+    return this.mensajesErroresUsuario.filter(msg =>
+      msg.toLowerCase().includes('usuario')
+    );
+  }
+  return this.mensajesErroresUsuario.filter(msg => msg.toLowerCase().includes(campo));
+}
 
   actualizarErroresUsuario() {
     const datos = this.formularioUsuario.value;

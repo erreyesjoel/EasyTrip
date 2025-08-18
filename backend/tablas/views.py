@@ -586,7 +586,7 @@ def crear_usuario(request):
         if not username or not email:
             return Response({'error': 'Username y email son requeridos.'}, status=400)
         if User.objects.filter(username=username).exists():
-            return Response({'error': 'El username ya existe.'}, status=400)
+            return Response({'error': 'El usuario ya existe.'}, status=400)
         if User.objects.filter(email=email).exists():
             return Response({'error': 'El email ya existe.'}, status=400)
         if '@' not in email or '.' not in email:
