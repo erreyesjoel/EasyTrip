@@ -13,7 +13,9 @@
           </div>
           <div>
             <div class="summary-title">Usuarios</div>
-            <div class="summary-value">58</div>
+            <div class="summary-value">
+              {{ totalUsuarios !== null ? totalUsuarios : '' }}
+            </div>
             <a href="/usuarios" class="summary-link">Gestionar</a>
           </div>
         </div>
