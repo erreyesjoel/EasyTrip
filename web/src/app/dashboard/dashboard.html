@@ -16,6 +16,10 @@
             <div class="summary-value">
               {{ totalUsuarios !== null ? totalUsuarios : '' }}
             </div>
+            <div class="summary-subvalues">
+              <span class="activo">Activos: {{ usuariosActivos !== null ? usuariosActivos : '' }}</span>
+              <span class="inactivo">No activos: {{ usuariosNoActivos !== null ? usuariosNoActivos : '' }}</span>
+            </div>
             <a href="/usuarios" class="summary-link">Gestionar</a>
           </div>
         </div>

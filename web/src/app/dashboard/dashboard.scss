@@ -91,6 +91,21 @@
     }
   }
 
+  .summary-subvalues {
+    font-size: 0.95rem;
+    margin-top: 0.2rem;
+    display: flex;
+    gap: 1.2rem;
+
+    .activo {
+      color: #baffc9;
+    }
+
+    .inactivo {
+      color: #ffd6d6;
+    }
+  }
+
   // Todas las tarjetas usan verdes, pero con matices distintos
   .gradient-blue {
     background: linear-gradient(90deg, vars.$verde-esmeralda 0%, vars.$verde-claro 100%);

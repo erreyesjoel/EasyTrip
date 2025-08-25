@@ -921,16 +921,10 @@ def count_usuarios(request):
     total_usuarios = User.objects.count()
     activos = User.objects.filter(is_active=True).count()
     inactivos = User.objects.filter(is_active=False).count()
-    agentes = User.objects.filter(rol='agente').count()
-    clientes = User.objects.filter(rol='cliente').count()
-    administradores = User.objects.filter(rol='administrador').count()
     return Response({
         'total': total_usuarios,
         'activos': activos,
         'inactivos': inactivos,
-        'agentes': agentes,
-        'clientes': clientes,
-        'administradores': administradores,
     }, status=200)
 
 @api_view(['GET'])

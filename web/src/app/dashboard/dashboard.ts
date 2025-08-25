@@ -31,6 +31,8 @@ interface ReservasCountResponse {
 export class DashboardComponent {
 
   totalUsuarios: number | null = null;
+  usuariosActivos: number | null = null;
+  usuariosNoActivos: number | null = null;
   totalReservas: number | null = null;
 
   // ngOnInit, cada vez que se renderia componente, llama a mostrarTotalUsuarios
@@ -45,8 +47,12 @@ export class DashboardComponent {
       if (!res.ok) throw new Error('Error al obtener el total de usuarios');
       const data: UsuariosCountResponse = await res.json();
       this.totalUsuarios = data.total;
+      this.usuariosActivos = data.activos;
+      this.usuariosNoActivos = data.inactivos;
     } catch (error) {
       this.totalUsuarios = null;
+      this.usuariosActivos = null;
+      this.usuariosNoActivos = null;
       console.error('Error al mostrar total de usuarios:', error);
     }
   }
