@@ -24,6 +24,7 @@ from rest_framework.decorators import parser_classes
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db.models import Count
+from django.db.models.functions import TruncMonth
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -73,7 +74,7 @@ def registro_usuario(request):
         key='access_token',
         value=access,
         httponly=True,
-        secure=False,  # True en producción
+        secure=False,
         samesite='Lax',
         path='/'
     )
@@ -957,3 +958,23 @@ def count_paquetes(request):
         'activos': activos,
         'inactivos': inactivos,
     }, status=200)
+
+@api_view(['GET'])
+def reservas_por_mes(request):
+    # Agrupa reservas por mes y cuenta cuántas hay en cada uno
+    reservas = (
+        Reserva.objects
+        .annotate(mes=TruncMonth('fecha_reservada'))
+        .values('mes')
+        .annotate(total=Count('id'))
+        .order_by('mes')
+    )
+    # Formatea la respuesta para el frontend
+    data = [
+        {
+            'mes': r['mes'].strftime('%Y-%m') if r['mes'] else '',
+            'total': r['total']
+        }
+        for r in reservas
+    ]
+    return Response(data)

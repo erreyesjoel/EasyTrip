@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SidebarComponent } from '../sidebar/sidebar'; // Usa la ruta correcta según tu estructura
+import { SidebarComponent } from '../sidebar/sidebar';
 import { environment } from '../../environments/environment';
 
 interface UsuariosCountResponse {
@@ -27,15 +27,16 @@ interface PaquetesCountResponse {
   inactivos: number;
 }
 
+declare var google: any;
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, SidebarComponent],
-  templateUrl: './dashboard.html',   // <--- debe existir este archivo
-  styleUrl: './dashboard.scss'       // <--- debe existir este archivo
+  templateUrl: './dashboard.html',
+  styleUrl: './dashboard.scss'
 })
 export class DashboardComponent {
-
   totalUsuarios: number | null = null;
   usuariosActivos: number | null = null;
   usuariosNoActivos: number | null = null;
@@ -43,16 +44,26 @@ export class DashboardComponent {
   totalPaquetes: number | null = null;
   paquetesActivos: number | null = null;
   paquetesNoActivos: number | null = null;
+  reservasPorMesLabels: string[] = [];
+  reservasPorMesData: number[] = [];
+
+  private chartsReady = false;
+  private datosReady = false;
 
   constructor() {}
 
-  // Al iniciar el componente, llama a la función mostrarTotalUsuarios
+  ngOnInit(): void {
+    // Carga Google Charts solo una vez
+    google.charts.load('current', { packages: ['corechart'] });
+    google.charts.setOnLoadCallback(() => {
+      this.chartsReady = true;
+      this.tryDrawChart();
+    });
 
-  // ngOnInit, cada vez que se renderia componente, llama a mostrarTotalUsuarios
-  ngOnInit():void {
     this.mostrarTotalUsuarios();
     this.mostrarTotalReservas();
     this.mostrarTotalPaquetes();
+    this.cargarReservasPorMes();
   }
 
   async mostrarTotalUsuarios(): Promise<void> {
@@ -100,5 +111,38 @@ export class DashboardComponent {
       this.paquetesNoActivos = null;
       console.error('Error al mostrar total de paquetes:', error);
     }
+  }
+
+  async cargarReservasPorMes(): Promise<void> {
+    try {
+      const res = await fetch(environment.apiBaseUrl + 'reservas-por-mes/');
+      if (!res.ok) throw new Error('Error al obtener reservas por mes');
+      const data = await res.json();
+      this.reservasPorMesLabels = data.map((item: any) => item.mes);
+      this.reservasPorMesData = data.map((item: any) => item.total);
+      this.datosReady = true;
+      this.tryDrawChart();
+    } catch (error) {
+      this.reservasPorMesLabels = [];
+      this.reservasPorMesData = [];
+      this.datosReady = false;
+      console.error('Error al cargar reservas por mes:', error);
+    }
+  }
+
+  tryDrawChart() {
+    if (this.chartsReady && this.datosReady && this.reservasPorMesLabels.length > 0) {
+      this.dibujarGrafico();
+    }
+  }
+
+  dibujarGrafico() {
+    const chartData = [
+      ['Mes', 'Reservas'],
+      ...this.reservasPorMesLabels.map((mes, i) => [mes, this.reservasPorMesData[i]])
+    ];
+    const data = google.visualization.arrayToDataTable(chartData);
+    const chart = new google.visualization.ColumnChart(document.getElementById('grafico-reservas'));
+    chart.draw(data, { title: 'Reservas por mes', legend: { position: 'none' } });
   }
 }

@@ -36,7 +36,7 @@
               <!-- Mostramos el total de reservas -->
               {{ totalReservas !== null ? totalReservas : '' }} 
             </div>
-            <a href="/reservas" class="summary-link">Ver reservas</a>
+            <a href="/gestion-reservas" class="summary-link">Gestionar reservas</a>
           </div>
         </div>
         <div class="summary-card gradient-purple">
@@ -52,15 +52,14 @@
               <span class="activo">Activos: {{ paquetesActivos !== null ? paquetesActivos : '' }}</span>
               <span class="inactivo">No activos: {{ paquetesNoActivos !== null ? paquetesNoActivos : '' }}</span>
             </div>
-            <a href="/paquetes" class="summary-link">Ver paquetes</a>
+            <a href="/gestion-paquetes" class="summary-link">Gestionar paquetes</a>
           </div>
         </div>
       </div>
 
       <div class="dashboard-charts">
         <div class="chart-card">
-          <h3>Reservas por estado</h3>
-          <img src="https://quickchart.io/chart?c={type:'doughnut',data:{labels:['Activas','Pendientes','Confirmadas'],datasets:[{data:[12,4,8],backgroundColor:['#4f8cff','#ffd166','#06d6a0']}]} }" alt="Reservas por estado" class="chart-img">
+          <div id="grafico-reservas" style="width: 100%; height: 300px;"></div>
         </div>
         <div class="chart-card">
           <h3>Usuarios registrados por mes</h3>
