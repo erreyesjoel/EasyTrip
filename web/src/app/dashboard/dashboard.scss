@@ -127,22 +127,52 @@
     color: #fff;
   }
 
+  // OPTIMIZACIÓN DE GRÁFICOS
   .dashboard-charts {
-    display: flex;
-    flex-direction: row; // Cambia a fila
-    gap: 10rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+    
+    // En pantallas muy grandes, limita a 2 columnas
+    @media (min-width: 1400px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    // En tablet, mantén una columna si es necesario
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    // En móvil, stack verticalmente
+    @media (max-width: vars.$mobile) {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
   }
 
   .chart-card {
     background: #fff;
     border-radius: 1.2rem;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
-    padding: 1.5rem 2rem;
-    min-width: 320px;
-    max-width: 600px;
-    flex: 1 1 320px;
+    padding: 2rem;
     border-top: 4px solid vars.$verde-esmeralda;
+    transition: transform 0.15s, box-shadow 0.15s;
+    
+    // Mejora la altura para que se vean proporcionados
+    min-height: 480px;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    // Asegura que el contenido del gráfico llene bien el espacio
+    > div {
+      height: 420px;
+      width: 100% !important;
+    }
   }
 
   .chart-img {
@@ -163,6 +193,29 @@
     .summary-link {
       color: #fff !important;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+    }
+  }
+}
+
+// Estilos adicionales para mejorar el responsive
+@media (max-width: vars.$mobile) {
+  .dashboard {
+    padding: 1rem;
+
+    .dashboard-title {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dashboard-summary {
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+      min-width: auto;
+      flex: 1 1 100%;
+      padding: 1.2rem 1.5rem;
     }
   }
 }
