@@ -129,7 +129,8 @@
 
   .dashboard-charts {
     display: flex;
-    gap: 2rem;
+    flex-direction: row; // Cambia a fila
+    gap: 10rem;
     flex-wrap: wrap;
   }
 
@@ -138,8 +139,9 @@
     border-radius: 1.2rem;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
     padding: 1.5rem 2rem;
-    flex: 1 1 320px;
     min-width: 320px;
+    max-width: 600px;
+    flex: 1 1 320px;
     border-top: 4px solid vars.$verde-esmeralda;
   }
 
