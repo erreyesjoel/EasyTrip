@@ -41,6 +41,12 @@ export class DashboardComponent {
   usuariosNoActivos: number | null = null;
   totalReservas: number | null = null;
   totalPaquetes: number | null = null;
+  paquetesActivos: number | null = null;
+  paquetesNoActivos: number | null = null;
+
+  constructor() {}
+
+  // Al iniciar el componente, llama a la función mostrarTotalUsuarios
 
   // ngOnInit, cada vez que se renderia componente, llama a mostrarTotalUsuarios
   ngOnInit():void {
@@ -85,9 +91,13 @@ export class DashboardComponent {
       if (!res.ok) throw new Error('Error al obtener el total de paquetes');
       const data: PaquetesCountResponse = await res.json();
       this.totalPaquetes = data.total;
+      this.paquetesActivos = data.activos;
+      this.paquetesNoActivos = data.inactivos;
       console.log('Total de paquetes:', data);
     } catch (error) {
       this.totalPaquetes = null;
+      this.paquetesActivos = null;
+      this.paquetesNoActivos = null;
       console.error('Error al mostrar total de paquetes:', error);
     }
   }

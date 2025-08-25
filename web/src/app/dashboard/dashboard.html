@@ -41,15 +41,16 @@
         </div>
         <div class="summary-card gradient-purple">
           <div class="icon-summary">
-            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <rect x="4" y="4" width="16" height="16" rx="4" stroke-width="2"/>
-              <path d="M8 12h8M12 8v8" stroke-width="2"/>
-            </svg>
+            <!-- ...icono... -->
           </div>
           <div>
             <div class="summary-title">Paquetes</div>
             <div class="summary-value">
               {{ totalPaquetes !== null ? totalPaquetes : '' }}
+            </div>
+            <div class="summary-subvalues">
+              <span class="activo">Activos: {{ paquetesActivos !== null ? paquetesActivos : '' }}</span>
+              <span class="inactivo">No activos: {{ paquetesNoActivos !== null ? paquetesNoActivos : '' }}</span>
             </div>
             <a href="/paquetes" class="summary-link">Ver paquetes</a>
           </div>
