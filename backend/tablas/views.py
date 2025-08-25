@@ -978,3 +978,23 @@ def reservas_por_mes(request):
         for r in reservas
     ]
     return Response(data)
+
+@api_view(['GET'])
+def usuarios_por_mes(request):
+    # Agrupa usuarios por mes y cuenta cuántos hay en cada uno
+    usuarios = (
+        User.objects
+        .annotate(mes=TruncMonth('date_joined'))
+        .values('mes')
+        .annotate(total=Count('id'))
+        .order_by('mes')
+    )
+    # Formatea la respuesta para el frontend
+    data = [
+        {
+            'mes': u['mes'].strftime('%Y-%m') if u['mes'] else '',
+            'total': u['total']
+        }
+        for u in usuarios
+    ]
+    return Response(data)

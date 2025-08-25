@@ -46,9 +46,12 @@ export class DashboardComponent {
   paquetesNoActivos: number | null = null;
   reservasPorMesLabels: string[] = [];
   reservasPorMesData: number[] = [];
+  usuariosPorMesLabels: string[] = [];
+  usuariosPorMesData: number[] = [];
 
   private chartsReady = false;
   private datosReady = false;
+  private usuariosDatosReady = false;
 
   constructor() {}
 
@@ -58,12 +61,14 @@ export class DashboardComponent {
     google.charts.setOnLoadCallback(() => {
       this.chartsReady = true;
       this.tryDrawChart();
+      this.tryDrawUsuariosChart();
     });
 
     this.mostrarTotalUsuarios();
     this.mostrarTotalReservas();
     this.mostrarTotalPaquetes();
     this.cargarReservasPorMes();
+    this.cargarUsuariosPorMes();
   }
 
   async mostrarTotalUsuarios(): Promise<void> {
@@ -130,9 +135,32 @@ export class DashboardComponent {
     }
   }
 
+  async cargarUsuariosPorMes(): Promise<void> {
+    try {
+      const res = await fetch(environment.apiBaseUrl + 'usuarios-por-mes/');
+      if (!res.ok) throw new Error('Error al obtener usuarios por mes');
+      const data = await res.json();
+      this.usuariosPorMesLabels = data.map((item: any) => item.mes);
+      this.usuariosPorMesData = data.map((item: any) => item.total);
+      this.usuariosDatosReady = true;
+      this.tryDrawUsuariosChart();
+    } catch (error) {
+      this.usuariosPorMesLabels = [];
+      this.usuariosPorMesData = [];
+      this.usuariosDatosReady = false;
+      console.error('Error al cargar usuarios por mes:', error);
+    }
+  }
+
   tryDrawChart() {
     if (this.chartsReady && this.datosReady && this.reservasPorMesLabels.length > 0) {
       this.dibujarGrafico();
+    }
+  }
+
+  tryDrawUsuariosChart() {
+    if (this.chartsReady && this.usuariosDatosReady && this.usuariosPorMesLabels.length > 0) {
+      this.dibujarUsuariosChart();
     }
   }
 
@@ -144,5 +172,15 @@ export class DashboardComponent {
     const data = google.visualization.arrayToDataTable(chartData);
     const chart = new google.visualization.ColumnChart(document.getElementById('grafico-reservas'));
     chart.draw(data, { title: 'Reservas por mes', legend: { position: 'none' } });
+  }
+
+  dibujarUsuariosChart() {
+    const chartData = [
+      ['Mes', 'Usuarios'],
+      ...this.usuariosPorMesLabels.map((mes, i) => [mes, this.usuariosPorMesData[i]])
+    ];
+    const data = google.visualization.arrayToDataTable(chartData);
+    const chart = new google.visualization.ColumnChart(document.getElementById('grafico-usuarios'));
+    chart.draw(data, { title: 'Usuarios registrados por mes', legend: { position: 'none' } });
   }
 }
