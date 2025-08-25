@@ -21,6 +21,12 @@ interface ReservasCountResponse {
   finalizadas: number;
 }
 
+interface PaquetesCountResponse {
+  total: number;
+  activos: number;
+  inactivos: number;
+}
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -34,11 +40,13 @@ export class DashboardComponent {
   usuariosActivos: number | null = null;
   usuariosNoActivos: number | null = null;
   totalReservas: number | null = null;
+  totalPaquetes: number | null = null;
 
   // ngOnInit, cada vez que se renderia componente, llama a mostrarTotalUsuarios
   ngOnInit():void {
     this.mostrarTotalUsuarios();
     this.mostrarTotalReservas();
+    this.mostrarTotalPaquetes();
   }
 
   async mostrarTotalUsuarios(): Promise<void> {
@@ -68,6 +76,19 @@ export class DashboardComponent {
     } catch (error) {
       this.totalReservas = null;
       console.error('Error al mostrar total de reservas:', error);
+    }
+  }
+
+  async mostrarTotalPaquetes(): Promise<void> {
+    try {
+      const res = await fetch(environment.apiBaseUrl + 'count-paquetes');
+      if (!res.ok) throw new Error('Error al obtener el total de paquetes');
+      const data: PaquetesCountResponse = await res.json();
+      this.totalPaquetes = data.total;
+      console.log('Total de paquetes:', data);
+    } catch (error) {
+      this.totalPaquetes = null;
+      console.error('Error al mostrar total de paquetes:', error);
     }
   }
 }

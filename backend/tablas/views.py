@@ -943,3 +943,17 @@ def count_reservas(request):
         'canceladas': canceladas,
         'finalizadas': finalizadas,
     }, status=200)
+
+# api get para saber el total de paquetes turísticos
+# usando count() de Django
+# from django.db.models import Count
+@api_view(['GET'])
+def count_paquetes(request):
+    total_paquetes = PaqueteTuristico.objects.count()
+    activos = PaqueteTuristico.objects.filter(estado='activo').count()
+    inactivos = PaqueteTuristico.objects.filter(estado='inactivo').count()
+    return Response({
+        'total': total_paquetes,
+        'activos': activos,
+        'inactivos': inactivos,
+    }, status=200)

@@ -48,7 +48,9 @@
           </div>
           <div>
             <div class="summary-title">Paquetes</div>
-            <div class="summary-value">7</div>
+            <div class="summary-value">
+              {{ totalPaquetes !== null ? totalPaquetes : '' }}
+            </div>
             <a href="/paquetes" class="summary-link">Ver paquetes</a>
           </div>
         </div>
