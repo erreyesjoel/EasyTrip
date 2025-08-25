@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from tablas.views import editar_paquete, ejemplo_get, eliminar_paquete, obtener_paquetes, registro_usuario, crear_paquete, enviar_codigo_verificacion, verificar_codigo, enviar_codigo_recuperacion, cambiar_password_con_codigo, gestion_usuarios_tabla, crear_usuario, editar_usuario, eliminar_usuario, obtener_roles_usuario, obtener_paquete_por_id, reservar_paquete_por_id, reservas_gestion, usuarios_agentes, asignar_gestor_reserva, crear_reserva, definicion_password, cambiar_estado_usuario
-from tablas.views import count_usuarios
+from tablas.views import count_usuarios, count_reservas
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from tablas.views import CustomTokenObtainPairView, usuario_actual, logout_view
 from django.conf import settings
@@ -53,6 +53,7 @@ urlpatterns = [
     path('api/definicion-password/<int:user_id>/', definicion_password, name='definicion_password'),
     path('api/cambiar-estado-usuario/<int:user_id>/', cambiar_estado_usuario, name='cambiar_estado_usuario'),
     path('api/count-usuarios/', count_usuarios, name='count_usuarios'),
+    path('api/count-reservas/', count_reservas, name='count_reservas'),
 ]
 
 # Solo en desarrollo: sirve archivos media desde MEDIA_URL

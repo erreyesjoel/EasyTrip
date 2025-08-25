@@ -27,22 +27,12 @@
             </svg>
           </div>
           <div>
-            <div class="summary-title">Reservas activas</div>
-            <div class="summary-value">12</div>
+            <div class="summary-title">Total reservas</div>
+            <div class="summary-value">
+              <!-- Mostramos el total de reservas -->
+              {{ totalReservas !== null ? totalReservas : '' }} 
+            </div>
             <a href="/reservas" class="summary-link">Ver reservas</a>
-          </div>
-        </div>
-        <div class="summary-card gradient-yellow">
-          <div class="icon-summary">
-            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path d="M12 8v4l3 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="12" cy="12" r="10" stroke-width="2"/>
-            </svg>
-          </div>
-          <div>
-            <div class="summary-title">Pendientes</div>
-            <div class="summary-value">4</div>
-            <a href="/reservas?estado=pendiente" class="summary-link">Ver pendientes</a>
           </div>
         </div>
         <div class="summary-card gradient-purple">

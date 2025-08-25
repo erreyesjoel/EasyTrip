@@ -932,3 +932,20 @@ def count_usuarios(request):
         'clientes': clientes,
         'administradores': administradores,
     }, status=200)
+
+@api_view(['GET'])
+def count_reservas(request):
+    total_reservas = Reserva.objects.count()
+    pendientes = Reserva.objects.filter(estado='pendiente').count()
+    confirmadas = Reserva.objects.filter(estado='confirmada').count()
+    pagadas = Reserva.objects.filter(estado='pagada').count()
+    canceladas = Reserva.objects.filter(estado='cancelada').count()
+    finalizadas = Reserva.objects.filter(estado='finalizada').count()
+    return Response({
+        'total': total_reservas,
+        'pendientes': pendientes,
+        'confirmadas': confirmadas,
+        'pagadas': pagadas,
+        'canceladas': canceladas,
+        'finalizadas': finalizadas,
+    }, status=200)

@@ -12,6 +12,15 @@ interface UsuariosCountResponse {
   administradores: number;
 }
 
+interface ReservasCountResponse {
+  total: number;
+  pendientes: number;
+  confirmadas: number;
+  pagadas: number;
+  canceladas: number;
+  finalizadas: number;
+}
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -22,10 +31,12 @@ interface UsuariosCountResponse {
 export class DashboardComponent {
 
   totalUsuarios: number | null = null;
+  totalReservas: number | null = null;
 
   // ngOnInit, cada vez que se renderia componente, llama a mostrarTotalUsuarios
   ngOnInit():void {
     this.mostrarTotalUsuarios();
+    this.mostrarTotalReservas();
   }
 
   async mostrarTotalUsuarios(): Promise<void> {
@@ -37,6 +48,20 @@ export class DashboardComponent {
     } catch (error) {
       this.totalUsuarios = null;
       console.error('Error al mostrar total de usuarios:', error);
+    }
+  }
+
+  async mostrarTotalReservas(): Promise<void> {
+    try {
+      const res = await fetch(environment.apiBaseUrl + 'count-reservas');
+      if (!res.ok) throw new Error('Error al obtener el total de reservas');
+      const data: ReservasCountResponse = await res.json();
+      this.totalReservas = data.total;
+      console.log('Total de reservas:', data);
+      // Aquí puedes asignar los datos a variables de clase si es necesario
+    } catch (error) {
+      this.totalReservas = null;
+      console.error('Error al mostrar total de reservas:', error);
     }
   }
 }
