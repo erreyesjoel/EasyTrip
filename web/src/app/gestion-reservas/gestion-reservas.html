@@ -172,7 +172,7 @@
       <div class="form-group">
         <label for="cliente">Cliente (email):</label>
         <input id="cliente" type="email" [(ngModel)]="nuevaReserva.email" name="cliente" class="form-input" required>
-        <div class="container-validacion-email">
+        <div class="container-espacio-mensaje">
       <app-mensajes [mensaje]="mensajeErrorForm" [tipo]="tipoMensajeForm"></app-mensajes>
         </div>
       </div>
@@ -196,13 +196,21 @@
           <option value="cancelada">Cancelada</option>
         </select>
       </div>
+      <!-- Nombre -->
       <div class="form-group">
         <label for="nombre">Nombre:</label>
         <input id="nombre" type="text" [(ngModel)]="nuevaReserva.nombre" name="nombre" class="form-input">
+        <div class="container-espacio-mensaje">
+          <app-mensajes [mensaje]="mensajeErrorNombre" [tipo]="tipoMensajeForm"></app-mensajes>
+        </div>
       </div>
+      <!-- Apellido -->
       <div class="form-group">
         <label for="apellido">Apellido:</label>
         <input id="apellido" type="text" [(ngModel)]="nuevaReserva.apellido" name="apellido" class="form-input">
+        <div class="container-espacio-mensaje">
+          <app-mensajes [mensaje]="mensajeErrorApellido" [tipo]="tipoMensajeForm"></app-mensajes>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-cancelar" (click)="cerrarModalCrearReserva()">Cancelar</button>

@@ -932,7 +932,7 @@ def crear_reserva(request):
             subject=f'¡Tu reserva en {settings.APP_NAME} se ha realizado con éxito!',
             message=(
                 f'¡Hola {nombre_saludo}!\n\n'
-                f'Tu reserva en {settings.APP_NAME} se ha realizado correctamente.\n\n'
+                f'Tu reserva en {settings.APP_NAME} para el paquete {paquete.nombre} se ha realizado correctamente.\n\n'
                 'Puedes gestionar tus reservas accediendo a la plataforma.\n\n'
                 '¡Gracias por confiar en nosotros!'
             ),
