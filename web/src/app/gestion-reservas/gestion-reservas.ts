@@ -46,7 +46,7 @@ export class GestionReservas {
   reservaEditada: Reserva | null = null;
 
   modalCrearReservaAbierto = false;
-  nuevaReserva = { email: '', paquete_id: '', fecha_reservada: '', estado: 'pendiente' };
+  nuevaReserva = { email: '', paquete_id: '', fecha_reservada: '', estado: 'pendiente', nombre: '', apellido: '' };
   // ARRAY DE PAQUETES
   // importante para mostrar el nombre del paquete en las notificaciones
   paquetes: { id: number, nombre: string }[] = [];
@@ -180,7 +180,7 @@ async guardarEdicion() {
 }
 
 abrirModalCrearReserva() {
-  this.nuevaReserva = { email: '', paquete_id: '', fecha_reservada: '', estado: 'pendiente' };
+  this.nuevaReserva = { email: '', paquete_id: '', fecha_reservada: '', estado: 'pendiente', nombre: '', apellido: '' };
   this.modalCrearReservaAbierto = true;
 }
 
@@ -210,7 +210,9 @@ this.tipoMensajeForm = undefined;
       email: this.nuevaReserva.email,
       paquete_id: this.nuevaReserva.paquete_id,
       fecha_reservada: this.nuevaReserva.fecha_reservada,
-      estado: this.nuevaReserva.estado
+      estado: this.nuevaReserva.estado,
+      nombre: this.nuevaReserva.nombre,      // Nuevo campo
+      apellido: this.nuevaReserva.apellido   // Nuevo campo
     })
   });
   if (res.status === 201 || res.status === 200) {

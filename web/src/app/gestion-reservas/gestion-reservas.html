@@ -196,6 +196,14 @@
           <option value="cancelada">Cancelada</option>
         </select>
       </div>
+      <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input id="nombre" type="text" [(ngModel)]="nuevaReserva.nombre" name="nombre" class="form-input">
+      </div>
+      <div class="form-group">
+        <label for="apellido">Apellido:</label>
+        <input id="apellido" type="text" [(ngModel)]="nuevaReserva.apellido" name="apellido" class="form-input">
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn-cancelar" (click)="cerrarModalCrearReserva()">Cancelar</button>
         <button type="submit" class="btn-guardar" [disabled]="!nuevaReserva.email || !nuevaReserva.paquete_id || !nuevaReserva.fecha_reservada || !nuevaReserva.estado">Crear</button>

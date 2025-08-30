@@ -870,15 +870,26 @@ def crear_reserva(request):
     paquete_id = data.get('paquete_id')
     fecha_reservada = data.get('fecha_reservada')
     estado = data.get('estado', 'pendiente')
+    first_name = data.get('nombre', '')  # Nuevo: nombre opcional
+    last_name = data.get('apellido', '') # Nuevo: apellido opcional
 
-    if not all([email, paquete_id, fecha_reservada, estado]):
+    if not email or not paquete_id or not fecha_reservada:
         return Response({'error': 'Faltan datos obligatorios.'}, status=400)
 
-    # Buscar usuario, si no existe lo crea como invitado
-    usuario, created = User.objects.get_or_create(
+    # Buscar o crear usuario
+    user, creado = User.objects.get_or_create(
         email=email,
-        defaults={'username': email.split('@')[0], 'is_active': True}
+        defaults={
+            'username': email.split('@')[0],
+            'first_name': first_name,
+            'last_name': last_name,
+            'rol': 'cliente',
+            'is_active': True
+        }
     )
+    if creado:
+        user.set_unusable_password()
+        user.save()
 
     # Buscar paquete
     try:
@@ -889,14 +900,48 @@ def crear_reserva(request):
     if paquete.estado != 'activo':
         return Response({'error': 'El paquete no está activo.'}, status=403)
 
+    # Crear la reserva
     reserva = Reserva.objects.create(
-        usuario=usuario,
+        usuario=user,
         paquete_turistico=paquete,
         fecha_reservada=fecha_reservada,
         estado=estado
     )
 
-    return Response({'mensaje': 'Reserva creada correctamente.', 'reserva_id': reserva.id}, status=201)
+    # Enviar email según si el usuario es nuevo o no
+    nombre_saludo = first_name if first_name else (user.first_name or 'usuario')
+    if creado:
+        # Generar token para definir contraseña
+        token = default_token_generator.make_token(user)
+        enlace = f'{settings.FRONTEND_URL}definir-password?user_id={user.id}&token={token}'
+        send_mail(
+            subject=f'¡Tu reserva en {settings.APP_NAME} se ha realizado con éxito!',
+            message=(
+                f'¡Hola {nombre_saludo}!\n\n'
+                f'Tu reserva en {settings.APP_NAME} para el paquete {paquete.nombre} se ha realizado correctamente.\n\n'
+                f'Hemos creado una cuenta para ti con el usuario: {user.username}\n'
+                f'Para sacar el máximo partido a EasyTrip y reservar desde donde quieras, define tu contraseña aquí:\n{enlace}\n\n'
+                '¡Gracias por confiar en nosotros!'
+            ),
+            from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
+            recipient_list=[email],
+            fail_silently=True
+        )
+    else:
+        send_mail(
+            subject=f'¡Tu reserva en {settings.APP_NAME} se ha realizado con éxito!',
+            message=(
+                f'¡Hola {nombre_saludo}!\n\n'
+                f'Tu reserva en {settings.APP_NAME} se ha realizado correctamente.\n\n'
+                'Puedes gestionar tus reservas accediendo a la plataforma.\n\n'
+                '¡Gracias por confiar en nosotros!'
+            ),
+            from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
+            recipient_list=[email],
+            fail_silently=True
+        )
+
+    return Response({'ok': True, 'mensaje': 'Reserva creada correctamente.'}, status=201)
 
 @api_view(['PATCH'])
 def definicion_password(request, user_id):
