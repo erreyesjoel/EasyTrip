@@ -49,6 +49,9 @@ def registro_usuario(request):
     if not email or not password:
         return Response({'error': 'Email y password son requeridos.'}, status=status.HTTP_400_BAD_REQUEST)
 
+    if len(password) < 8:
+        return Response({'error': 'La contraseña debe tener al menos 8 caracteres.'}, status=status.HTTP_400_BAD_REQUEST)
+
     username = email.split('@')[0]
 
     if User.objects.filter(email=email).exists():

@@ -68,3 +68,12 @@ export function validarNombreApellidoReserva(form: { first_name: string, last_na
   ];
   return reglas.filter(rule => !rule.validacion).map(rule => rule.message);
 }
+
+export function validarPassword(password: string): string[] {
+  const errores: string[] = [];
+  if (!password || password.length < 8) {
+    errores.push('La contraseña debe tener al menos 8 caracteres.');
+  }
+  // Puedes añadir más reglas si quieres (mayúsculas, números, etc.)
+  return errores;
+}
