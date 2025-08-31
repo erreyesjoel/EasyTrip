@@ -23,130 +23,199 @@
   min-height: 100vh;
 
   .dashboard-title {
-    font-size: vars.$font-size-xxxl;
-    font-weight: bold;
-    margin-bottom: vars.$spacing-xl;
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
     color: vars.$verde-esmeralda;
     text-align: center;
-
-    @media (max-width: vars.$mobile) {
-      font-size: vars.$font-size-xxl;
-      margin-bottom: vars.$spacing-lg;
-    }
   }
 
-  .dashboard-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: vars.$spacing-xl;
-    max-width: 1200px;
-    margin: 0 auto;
-
-    @media (max-width: vars.$mobile) {
-      grid-template-columns: 1fr;
-      gap: vars.$spacing-lg;
-    }
-  }
-
-  .dashboard-card {
-    background: vars.$blanco;
-    border-radius: vars.$border-radius-xl;
-    box-shadow: vars.$shadow-sm;
-    border: 1px solid vars.$gris-medio;
-    padding: vars.$spacing-xl vars.$spacing-lg;
-    transition: all 0.3s ease;
-    min-height: 140px;
+  .dashboard-summary {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .summary-card {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    background: #fff;
+    border-radius: 1.2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    padding: 1.5rem 2rem;
+    min-width: 240px;
+    flex: 1 1 220px;
+    transition: transform 0.15s;
 
     &:hover {
-      box-shadow: vars.$shadow-lg;
-      transform: translateY(-2px);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 4px 16px rgba(45, 125, 95, 0.15);
     }
+  }
 
-    .titulos-dashboard {
+  .icon-summary {
+    background: vars.$verde-esmeralda;
+    border-radius: 50%;
+    padding: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      stroke: #fff;
+    }
+  }
+
+  .summary-title {
+    font-size: 1.1rem;
+    color: vars.$verde-oscuro;
+    font-weight: 600;
+  }
+
+  .summary-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: vars.$verde-esmeralda;
+  }
+
+  .summary-link {
+    font-size: 0.95rem;
+    color: vars.$verde-claro;
+    text-decoration: underline;
+    font-weight: 500;
+
+    &:hover {
       color: vars.$verde-esmeralda;
-      font-size: vars.$font-size-xl;
-      margin-bottom: vars.$spacing-md;
-      font-weight: 600;
+    }
+  }
+
+  .summary-subvalues {
+    font-size: 0.95rem;
+    margin-top: 0.2rem;
+    display: flex;
+    gap: 1.2rem;
+
+    .activo {
+      color: #baffc9;
     }
 
-    .card-content {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: vars.$font-size-lg;
-      color: vars.$gris-oscuro;
-      flex-wrap: wrap;
-      gap: vars.$spacing-md;
+    .inactivo {
+      color: #ffd6d6;
+    }
+  }
 
-      span {
-        display: flex;
-        align-items: center;
-        gap: vars.$spacing-xs;
-        font-weight: 500;
+  // Todas las tarjetas usan verdes, pero con matices distintos
+  .gradient-blue {
+    background: linear-gradient(90deg, vars.$verde-esmeralda 0%, vars.$verde-claro 100%);
+    color: #fff;
+  }
 
-        strong {
-          font-size: vars.$font-size-xxl;
-          color: vars.$verde-esmeralda;
-          font-weight: 700;
-        }
-      }
+  .gradient-green {
+    background: linear-gradient(90deg, vars.$verde-claro 0%, vars.$verde-esmeralda 100%);
+    color: #fff;
+  }
 
-      .boton-acceso-rapido {
-        margin: 0;
-        padding: vars.$spacing-sm vars.$spacing-md;
-        font-size: vars.$font-size-sm;
-        display: inline-block;
-        white-space: nowrap;
-        flex-shrink: 0;
-      }
+  .gradient-yellow {
+    background: linear-gradient(90deg, vars.$verde-esmeralda 0%, vars.$success 100%);
+    color: #fff;
+  }
+
+  .gradient-purple {
+    background: linear-gradient(90deg, vars.$verde-oscuro 0%, vars.$verde-esmeralda 100%);
+    color: #fff;
+  }
+
+  // OPTIMIZACIÓN DE GRÁFICOS
+  .dashboard-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+    
+    // En pantallas muy grandes, limita a 2 columnas
+    @media (min-width: 1400px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    // En tablet, mantén una columna si es necesario
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
 
-    .boton-acceso-rapido {
-      display: inline-block;
-      padding: vars.$spacing-md vars.$spacing-lg;
-      background: vars.$verde-esmeralda;
-      color: vars.$blanco;
-      border: none;
-      border-radius: vars.$border-radius;
-      font-size: vars.$font-size-base;
-      font-family: inherit;
-      font-weight: 500;
-      text-decoration: none;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: vars.$shadow-sm;
-      transition: all 0.2s ease;
-
-      &:hover,
-      &:focus {
-        background: vars.$verde-oscuro;
-        box-shadow: vars.$shadow-md;
-        color: vars.$blanco;
-        outline: none;
-        transform: translateY(-1px);
-      }
-
-      &:active {
-        transform: translateY(0);
-      }
-    }
-
+    // En móvil, stack verticalmente
     @media (max-width: vars.$mobile) {
-      padding: vars.$spacing-lg;
-      
-      .card-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: vars.$spacing-md;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
 
-        .boton-acceso-rapido {
-          width: 100%;
-          text-align: center;
-        }
-      }
+  .chart-card {
+    background: #fff;
+    border-radius: 1.2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    padding: 2rem;
+    border-top: 4px solid vars.$verde-esmeralda;
+    transition: transform 0.15s, box-shadow 0.15s;
+    
+    // Mejora la altura para que se vean proporcionados
+    min-height: 480px;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    // Asegura que el contenido del gráfico llene bien el espacio
+    > div {
+      height: 420px;
+      width: 100% !important;
+    }
+  }
+
+  .chart-img {
+    width: 100%;
+    max-width: 340px;
+    margin-top: 1rem;
+    border-radius: 0.7rem;
+    background: #f7f7f7;
+    border: 2px solid vars.$verde-claro;
+  }
+
+  .summary-card.gradient-blue,
+  .summary-card.gradient-green,
+  .summary-card.gradient-yellow,
+  .summary-card.gradient-purple {
+    .summary-title,
+    .summary-value,
+    .summary-link {
+      color: #fff !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+    }
+  }
+}
+
+// Estilos adicionales para mejorar el responsive
+@media (max-width: vars.$mobile) {
+  .dashboard {
+    padding: 1rem;
+
+    .dashboard-title {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dashboard-summary {
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+      min-width: auto;
+      flex: 1 1 100%;
+      padding: 1.2rem 1.5rem;
     }
   }
 }

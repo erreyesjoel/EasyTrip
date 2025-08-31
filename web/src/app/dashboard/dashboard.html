@@ -1,44 +1,68 @@
 <div class="admin-layout">
-<app-sidebar></app-sidebar>
-  
+  <app-sidebar></app-sidebar>
   <main class="main-content">
     <section class="dashboard">
-      <h1 class="dashboard-title">Dashboard Administrador</h1>
-      <div class="dashboard-cards">
-        <div class="dashboard-card">
-          <h2 class="titulos-dashboard">Reservas actuales</h2>
-          <div class="card-content">
-            <span><strong>12</strong> reservas activas</span>
-            <a href="/reservas" class="boton-acceso-rapido">Ver reservas</a>
+      <h1 class="dashboard-title">Panel de Control</h1>
+      <div class="dashboard-summary">
+        <div class="summary-card gradient-blue">
+          <div class="icon-summary">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M8 17v-6a4 4 0 1 1 8 0v6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="5" y="17" width="14" height="4" rx="2" stroke-width="2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="summary-title">Usuarios</div>
+            <div class="summary-value">
+              {{ totalUsuarios !== null ? totalUsuarios : '' }}
+            </div>
+            <div class="summary-subvalues">
+              <span class="activo">Activos: {{ usuariosActivos !== null ? usuariosActivos : '' }}</span>
+              <span class="inactivo">No activos: {{ usuariosNoActivos !== null ? usuariosNoActivos : '' }}</span>
+            </div>
+            <a href="/usuarios" class="summary-link">Gestionar</a>
           </div>
         </div>
-        <div class="dashboard-card">
-          <h2 class="titulos-dashboard">Reservas pendientes</h2>
-          <div class="card-content">
-            <span><strong>4</strong> pendientes</span>
-            <a href="/reservas?estado=pendiente" class="boton-acceso-rapido">Ver pendientes</a>
+        <div class="summary-card gradient-green">
+          <div class="icon-summary">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <rect x="3" y="7" width="18" height="13" rx="2" stroke-width="2"/>
+              <path d="M16 3v4M8 3v4" stroke-width="2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="summary-title">Total reservas</div>
+            <div class="summary-value">
+              <!-- Mostramos el total de reservas -->
+              {{ totalReservas !== null ? totalReservas : '' }} 
+            </div>
+            <a href="/gestion-reservas" class="summary-link">Gestionar reservas</a>
           </div>
         </div>
-        <div class="dashboard-card">
-          <h2 class="titulos-dashboard">Reservas confirmadas</h2>
-          <div class="card-content">
-            <span><strong>8</strong> confirmadas</span>
-            <a href="/reservas?estado=confirmada" class="boton-acceso-rapido">Ver confirmadas</a>
+        <div class="summary-card gradient-purple">
+          <div class="icon-summary">
+            <!-- ...icono... -->
+          </div>
+          <div>
+            <div class="summary-title">Paquetes</div>
+            <div class="summary-value">
+              {{ totalPaquetes !== null ? totalPaquetes : '' }}
+            </div>
+            <div class="summary-subvalues">
+              <span class="activo">Activos: {{ paquetesActivos !== null ? paquetesActivos : '' }}</span>
+              <span class="inactivo">No activos: {{ paquetesNoActivos !== null ? paquetesNoActivos : '' }}</span>
+            </div>
+            <a href="/gestion-paquetes" class="summary-link">Gestionar paquetes</a>
           </div>
         </div>
-        <div class="dashboard-card">
-          <h2 class="titulos-dashboard">Usuarios registrados</h2>
-          <div class="card-content">
-            <span><strong>58</strong> usuarios totales</span>
-            <a href="/usuarios" class="boton-acceso-rapido">Gestionar usuarios</a>
-          </div>
+      </div>
+
+      <div class="dashboard-charts">
+        <div class="chart-card">
+          <div id="grafico-reservas" style="width: 100%; height: 420px;"></div>
         </div>
-        <div class="dashboard-card">
-          <h2 class="titulos-dashboard">Paquetes turísticos</h2>
-          <div class="card-content">
-            <span><strong>7</strong> paquetes disponibles</span>
-            <a href="/paquetes" class="boton-acceso-rapido">Ver paquetes</a>
-          </div>
+        <div class="chart-card">
+          <div id="grafico-usuarios" style="width: 100%; height: 420px;"></div>
         </div>
       </div>
     </section>

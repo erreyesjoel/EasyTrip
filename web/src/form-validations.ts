@@ -55,6 +55,25 @@ export function validarCrearUsuario(form: {
     { validacion: !!form.last_name && form.last_name.length >= 2, message: 'El apellido debe tener al menos 2 caracteres.' },
     { validacion: form.last_name.length <= 30, message: 'El apellido no puede exceder los 30 caracteres.' },
     { validacion: form.email.length <= 150, message: 'El email no puede exceder los 150 caracteres.' }
-  ];
+  ];https://www.infojobs.net/jobsearch/search-results/list.xhtml?keyword=frontend%20developer&normalizedJobTitleIds=2512_866c7813-2c03-47d7-9bdc-192cfbace57c&searchByType=country&segmentId=&page=1&sortBy=RELEVANCE&onlyForeignCountry=false&countryIds=17&sinceDate=ANY
   return validacionesCrearUsuario.filter(rule => !rule.validacion).map(rule => rule.message);
+}
+
+export function validarNombreApellidoReserva(form: { first_name: string, last_name: string }): string[] {
+  const reglas = [
+    { validacion: !!form.first_name && form.first_name.length >= 2, message: 'El nombre debe tener al menos 2 caracteres.' },
+    { validacion: form.first_name.length <= 30, message: 'El nombre no puede exceder los 30 caracteres.' },
+    { validacion: !!form.last_name && form.last_name.length >= 2, message: 'El apellido debe tener al menos 2 caracteres.' },
+    { validacion: form.last_name.length <= 30, message: 'El apellido no puede exceder los 30 caracteres.' }
+  ];
+  return reglas.filter(rule => !rule.validacion).map(rule => rule.message);
+}
+
+export function validarPassword(password: string): string[] {
+  const errores: string[] = [];
+  if (!password || password.length < 8) {
+    errores.push('La contraseña debe tener al menos 8 caracteres.');
+  }
+  // Puedes añadir más reglas si quieres (mayúsculas, números, etc.)
+  return errores;
 }

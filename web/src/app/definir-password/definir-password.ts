@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { MensajesComponent } from '../mensajes/mensajes';
+import { validarPassword } from '../../form-validations';
 
 @Component({
   selector: 'app-definir-password',
@@ -28,7 +29,17 @@ export class DefinirPassword {
 
     this.mensajeError = '';
     this.mensajeExito = '';
-    
+
+    const erroresPassword = validarPassword(this.password);
+    if (erroresPassword.length > 0) {
+      this.mensajeError = erroresPassword[0];
+      return;
+    }
+    if (this.password !== this.confirmPassword) {
+      this.mensajeError = 'Las contraseñas no coinciden';
+      return;
+    }
+
     const { user_id, token } = this.getParamsFromUrl();
     console.log('Intentando enviar:', { user_id, token, password: this.password, confirmPassword: this.confirmPassword });
 
@@ -64,5 +75,18 @@ export class DefinirPassword {
     } catch (err) {
       this.mensajeError = 'Error de red o servidor.';
     }
+  }
+
+  async finalizarRegistro() {
+    const erroresPassword = validarPassword(this.password);
+    if (erroresPassword.length > 0) {
+      this.mensajeError = erroresPassword[0];
+      return;
+    }
+    if (this.password !== this.confirmPassword) {
+      this.mensajeError = 'Las contraseñas no coinciden';
+      return;
+    }
+    // ...resto del código para finalizar el registro
   }
 }

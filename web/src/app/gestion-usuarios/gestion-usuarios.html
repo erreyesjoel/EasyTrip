@@ -156,7 +156,7 @@
         <div class="form-group">
           <label for="first_name">Nombre:</label>
           <input id="first_name" type="text" formControlName="first_name" class="form-input" (input)="actualizarErroresUsuario()">
-          <div class="container-validacion-email" *ngIf="getErroresCampo('nombre').length > 0">
+          <div class="container-espacio-mensaje" *ngIf="getErroresCampo('nombre').length > 0">
             <app-mensajes
               *ngFor="let msg of getErroresCampo('nombre')"
               [tipo]="'error-form'"
@@ -167,7 +167,7 @@
         <div class="form-group">
           <label for="last_name">Apellido:</label>
           <input id="last_name" type="text" formControlName="last_name" class="form-input" (input)="actualizarErroresUsuario()">
-          <div class="container-validacion-email" *ngIf="getErroresCampo('apellido').length > 0">
+          <div class="container-espacio-mensaje" *ngIf="getErroresCampo('apellido').length > 0">
             <app-mensajes
               *ngFor="let msg of getErroresCampo('apellido')"
               [tipo]="'error-form'"
@@ -178,7 +178,7 @@
         <div class="form-group">
           <label for="username">Username:</label>
           <input id="username" type="text" formControlName="username" class="form-input" required (input)="actualizarErroresUsuario()">
-          <div class="container-validacion-email" *ngIf="getErroresCampo('usuario').length > 0">
+          <div class="container-espacio-mensaje" *ngIf="getErroresCampo('usuario').length > 0">
             <app-mensajes
               *ngFor="let msg of getErroresCampo('usuario')"
               [tipo]="'error-form'"
@@ -190,7 +190,7 @@
       <div class="form-group">
         <label for="email">Email:</label>
         <input id="email" type="email" formControlName="email" class="form-input" (input)="actualizarErroresUsuario()">
-        <div class="container-validacion-email">
+        <div class="container-espacio-mensaje">
           <app-mensajes
             *ngIf="formularioUsuario.get('email')?.errors?.['formatoEmail'] && formularioUsuario.get('email')?.touched"
             [tipo]="'error-form'"

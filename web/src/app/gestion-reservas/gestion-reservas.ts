@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Notificaciones } from '../notificaciones/notificaciones'; // importar componente
-import { validacionFormatoEmail } from '../../form-validations'; // Importar la función de validación
+import { validacionFormatoEmail, validarNombreApellidoReserva } from '../../form-validations'; // Importar la función de validación
 import { MensajesComponent } from '../mensajes/mensajes';
 
 interface Reserva {
@@ -46,7 +46,7 @@ export class GestionReservas {
   reservaEditada: Reserva | null = null;
 
   modalCrearReservaAbierto = false;
-  nuevaReserva = { email: '', paquete_id: '', fecha_reservada: '', estado: 'pendiente' };
+  nuevaReserva = { email: '', paquete_id: '', fecha_reservada: '', estado: 'pendiente', nombre: '', apellido: '' };
   // ARRAY DE PAQUETES
   // importante para mostrar el nombre del paquete en las notificaciones
   paquetes: { id: number, nombre: string }[] = [];
@@ -180,7 +180,7 @@ async guardarEdicion() {
 }
 
 abrirModalCrearReserva() {
-  this.nuevaReserva = { email: '', paquete_id: '', fecha_reservada: '', estado: 'pendiente' };
+  this.nuevaReserva = { email: '', paquete_id: '', fecha_reservada: '', estado: 'pendiente', nombre: '', apellido: '' };
   this.modalCrearReservaAbierto = true;
 }
 
@@ -190,18 +190,41 @@ cerrarModalCrearReserva() {
 
 mensajeErrorForm: string | undefined = undefined;
 tipoMensajeForm: 'error' | 'exito' | 'error-form' | undefined = undefined;
+mensajeErrorNombre: string | undefined = undefined;
+mensajeErrorApellido: string | undefined = undefined;
 
 async guardarNuevaReserva() {
   // Validar formato de email antes de enviar
-  // usamos la función de validación importada
-const resultado = validacionFormatoEmail(this.nuevaReserva.email);
-if (!resultado.validacion) {
-  this.mensajeErrorForm = resultado.message;
-  this.tipoMensajeForm = 'error-form';
-  return;
-}
-this.mensajeErrorForm = undefined;
-this.tipoMensajeForm = undefined;
+  const resultado = validacionFormatoEmail(this.nuevaReserva.email);
+  if (!resultado.validacion) {
+    this.mensajeErrorForm = resultado.message;
+    this.tipoMensajeForm = 'error-form';
+    return;
+  }
+
+  // Validar nombre y apellido
+  const erroresNombreApellido = validarNombreApellidoReserva({
+    first_name: this.nuevaReserva.nombre,
+    last_name: this.nuevaReserva.apellido
+  });
+
+  // Resetear mensajes
+  this.mensajeErrorNombre = undefined;
+  this.mensajeErrorApellido = undefined;
+
+  // Mostrar errores específicos
+  erroresNombreApellido.forEach(error => {
+    if (error.includes('nombre')) this.mensajeErrorNombre = error;
+    if (error.includes('apellido')) this.mensajeErrorApellido = error;
+  });
+
+  if (erroresNombreApellido.length > 0) {
+    this.tipoMensajeForm = 'error-form';
+    return;
+  }
+
+  this.mensajeErrorForm = undefined;
+  this.tipoMensajeForm = undefined;
 
   const res = await fetch(environment.apiBaseUrl + 'crear-reserva-gestion/', {
     method: 'POST',
@@ -210,7 +233,9 @@ this.tipoMensajeForm = undefined;
       email: this.nuevaReserva.email,
       paquete_id: this.nuevaReserva.paquete_id,
       fecha_reservada: this.nuevaReserva.fecha_reservada,
-      estado: this.nuevaReserva.estado
+      estado: this.nuevaReserva.estado,
+      nombre: this.nuevaReserva.nombre,      // Nuevo campo
+      apellido: this.nuevaReserva.apellido   // Nuevo campo
     })
   });
   if (res.status === 201 || res.status === 200) {

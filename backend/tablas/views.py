@@ -23,6 +23,8 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import parser_classes
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
 
 @api_view(['GET'])
 def ejemplo_get(request):
@@ -46,6 +48,9 @@ def registro_usuario(request):
 
     if not email or not password:
         return Response({'error': 'Email y password son requeridos.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if len(password) < 8:
+        return Response({'error': 'La contraseña debe tener al menos 8 caracteres.'}, status=status.HTTP_400_BAD_REQUEST)
 
     username = email.split('@')[0]
 
@@ -72,7 +77,7 @@ def registro_usuario(request):
         key='access_token',
         value=access,
         httponly=True,
-        secure=False,  # True en producción
+        secure=False,
         samesite='Lax',
         path='/'
     )
@@ -868,15 +873,26 @@ def crear_reserva(request):
     paquete_id = data.get('paquete_id')
     fecha_reservada = data.get('fecha_reservada')
     estado = data.get('estado', 'pendiente')
+    first_name = data.get('nombre', '')  # Nuevo: nombre opcional
+    last_name = data.get('apellido', '') # Nuevo: apellido opcional
 
-    if not all([email, paquete_id, fecha_reservada, estado]):
+    if not email or not paquete_id or not fecha_reservada:
         return Response({'error': 'Faltan datos obligatorios.'}, status=400)
 
-    # Buscar usuario, si no existe lo crea como invitado
-    usuario, created = User.objects.get_or_create(
+    # Buscar o crear usuario
+    user, creado = User.objects.get_or_create(
         email=email,
-        defaults={'username': email.split('@')[0], 'is_active': True}
+        defaults={
+            'username': email.split('@')[0],
+            'first_name': first_name,
+            'last_name': last_name,
+            'rol': 'cliente',
+            'is_active': True
+        }
     )
+    if creado:
+        user.set_unusable_password()
+        user.save()
 
     # Buscar paquete
     try:
@@ -887,14 +903,48 @@ def crear_reserva(request):
     if paquete.estado != 'activo':
         return Response({'error': 'El paquete no está activo.'}, status=403)
 
+    # Crear la reserva
     reserva = Reserva.objects.create(
-        usuario=usuario,
+        usuario=user,
         paquete_turistico=paquete,
         fecha_reservada=fecha_reservada,
         estado=estado
     )
 
-    return Response({'mensaje': 'Reserva creada correctamente.', 'reserva_id': reserva.id}, status=201)
+    # Enviar email según si el usuario es nuevo o no
+    nombre_saludo = first_name if first_name else (user.first_name or 'usuario')
+    if creado:
+        # Generar token para definir contraseña
+        token = default_token_generator.make_token(user)
+        enlace = f'{settings.FRONTEND_URL}definir-password?user_id={user.id}&token={token}'
+        send_mail(
+            subject=f'¡Tu reserva en {settings.APP_NAME} se ha realizado con éxito!',
+            message=(
+                f'¡Hola {nombre_saludo}!\n\n'
+                f'Tu reserva en {settings.APP_NAME} para el paquete {paquete.nombre} se ha realizado correctamente.\n\n'
+                f'Hemos creado una cuenta para ti con el usuario: {user.username}\n'
+                f'Para sacar el máximo partido a EasyTrip y reservar desde donde quieras, define tu contraseña aquí:\n{enlace}\n\n'
+                '¡Gracias por confiar en nosotros!'
+            ),
+            from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
+            recipient_list=[email],
+            fail_silently=True
+        )
+    else:
+        send_mail(
+            subject=f'¡Tu reserva en {settings.APP_NAME} se ha realizado con éxito!',
+            message=(
+                f'¡Hola {nombre_saludo}!\n\n'
+                f'Tu reserva en {settings.APP_NAME} para el paquete {paquete.nombre} se ha realizado correctamente.\n\n'
+                'Puedes gestionar tus reservas accediendo a la plataforma.\n\n'
+                '¡Gracias por confiar en nosotros!'
+            ),
+            from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
+            recipient_list=[email],
+            fail_silently=True
+        )
+
+    return Response({'ok': True, 'mensaje': 'Reserva creada correctamente.'}, status=201)
 
 @api_view(['PATCH'])
 def definicion_password(request, user_id):
@@ -911,3 +961,88 @@ def definicion_password(request, user_id):
     user.set_password(password)
     user.save()
     return Response({'mensaje': 'Contraseña definida correctamente.'}, status=200)
+
+# api get para saber el total de usuarios registrados
+# usando count() de Django
+# from django.db.models import Count
+@api_view(['GET'])
+def count_usuarios(request):
+    total_usuarios = User.objects.count()
+    activos = User.objects.filter(is_active=True).count()
+    inactivos = User.objects.filter(is_active=False).count()
+    return Response({
+        'total': total_usuarios,
+        'activos': activos,
+        'inactivos': inactivos,
+    }, status=200)
+
+@api_view(['GET'])
+def count_reservas(request):
+    total_reservas = Reserva.objects.count()
+    pendientes = Reserva.objects.filter(estado='pendiente').count()
+    confirmadas = Reserva.objects.filter(estado='confirmada').count()
+    pagadas = Reserva.objects.filter(estado='pagada').count()
+    canceladas = Reserva.objects.filter(estado='cancelada').count()
+    finalizadas = Reserva.objects.filter(estado='finalizada').count()
+    return Response({
+        'total': total_reservas,
+        'pendientes': pendientes,
+        'confirmadas': confirmadas,
+        'pagadas': pagadas,
+        'canceladas': canceladas,
+        'finalizadas': finalizadas,
+    }, status=200)
+
+# api get para saber el total de paquetes turísticos
+# usando count() de Django
+# from django.db.models import Count
+@api_view(['GET'])
+def count_paquetes(request):
+    total_paquetes = PaqueteTuristico.objects.count()
+    activos = PaqueteTuristico.objects.filter(estado='activo').count()
+    inactivos = PaqueteTuristico.objects.filter(estado='inactivo').count()
+    return Response({
+        'total': total_paquetes,
+        'activos': activos,
+        'inactivos': inactivos,
+    }, status=200)
+
+@api_view(['GET'])
+def reservas_por_mes(request):
+    # Agrupa reservas por mes y cuenta cuántas hay en cada uno
+    reservas = (
+        Reserva.objects
+        .annotate(mes=TruncMonth('fecha_reservada'))
+        .values('mes')
+        .annotate(total=Count('id'))
+        .order_by('mes')
+    )
+    # Formatea la respuesta para el frontend
+    data = [
+        {
+            'mes': r['mes'].strftime('%Y-%m') if r['mes'] else '',
+            'total': r['total']
+        }
+        for r in reservas
+    ]
+    return Response(data)
+
+@api_view(['GET'])
+def usuarios_por_mes(request):
+    # Agrupa usuarios por mes y cuenta cuántos hay en cada uno
+    usuarios = (
+        User.objects
+        .annotate(mes=TruncMonth('date_joined'))
+        .values('mes')
+        .annotate(total=Count('id'))
+        .order_by('mes')
+    )
+    # Formatea la respuesta para el frontend
+    data = [
+        {
+            'mes': u['mes'].strftime('%Y-%m') if u['mes'] else '',
+            'total': u['total']
+        }
+        for u in usuarios
+    ]
+    return Response(data)
