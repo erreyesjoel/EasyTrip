@@ -3,7 +3,7 @@
 /* para que no haya margenes blancos, ni verticales ni horizontales, lo he puesto mas que nada por el header 
 en globales, para que se haga en toda la pagina */
 
-@use 'variables';
+@use 'variables' as vars;
 
 html, body {
   height: 100%;
@@ -16,6 +16,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: vars.$gris-claro;
 }
 
 app-root {

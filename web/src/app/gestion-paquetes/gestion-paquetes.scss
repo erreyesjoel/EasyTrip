@@ -1,10 +1,5 @@
 @use '../../_variables' as vars;
 
-body, :host {
-  background-color: vars.$gris-claro;
-  min-height: 170vh;
-}
-
 .header-gestion-paquetes {
   display: flex;
   justify-content: space-between;

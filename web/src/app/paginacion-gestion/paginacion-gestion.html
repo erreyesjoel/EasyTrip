@@ -24,7 +24,9 @@
     <label for="pageSize">Mostrar:</label>
     <select id="pageSize" [(ngModel)]="pageSizeInterno" (change)="cambiarPageSize($event)">
       <option value="" disabled [selected]="!pageSizeInterno">Selecciona</option>
-      <option *ngFor="let size of opcionesPageSize" [value]="size">{{ size }}</option>
+      <option *ngFor="let size of opcionesPageSize" [value]="size">
+        {{ size === 0 ? 'Todos' : size }}
+      </option>
     </select>
     <span>por página</span>
   </div>

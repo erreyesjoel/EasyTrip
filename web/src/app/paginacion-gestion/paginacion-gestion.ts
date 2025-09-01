@@ -13,7 +13,7 @@ export class PaginacionGestion implements OnChanges {
   @Input() paginaActual: number = 1;
   @Input() totalPaginas: number = 1;
   @Input() pageSize: number = 6;
-  @Input() opcionesPageSize: number[] = [3, 6, 10, 20];
+  @Input() opcionesPageSize: number[] = [3, 6, 9, 20];
 
   @Output() paginaCambiada = new EventEmitter<number>();
   @Output() pageSizeCambiado = new EventEmitter<number>();

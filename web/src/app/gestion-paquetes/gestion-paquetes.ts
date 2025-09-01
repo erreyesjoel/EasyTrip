@@ -100,12 +100,12 @@ export class GestionPaquetes implements OnInit {
   // Paginación
   paginaActual = 1;
   totalPaginas = 1;
-  pageSize = 6; /* cada pagina muestra 6 paquetes
+  pageSize = 3; /* cada pagina muestra 3 paquetes
   dependiendo del numero que pongamos, el fetch 
   cambiara el page_size y se veran mas o menos paquetes 
   ejemplo con 3, 3 paquetes por pagina
   /api/paquetes/?page=1&page_size=3 */
-  opcionesPageSize = [3, 6, 10, 20];
+  opcionesPageSize = [3, 6, 9, 20, 0]; // 0 hara referencia a TODOS
 
   constructor(private fb: FormBuilder) {
     // Configuramos la URL de la imagen predeterminada
@@ -184,7 +184,8 @@ export class GestionPaquetes implements OnInit {
       const urlObj = new URL(this.baseUrl);
       const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
       // Añadimos los parámetros de paginación
-      const url = `${baseUrlCorrecta}/api/paquetes/?page=${this.paginaActual}&page_size=${this.pageSize}`;
+      const pageSizeParam = this.pageSize === 0 ? 9999 : this.pageSize;
+      const url = `${baseUrlCorrecta}/api/paquetes/?page=${this.paginaActual}&page_size=${pageSizeParam}`;
 
       console.log('URL final de petición:', url);
 
