@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { Notificaciones } from '../notificaciones/notificaciones';
 import { MensajesComponent } from '../mensajes/mensajes';
 import { validarFormulariosPaquete } from '../../form-validations';
+import { PaginacionGestion } from '../paginacion-gestion/paginacion-gestion';
 
 // Interfaz para manejar las imágenes que vienen del backend
 interface ImagenPaquete {
@@ -49,7 +50,7 @@ interface PaqueteTuristico {
 @Component({
   selector: 'app-gestion-paquetes',
   standalone: true,
-  imports: [SidebarComponent, CommonModule, ReactiveFormsModule, Notificaciones, MensajesComponent],
+  imports: [SidebarComponent, CommonModule, ReactiveFormsModule, Notificaciones, MensajesComponent, PaginacionGestion],
   templateUrl: './gestion-paquetes.html',
   styleUrl: './gestion-paquetes.scss'
 })
@@ -95,6 +96,16 @@ export class GestionPaquetes implements OnInit {
   @ViewChild('notificaciones') notificacionesRef!: Notificaciones;
 
   erroresForm: { [campo: string]: string } = {};
+
+  // Paginación
+  paginaActual = 1;
+  totalPaginas = 1;
+  pageSize = 6; /* cada pagina muestra 6 paquetes
+  dependiendo del numero que pongamos, el fetch 
+  cambiara el page_size y se veran mas o menos paquetes 
+  ejemplo con 3, 3 paquetes por pagina
+  /api/paquetes/?page=1&page_size=3 */
+  opcionesPageSize = [3, 6, 10, 20];
 
   constructor(private fb: FormBuilder) {
     // Configuramos la URL de la imagen predeterminada
@@ -167,16 +178,13 @@ export class GestionPaquetes implements OnInit {
 
   // Método para cargar un paquete usando fetch y async/await
   async cargarPaquete(): Promise<void> {
-    // URL del endpoint para obtener paquetes
-    // Verificamos y corregimos la URL base para evitar duplicaciones
-    console.log('baseUrl original:', this.baseUrl);
-
+    // Construimos la URL base para la API de paquetes turísticos
+    // Usamos los parámetros de paginación: page y page_size
     try {
-      // Creamos un objeto URL para manipularlo fácilmente
       const urlObj = new URL(this.baseUrl);
-      // Construimos la URL correcta sin duplicación
       const baseUrlCorrecta = `${urlObj.protocol}//${urlObj.host}`;
-      const url = `${baseUrlCorrecta}/api/paquetes/`;
+      // Añadimos los parámetros de paginación
+      const url = `${baseUrlCorrecta}/api/paquetes/?page=${this.paginaActual}&page_size=${this.pageSize}`;
 
       console.log('URL final de petición:', url);
 
@@ -187,11 +195,12 @@ export class GestionPaquetes implements OnInit {
         throw new Error('Error al cargar los paquetes');
       }
 
-      const paquetesApi: PaqueteApi[] = await response.json();
+      // La respuesta de la API paginada tiene la forma:
+      // { results: [...], total: X, page: Y, page_size: Z, total_pages: N }
+      const data = await response.json();
 
-      if (paquetesApi && paquetesApi.length > 0) {
-        // Convertimos todos los paquetes al formato que usa nuestro componente
-        this.paquetes = paquetesApi.map(paquete => ({
+      // Convertimos los paquetes al formato que usa nuestro componente
+      this.paquetes = (data.results || []).map((paquete: any) => ({
         id: paquete.id,
         nombre: paquete.nombre,
         descripcion: paquete.descripcion,
@@ -199,16 +208,28 @@ export class GestionPaquetes implements OnInit {
         duracion: paquete.duracion_dias,
         cupo: paquete.cupo_maximo,
         estado: paquete.estado,
-        imagen_url: paquete.imagenes && paquete.imagenes.length > 0 
-          ? this.corregirUrl(paquete.imagenes[0].imagen_url) 
+        imagen_url: paquete.imagenes && paquete.imagenes.length > 0
+          ? this.corregirUrl(paquete.imagenes[0].imagen_url)
           : this.imagenPredeterminada,
-        imagenes: paquete.imagenes // <-- Añade esto para que el carrusel tenga acceso a todas las imágenes
+        imagenes: paquete.imagenes // Para el carrusel
       }));
 
-        // Seleccionamos el primer paquete como actual
+      // Actualizamos los datos de paginación
+      this.totalPaginas = data.total_pages || 1;
+      this.paginaActual = data.page || 1;
+      this.pageSize = data.page_size || this.pageSize;
+
+      // Seleccionamos el primer paquete como actual (opcional)
+      if (this.paquetes.length > 0) {
         this.paqueteActual = this.paquetes[0];
-        console.log('Paquetes cargados:', this.paquetes);
       }
+
+      console.log('Paquetes cargados:', this.paquetes);
+      console.log('Paginación:', {
+        paginaActual: this.paginaActual,
+        totalPaginas: this.totalPaginas,
+        pageSize: this.pageSize
+      });
     } catch (error) {
       console.error('Error al construir la URL o al cargar los paquetes:', error);
     }
@@ -547,5 +568,15 @@ actualizarErroresForm() {
   });
 }
 
-// Llama a actualizarErroresForm() en cada input y en guardarCambios()
+// Métodos para manejar los eventos de paginación
+onPaginaCambiada(nuevaPagina: number) {
+  this.paginaActual = nuevaPagina;
+  this.cargarPaquete();
+}
+
+onPageSizeCambiado(nuevoSize: number) {
+  this.pageSize = nuevoSize;
+  this.paginaActual = 1; // Vuelve a la primera página
+  this.cargarPaquete();
+}
 }

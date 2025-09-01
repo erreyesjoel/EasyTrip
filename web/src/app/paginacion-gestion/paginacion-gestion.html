@@ -1,0 +1,32 @@
+<div class="paginacion-gestion">
+  <div class="paginacion-controles">
+    <button class="btn-paginacion-nav btn-paginacion-anterior"
+            (click)="cambiarPagina(paginaActual - 1)" [disabled]="paginaActual === 1">
+      &laquo; Anterior
+    </button>
+
+    <ng-container *ngFor="let pagina of paginas">
+      <button
+        class="botones-numeros-paginacion"
+        [class.activa]="pagina === paginaActual"
+        (click)="cambiarPagina(pagina)">
+        {{ pagina }}
+      </button>
+    </ng-container>
+
+    <button class="btn-paginacion-nav btn-paginacion-siguiente"
+            (click)="cambiarPagina(paginaActual + 1)" [disabled]="paginaActual === totalPaginas">
+      Siguiente &raquo;
+    </button>
+  </div>
+
+  <div class="paginacion-selector">
+    <label for="pageSize">Mostrar:</label>
+    <select id="pageSize" [(ngModel)]="pageSizeInterno" (change)="cambiarPageSize($event)">
+      <option value="" disabled [selected]="!pageSizeInterno">Selecciona</option>
+      <option *ngFor="let size of opcionesPageSize" [value]="size">{{ size }}</option>
+    </select>
+    <span>por página</span>
+  </div>
+</div>
+
