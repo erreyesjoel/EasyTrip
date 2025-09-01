@@ -62,8 +62,9 @@ export class MostrarPaquetes {
       const res = await fetch(environment.apiBaseUrl + 'paquetes?estado=activo');
       if (res.status === 200) {
         const paquetes = await res.json(); // convertimos la respuesta a JSON
-
-        this.paquetesLanding = paquetes.slice(0, 3); // obtenemos los primeros 3 paquetes activos
+        // si la respuesta tiene una lista de paquetes, la usamos
+        const listaPaquetes = paquetes.results || paquetes;
+        this.paquetesLanding = listaPaquetes.slice(0, 3); // obtenemos los primeros 3 paquetes activos
 
         this.paquetesLanding.forEach((paquete: Paquete) => {
           paquete.imagenes = paquete.imagenes

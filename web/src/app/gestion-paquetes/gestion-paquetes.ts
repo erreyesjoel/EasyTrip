@@ -123,8 +123,8 @@ export class GestionPaquetes implements OnInit {
     
     // Inicializamos el formulario
     this.formularioPaquete = this.fb.group({
-      nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      nombre: ['', [Validators.required]],
+      descripcion: ['', [Validators.required, Validators.maxLength(300)]],
       precio: [0, [Validators.required, Validators.min(0.01)]],
       duracion: [1, [Validators.required, Validators.min(1)]],
       cupo: [1, [Validators.required, Validators.min(1)]],
