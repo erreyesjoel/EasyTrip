@@ -19,7 +19,7 @@ export class PaginacionGestion implements OnChanges {
   @Output() pageSizeCambiado = new EventEmitter<number>();
 
   paginas: number[] = [];
-  pageSizeInterno: number = 6;
+  pageSizeInterno: number = 3; // por defecto 3
 
   ngOnChanges() {
     this.paginas = [];

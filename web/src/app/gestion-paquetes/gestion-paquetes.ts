@@ -464,11 +464,12 @@ export class GestionPaquetes implements OnInit {
   }
 
   // Devuelve la URL de la imagen actual a mostrar en la tarjeta
-  getImagenActualTarjeta(paquete: any): string {
-    // Si el paquete tiene imágenes, mostramos la seleccionada, si no, la predeterminada
+  getImagenActualTarjeta(paquete: PaqueteTuristico): string {
+    if (typeof paquete.id === 'undefined') {
+      return this.imagenPredeterminada;
+    }
     const idx = this.imagenActualPorPaquete[paquete.id] || 0;
     if (paquete.imagenes && paquete.imagenes.length > 0) {
-      // Si el índice está fuera de rango, lo corregimos
       const safeIdx = ((idx % paquete.imagenes.length) + paquete.imagenes.length) % paquete.imagenes.length;
       return this.corregirUrl(paquete.imagenes[safeIdx].imagen_url);
     }
@@ -476,8 +477,10 @@ export class GestionPaquetes implements OnInit {
   }
 
   // Cambia la imagen actual del carrusel de la tarjeta (izquierda/derecha)
-  cambiarImagenTarjeta(paquete: any, cambio: number): void {
+  cambiarImagenTarjeta(paquete: PaqueteTuristico, cambio: number): void {
     if (!paquete.imagenes || paquete.imagenes.length < 2) return;
+    if (typeof paquete.id === 'undefined') return; // <-- Solución
+
     const actual = this.imagenActualPorPaquete[paquete.id] || 0;
     let nuevo = actual + cambio;
     if (nuevo < 0) nuevo = paquete.imagenes.length - 1;
@@ -518,8 +521,9 @@ export class GestionPaquetes implements OnInit {
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error('Error al filtrar los paquetes');
-    const paquetesApi: PaqueteApi[] = await response.json();
-    this.paquetes = paquetesApi.map(paquete => ({
+    const paquetesApi = await response.json();
+    const listaPaquetes = Array.isArray(paquetesApi) ? paquetesApi : (paquetesApi.results || []);
+    this.paquetes = listaPaquetes.map((paquete: PaqueteApi) => ({
       id: paquete.id,
       nombre: paquete.nombre,
       descripcion: paquete.descripcion,
