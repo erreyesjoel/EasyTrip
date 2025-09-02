@@ -567,8 +567,18 @@ def gestion_usuarios_tabla(request):
     if ordering:
         usuarios = usuarios.order_by(ordering)
 
+    # PAGINACIÓN
+    # quiero mostrar por defecto 7 usuarios por pagina
+    page = int(request.GET.get('page', 1))
+    page_size = int(request.GET.get('page_size', 7))  # 7 por defecto
+
+    total = usuarios.count()
+    start = (page - 1) * page_size
+    end = start + page_size
+    usuarios_pagina = usuarios[start:end]
+    
     data = []
-    for user in usuarios:
+    for user in usuarios_pagina:
         data.append({
             'id': user.id,
             'username': user.username,
@@ -580,7 +590,13 @@ def gestion_usuarios_tabla(request):
             'last_login': user.last_login,
             'date_joined': user.date_joined,
         })
-    return Response(data)
+    return Response({
+        'results': data,
+        'total': total,
+        'page': page,
+        'page_size': page_size,
+        'total_pages': (total + page_size - 1) // page_size
+    })
 
 # api para crear un usuario
 # Se usa el modelo User de Django para crear un nuevo usuario

@@ -10,6 +10,7 @@ import { MensajesComponent } from '../mensajes/mensajes';
 import { Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Notificaciones } from '../notificaciones/notificaciones'; // Importar componente de notificaciones
 import { ViewChild } from '@angular/core';
+import { PaginacionGestion } from '../paginacion-gestion/paginacion-gestion';
 
 // Interfaz para el usuario
 // Representa la estructura de un usuario en el sistema
@@ -35,7 +36,7 @@ const emailFormatoValidator = (control: AbstractControl): ValidationErrors | nul
 
 @Component({
   selector: 'app-gestion-usuarios',
-  imports: [CommonModule, SidebarComponent, ReactiveFormsModule, FormsModule, MensajesComponent, Notificaciones],
+  imports: [CommonModule, SidebarComponent, ReactiveFormsModule, FormsModule, MensajesComponent, Notificaciones, PaginacionGestion],
   templateUrl: './gestion-usuarios.html',
   styleUrls: ['./gestion-usuarios.scss']
 })
@@ -72,6 +73,13 @@ export class GestionUsuarios {
 
   mensajesErroresUsuario: string[] = [];
 
+  /* paginacion */
+
+  paginaActual: number = 1;
+  totalPaginas: number = 1;
+  pageSize: number = 7; // Tamaño de página por defecto
+  opcionesPageSize: number[] = [7, 14, 21, 0]; // Opciones de tamaño de página, 0 = todos
+
   constructor(private fb: FormBuilder) {
     this.formularioUsuario = this.fb.group({
       username: [''],
@@ -100,20 +108,22 @@ export class GestionUsuarios {
   /* Carga los usuarios desde la API 
   funcion independiente, que llamaremos desde ngOnInit */
   async cargarUsuarios(): Promise<void> {
+    // Construye la query string con paginación
+    const params = new URLSearchParams();
+    params.append('page', String(this.paginaActual));
+    params.append('page_size', String(this.pageSize === 0 ? 9999 : this.pageSize));
+
     // Realiza una petición a la API para obtener los usuarios
-    // Utiliza la URL base definida en el entorno para construir la URL completa (variable de entorno, que indica donde se ejecuta el backend)
-    const res = await fetch(environment.apiBaseUrl + 'gestion-usuarios');
-    if (res.status === 200) { // Si la respuesta es exitosa (código 200)
+    const res = await fetch(environment.apiBaseUrl + 'gestion-usuarios?' + params.toString());
+    if (res.status === 200) {
       // Convierte la respuesta JSON a un array de objetos Usuario
-      // Utiliza la interfaz Usuario para tipar los datos obtenidos
-      // Esto asegura que los datos cumplen con la estructura definida en la interfaz Usuario
-      // Esto es una promesa, por eso usamos await
-      // res.json() devuelve una promesa que se resuelve con el cuerpo de la respuesta
-      // En este caso, esperamos que sea un array de usuarios
-      const usuarios: Usuario[] = await res.json();
-      this.usuarios = usuarios; // 
-      // Ahora this.usuarios contiene los usuarios obtenidos de la API
-      console.log("Usuarios de la bbdd:", usuarios);
+      // Si la API devuelve { results, total_pages, page, page_size }
+      const data = await res.json();
+      this.usuarios = Array.isArray(data) ? data : (data.results || []);
+      this.totalPaginas = data.total_pages || 1;
+      this.paginaActual = data.page || 1;
+      this.pageSize = data.page_size || this.pageSize;
+      console.log("Usuarios de la bbdd:", this.usuarios);
     } else {
       console.log("Error en la peticion");
     }
@@ -292,12 +302,29 @@ async confirmarCambioEstadoUsuario() {
     if (this.filtroRol) params.append('rol', this.filtroRol);
     if (this.filtroEstado) params.append('estado', this.filtroEstado);
     if (this.ordenCampo) params.append('ordering', (this.ordenAsc ? '' : '-') + this.ordenCampo);
+    params.append('page', String(this.paginaActual));
+    params.append('page_size', String(this.pageSize === 0 ? 9999 : this.pageSize));
 
-    const url = environment.apiBaseUrl + 'gestion-usuarios' + (params.toString() ? '?' + params.toString() : '');
+    const url = environment.apiBaseUrl + 'gestion-usuarios?' + params.toString();
     const res = await fetch(url);
     if (res.status === 200) {
-      this.usuarios = await res.json();
+      const data = await res.json();
+      this.usuarios = Array.isArray(data) ? data : (data.results || []);
+      this.totalPaginas = data.total_pages || 1;
+      this.paginaActual = data.page || 1;
+      this.pageSize = data.page_size || this.pageSize;
     }
+  }
+
+    onPaginaCambiada(nuevaPagina: number) {
+    this.paginaActual = nuevaPagina;
+    this.aplicarFiltros();
+  }
+
+  onPageSizeCambiado(nuevoSize: number) {
+    this.pageSize = nuevoSize;
+    this.paginaActual = 1;
+    this.aplicarFiltros();
   }
 
   // Método para reiniciar los filtros

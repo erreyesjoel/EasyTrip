@@ -343,6 +343,13 @@ app-sidebar {
   }
 }
 
+.paginacion-usuarios-centro {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2px; // ajusta el espacio arriba si lo necesitas
+}
+
 @media (max-width: 1100px) {
   .tabla-usuarios {
     max-width: 100%;
