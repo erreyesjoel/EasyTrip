@@ -236,6 +236,12 @@ export class GestionUsuarios {
         await this.cargarUsuarios();
         this.notificacionesRef.mostrar(`Usuario ${this.usuarioActual.username} eliminado correctamente`, 'success');
         this.cerrarModalEliminarUsuario();
+        // Si la pagina actual queda vacia y no es la primera, vuelve a la primera y recarga
+        // Si en la pagina, queda 1 registro y lo borramos, nos volverá a la primera pagina
+        if (this.paginaActual > 1 && this.usuarios.length === 0) {
+          this.paginaActual = 1;
+          await this.cargarUsuarios();
+        }
       } else {
         const error = await res.json();
         this.notificacionesRef.mostrar(error.error || 'Error al eliminar usuario', 'error');
