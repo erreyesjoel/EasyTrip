@@ -441,8 +441,14 @@ export class GestionPaquetes implements OnInit {
       const data = await res.json();
       console.log('Respuesta de eliminación:', data);
       // Recargamos la lista de paquetes para ver los cambios reflejados
-      this.cargarPaquete();
+      await this.cargarPaquete();
       this.cerrarModalEliminar();
+      // Si la pagina actual queda vacia y no es la primera, vuelve a la primera y recarga
+      // Es decir, si queda 1 registro en la pagina, si lo borramos, debemos volver a la primera pagina
+      if (this.paginaActual > 1 && this.paquetes.length === 0) {
+        this.paginaActual = 1;
+        await this.cargarPaquete();
+      }
     } catch (error) {
       console.error('Error al eliminar el paquete:', error);
     }
