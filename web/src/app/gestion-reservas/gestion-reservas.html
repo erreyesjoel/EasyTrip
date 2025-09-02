@@ -102,6 +102,17 @@
         </tbody>
       </table>
     </div>
+
+    <div class="paginacion-reservas-centro">
+      <app-paginacion-gestion
+        [paginaActual]="paginaActual"
+        [totalPaginas]="totalPaginas"
+        [pageSize]="pageSize"
+        [opcionesPageSize]="opcionesPageSize"
+        (paginaCambiada)="onPaginaCambiada($event)"
+        (pageSizeCambiado)="onPageSizeCambiado($event)">
+      </app-paginacion-gestion>
+    </div>
   </div>
 </div>
 

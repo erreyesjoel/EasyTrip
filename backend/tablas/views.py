@@ -829,9 +829,18 @@ def reservas_gestion(request):
     # Filtramos las reservas según los filtros construidos
     reservas = Reserva.objects.filter(**filtros).order_by('-fecha_creacion')
 
+    # PAGINACION
+    page = int(request.GET.get('page', 1))
+    page_size = int(request.GET.get('page_size', 7)) # 7 por defecto
+
+    total = reservas.count()
+    start = (page - 1) * page_size
+    end = start + page_size
+    reservas_pagina = reservas[start:end]
+
     # Serializamos los datos manualmente para devolver solo lo necesario
     reservas_data = []
-    for reserva in reservas:
+    for reserva in reservas_pagina:
         reservas_data.append({
             'id': reserva.id,
             'usuario': reserva.usuario.email,
@@ -845,7 +854,13 @@ def reservas_gestion(request):
             'duracion_dias': reserva.paquete_turistico.duracion_dias
         })
     # Devolvemos la respuesta en formato JSON
-    return Response(reservas_data)
+    return Response({
+        'results': reservas_data,
+        'total': total,
+        'page': page,
+        'page_size': page_size,
+        'total_pages': (total + page_size - 1) // page_size
+    })
 
 # api para devolver los agentes activos
 @api_view(['GET'])
