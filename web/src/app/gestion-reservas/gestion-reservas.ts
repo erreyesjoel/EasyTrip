@@ -251,12 +251,14 @@ async guardarNuevaReserva() {
     this.notificacionesRef.mostrar('Error al crear la reserva', 'error')
   }
 }
+
 async obtenerPaquetes() {
   const res = await fetch(environment.apiBaseUrl + 'paquetes/');
   if (res.status === 200) {
     const data = await res.json();
-    // Filtra solo los activos
-    this.paquetes = data.filter((p: any) => p.estado === 'activo');
+    // Accedemos al array correcto
+    const paquetesArray = Array.isArray(data) ? data : (data.results || []);
+    this.paquetes = paquetesArray.filter((p: any) => p.estado === 'activo');
     console.log('Paquetes activos:', this.paquetes);
   }
 }
