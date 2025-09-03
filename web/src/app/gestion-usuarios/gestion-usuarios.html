@@ -140,7 +140,8 @@
       </table>
     </div>
 
-    <div class="paginacion-usuarios-centro">
+    <!-- Solo mostrar paginación si hay usuarios (registros vaya)-->
+    <div class="paginacion-usuarios-centro" *ngIf="usuarios.length > 0">
       <app-paginacion-gestion
         [paginaActual]="paginaActual"
         [totalPaginas]="totalPaginas"

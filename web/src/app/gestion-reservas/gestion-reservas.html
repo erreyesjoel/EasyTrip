@@ -103,7 +103,7 @@
       </table>
     </div>
 
-    <div class="paginacion-reservas-centro">
+    <div class="paginacion-reservas-centro" *ngIf="reservas.length > 0">
       <app-paginacion-gestion
         [paginaActual]="paginaActual"
         [totalPaginas]="totalPaginas"

@@ -202,7 +202,7 @@
 </div>
 
 <!-- Debajo de la lista de paquetes -->
-<div class="paginacion-paquetes-centro">
+<div class="paginacion-paquetes-centro" *ngIf="paquetes.length > 0">
   <app-paginacion-gestion
     [paginaActual]="paginaActual"
     [totalPaginas]="totalPaginas"

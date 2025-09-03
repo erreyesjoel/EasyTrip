@@ -12,6 +12,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  min-height: 70vh; // O el alto que prefieras
 }
 
 app-sidebar {
@@ -160,6 +161,9 @@ app-sidebar {
 
 .tabla-reservas-container {
   margin-left: 5px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .tabla-reservas {
