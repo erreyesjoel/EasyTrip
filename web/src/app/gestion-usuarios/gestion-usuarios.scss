@@ -31,7 +31,7 @@ app-sidebar {
 
 .main-content {
   flex: 1;
-  margin: 10px 35px 35px 35px; // margen superior reducido
+  margin: 10px 35px 35px 35px;
   padding: 5px 32px 40px 32px;
   display: flex;
   flex-direction: column;
@@ -341,6 +341,14 @@ app-sidebar {
     border-color: darken(vars.$verde-esmeralda, 10%);
     svg { stroke: #fff; }
   }
+}
+
+.paginacion-usuarios-centro {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  margin-top: auto; // Esto empuja la paginación al fondo del main-content
+  margin-bottom: 0; 
 }
 
 @media (max-width: 1100px) {

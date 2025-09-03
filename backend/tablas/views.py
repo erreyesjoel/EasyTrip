@@ -287,10 +287,11 @@ def logout_view(request):
 # api para obtener todos los paquetes turísticos y sus imágenes
 @api_view(['GET'])
 def obtener_paquetes(request):
-    """
-    Vista para obtener todos los paquetes turísticos y sus imágenes,
-    con filtros por query string (nombre, estado, precio_base, duracion, cupo).
-    """
+    page = int(request.GET.get('page', 1))
+    # page_size es el número de paquetes por página
+    # en plan, como lo que "filtramos" en SQL con LIMIT
+    page_size = int(request.GET.get('page_size', 6))  # 6 por defecto
+
     filtro_map = {
         'nombre':      lambda v: {'nombre__icontains': v},
         'estado':      lambda v: {'estado': v},
@@ -327,9 +328,12 @@ def obtener_paquetes(request):
         except ValueError:
             pass
 
-    paquetes = PaqueteTuristico.objects.filter(**filtros).order_by('id')
+    paquetes_qs = PaqueteTuristico.objects.filter(**filtros).order_by('id')
+    total = paquetes_qs.count()
+    start = (page - 1) * page_size
+    end = start + page_size
+    paquetes = paquetes_qs[start:end]
 
-    # Preparamos la respuesta
     resultado = []
     for paquete in paquetes:
         imagenes_data = []
@@ -352,7 +356,13 @@ def obtener_paquetes(request):
             'imagenes': imagenes_data
         }
         resultado.append(paquete_data)
-    return Response(resultado)
+    return Response({
+        'results': resultado,
+        'total': total,
+        'page': page,
+        'page_size': page_size,
+        'total_pages': (total + page_size - 1) // page_size
+    })
 
 # api creada, para crear un paquete turistico
 @api_view(['POST'])
@@ -557,8 +567,18 @@ def gestion_usuarios_tabla(request):
     if ordering:
         usuarios = usuarios.order_by(ordering)
 
+    # PAGINACIÓN
+    # quiero mostrar por defecto 7 usuarios por pagina
+    page = int(request.GET.get('page', 1))
+    page_size = int(request.GET.get('page_size', 7))  # 7 por defecto
+
+    total = usuarios.count()
+    start = (page - 1) * page_size
+    end = start + page_size
+    usuarios_pagina = usuarios[start:end]
+    
     data = []
-    for user in usuarios:
+    for user in usuarios_pagina:
         data.append({
             'id': user.id,
             'username': user.username,
@@ -570,7 +590,13 @@ def gestion_usuarios_tabla(request):
             'last_login': user.last_login,
             'date_joined': user.date_joined,
         })
-    return Response(data)
+    return Response({
+        'results': data,
+        'total': total,
+        'page': page,
+        'page_size': page_size,
+        'total_pages': (total + page_size - 1) // page_size
+    })
 
 # api para crear un usuario
 # Se usa el modelo User de Django para crear un nuevo usuario
@@ -803,9 +829,18 @@ def reservas_gestion(request):
     # Filtramos las reservas según los filtros construidos
     reservas = Reserva.objects.filter(**filtros).order_by('-fecha_creacion')
 
+    # PAGINACION
+    page = int(request.GET.get('page', 1))
+    page_size = int(request.GET.get('page_size', 7)) # 7 por defecto
+
+    total = reservas.count()
+    start = (page - 1) * page_size
+    end = start + page_size
+    reservas_pagina = reservas[start:end]
+
     # Serializamos los datos manualmente para devolver solo lo necesario
     reservas_data = []
-    for reserva in reservas:
+    for reserva in reservas_pagina:
         reservas_data.append({
             'id': reserva.id,
             'usuario': reserva.usuario.email,
@@ -819,7 +854,13 @@ def reservas_gestion(request):
             'duracion_dias': reserva.paquete_turistico.duracion_dias
         })
     # Devolvemos la respuesta en formato JSON
-    return Response(reservas_data)
+    return Response({
+        'results': reservas_data,
+        'total': total,
+        'page': page,
+        'page_size': page_size,
+        'total_pages': (total + page_size - 1) // page_size
+    })
 
 # api para devolver los agentes activos
 @api_view(['GET'])

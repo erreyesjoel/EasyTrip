@@ -200,4 +200,16 @@
   <img [src]="imagenAmpliada" alt="Imagen ampliada" />
   <button class="cerrar-modal" (click)="cerrarImagenAmpliada()">×</button>
 </div>
+
+<!-- Debajo de la lista de paquetes -->
+<div class="paginacion-paquetes-centro" *ngIf="paquetes.length > 0">
+  <app-paginacion-gestion
+    [paginaActual]="paginaActual"
+    [totalPaginas]="totalPaginas"
+    [pageSize]="pageSize"
+    [opcionesPageSize]="opcionesPageSize"
+    (paginaCambiada)="onPaginaCambiada($event)"
+    (pageSizeCambiado)="onPageSizeCambiado($event)">
+  </app-paginacion-gestion>
+</div>
 </div>

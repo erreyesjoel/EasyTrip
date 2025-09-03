@@ -139,6 +139,18 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Solo mostrar paginación si hay usuarios (registros vaya)-->
+    <div class="paginacion-usuarios-centro" *ngIf="usuarios.length > 0">
+      <app-paginacion-gestion
+        [paginaActual]="paginaActual"
+        [totalPaginas]="totalPaginas"
+        [pageSize]="pageSize"
+        [opcionesPageSize]="opcionesPageSize"
+        (paginaCambiada)="onPaginaCambiada($event)"
+        (pageSizeCambiado)="onPageSizeCambiado($event)">
+      </app-paginacion-gestion>
+    </div>
   </div>
 </div>
 

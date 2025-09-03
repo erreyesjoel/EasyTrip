@@ -51,7 +51,7 @@ export class Paquetes {
       const res = await fetch(environment.apiBaseUrl + 'paquetes?estado=activo');
       if (res.status === 200) {
         const dataPaquetes = await res.json();
-        this.paquetes = dataPaquetes;
+        this.paquetes = Array.isArray(dataPaquetes) ? dataPaquetes : (dataPaquetes.results || []);
       }
     } catch (error) {
       console.error('Error fetching paquetes:', error);

@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Notificaciones } from '../notificaciones/notificaciones'; // importar componente
 import { validacionFormatoEmail, validarNombreApellidoReserva } from '../../form-validations'; // Importar la función de validación
 import { MensajesComponent } from '../mensajes/mensajes';
+import { PaginacionGestion } from '../paginacion-gestion/paginacion-gestion';
 
 interface Reserva {
   id: number;
@@ -21,7 +22,7 @@ interface Reserva {
 
 @Component({
   selector: 'app-gestion-reservas',
-  imports: [SidebarComponent, CommonModule, FormsModule, Notificaciones, MensajesComponent], 
+  imports: [SidebarComponent, CommonModule, FormsModule, Notificaciones, MensajesComponent, PaginacionGestion], 
   templateUrl: './gestion-reservas.html',
   styleUrl: './gestion-reservas.scss'
 })
@@ -57,6 +58,12 @@ export class GestionReservas {
   // esto en el input de fecha
   hoy: string = new Date().toISOString().slice(0, 10);
 
+  // paginacion
+  paginaActual: number = 1;
+  totalPaginas: number = 1;
+  pageSize: number = 7;
+  opcionesPageSize: number[] = [7, 14, 21, 0]; // 0 para "todos"
+
   // ngOnInit porque se utiliza para inicializar la carga de datos al inicio del componente
   // nada mas renderizar el componente, llamamos de forma asincrona a la funcion obtenerReservas
   async ngOnInit() {
@@ -67,15 +74,17 @@ export class GestionReservas {
 
   async obtenerReservas(): Promise<void> {
     try {
-      const res = await fetch(environment.apiBaseUrl + 'gestion-reservas/', {
-      });
-
-      // si la respuesta es exitosa, 200, como es get
+      const params = new URLSearchParams();
+      params.append('page', String(this.paginaActual));
+      params.append('page_size', String(this.pageSize === 0 ? 9999 : this.pageSize));
+      const res = await fetch(environment.apiBaseUrl + 'gestion-reservas/?' + params.toString());
       if (res.status === 200) {
         const data = await res.json();
-        this.reservas = data; // Asignar los datos a la propiedad reservas
-        // console log para depuracion
-        console.log('Reservas obtenidas:', data);
+        this.reservas = Array.isArray(data) ? data : (data.results || []);
+        this.totalPaginas = data.total_pages || 1;
+        this.paginaActual = data.page || 1;
+        this.pageSize = data.page_size || this.pageSize;
+        console.log('Reservas obtenidas:', this.reservas);
       }
     } catch (error) {
       console.error('Error al obtener reservas:', error);
@@ -127,11 +136,28 @@ async aplicarFiltros() {
   if (this.filtroGestor) params.push(`usuario_gestor=${encodeURIComponent(this.filtroGestor)}`);
   if (this.filtroEstado) params.push(`estado=${encodeURIComponent(this.filtroEstado)}`);
   if (this.filtroFecha) params.push(`fecha_reservada=${encodeURIComponent(this.filtroFecha)}`);
+  params.push(`page=${this.paginaActual}`);
+  params.push(`page_size=${this.pageSize === 0 ? 9999 : this.pageSize}`);
   const query = params.length ? '?' + params.join('&') : '';
   const res = await fetch(environment.apiBaseUrl + 'gestion-reservas/' + query);
   if (res.status === 200) {
-    this.reservas = await res.json();
+    const data = await res.json();
+    this.reservas = Array.isArray(data) ? data : (data.results || []);
+    this.totalPaginas = data.total_pages || 1;
+    this.paginaActual = data.page || 1;
+    this.pageSize = data.page_size || this.pageSize;
   }
+}
+
+onPaginaCambiada(nuevaPagina: number) {
+  this.paginaActual = nuevaPagina;
+  this.aplicarFiltros();
+}
+
+onPageSizeCambiado(nuevoSize: number) {
+  this.pageSize = nuevoSize;
+  this.paginaActual = 1;
+  this.aplicarFiltros();
 }
 
 reiniciarFiltros() {
@@ -251,12 +277,14 @@ async guardarNuevaReserva() {
     this.notificacionesRef.mostrar('Error al crear la reserva', 'error')
   }
 }
+
 async obtenerPaquetes() {
   const res = await fetch(environment.apiBaseUrl + 'paquetes/');
   if (res.status === 200) {
     const data = await res.json();
-    // Filtra solo los activos
-    this.paquetes = data.filter((p: any) => p.estado === 'activo');
+    // Accedemos al array correcto
+    const paquetesArray = Array.isArray(data) ? data : (data.results || []);
+    this.paquetes = paquetesArray.filter((p: any) => p.estado === 'activo');
     console.log('Paquetes activos:', this.paquetes);
   }
 }
