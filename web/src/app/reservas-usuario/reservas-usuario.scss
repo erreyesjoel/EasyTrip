@@ -4,7 +4,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
-  margin: 2rem auto;
+  margin: 0 auto; // Quita el margen superior (antes era 2rem)
   max-width: 1200px;
   padding: 0 1rem;
 
@@ -296,6 +296,42 @@
 
   &:hover {
     transform: scale(1.02);
+  }
+}
+
+.reservas-usuario-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 0.2rem; // Reduce el margen inferior
+  padding: 0 1rem;
+}
+
+.btn-descargar {
+  background: linear-gradient(135deg, #e53935, #ff5252); // Rojo PDF
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  margin-top: 5px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(229, 57, 53, 0.10);
+  transition: background 0.15s, box-shadow 0.15s;
+
+  .icon-pdf {
+    width: 1.3rem;
+    height: 1.3rem;
+    color: #fff;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #b71c1c, #e53935);
+    box-shadow: 0 4px 16px rgba(229, 57, 53, 0.15);
   }
 }
 

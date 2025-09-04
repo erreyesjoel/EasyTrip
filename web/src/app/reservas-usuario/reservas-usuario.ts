@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 // interface para definir la estructura de una reserva
 interface ReservaUsuario {
@@ -37,5 +39,24 @@ export class ReservasUsuario {
     } else {
       console.error('Error al obtener las reservas');
     }
+  }
+
+  // el css o estilos, es de la libreria jspdf-autotable, por defecto
+  descargarReservasPDF() {
+    const doc = new jsPDF();
+    doc.text('Mis reservas', 14, 16);
+
+    autoTable(doc, {
+      head: [['Paquete', 'Fecha reservada', 'Estado']],
+      body: this.reservas.map(r => [
+        r.paquete,
+        // Formatea la fecha como quieras:
+        new Date(r.fecha_reservada).toLocaleDateString(),
+        r.estado
+      ]),
+      startY: 22
+    });
+
+    doc.save('mis_reservas.pdf');
   }
 }
