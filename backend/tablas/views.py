@@ -1090,15 +1090,14 @@ def usuarios_por_mes(request):
 
 # api get para obtener las reservas de un usuario
 @api_view(['GET'])
-def reservas_usuario(request, user_id):
-    reservas = Reserva.objects.filter(usuario_id=user_id)
-    if not reservas.exists():
-        return Response({'error': 'No se encontraron reservas para este usuario.'}, status=404)
+@permission_classes([IsAuthenticated])
+def reservas_usuario(request):
+    reservas = Reserva.objects.filter(usuario=request.user)
     resultado = []
     for reserva in reservas:
         resultado.append({
             'id': reserva.id,
-            'paquete': reserva.paquete_turistico.nombre,  # Ajusta el nombre del campo si es necesario
+            'paquete': reserva.paquete_turistico.nombre,
             'fecha_reservada': reserva.fecha_reservada,
             'estado': reserva.estado
         })

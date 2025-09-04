@@ -57,7 +57,7 @@ urlpatterns = [
     path('api/count-paquetes/', count_paquetes, name='count_paquetes'),
     path('api/reservas-por-mes/', reservas_por_mes, name='reservas_por_mes'),  # Nueva ruta para reservas por mes
     path('api/usuarios-por-mes/', usuarios_por_mes, name='usuarios_por_mes'),  # Nueva ruta para usuarios por mes
-    path('api/reservas-usuario/<int:user_id>/', reservas_usuario, name='reservas_usuario')
+    path('api/reservas-usuario/', reservas_usuario, name='reservas_usuario')
 ]
 
 # Solo en desarrollo: sirve archivos media desde MEDIA_URL
