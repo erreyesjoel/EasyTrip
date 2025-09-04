@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { RouterModule } from '@angular/router';
 
 // interface para definir la estructura de una reserva
 interface ReservaUsuario {
@@ -15,7 +16,7 @@ interface ReservaUsuario {
 
 @Component({
   selector: 'app-reservas-usuario',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './reservas-usuario.html',
   styleUrl: './reservas-usuario.scss'
 })
