@@ -28,6 +28,8 @@ export class ReservasUsuario {
   reservas: ReservaUsuario[] = [];
   reservasPorPagina = 6;
   paginaActual = 1;
+  mostrarModalCancelar = false;
+  reservaSeleccionada: ReservaUsuario | null = null;
 
   async ngOnInit():Promise<void> {
     console.log('API URL:', environment.apiBaseUrl);
@@ -77,5 +79,31 @@ export class ReservasUsuario {
 
   cambiarPagina(pagina: number) {
     this.paginaActual = pagina;
+  }
+
+  abrirModalCancelar(reserva: ReservaUsuario) {
+    this.reservaSeleccionada = reserva;
+    this.mostrarModalCancelar = true;
+  }
+
+  cerrarModalCancelar() {
+    this.mostrarModalCancelar = false;
+    this.reservaSeleccionada = null;
+  }
+
+  async confirmarCancelarReserva() {
+    if (!this.reservaSeleccionada) return;
+    const res = await fetch(
+      environment.apiBaseUrl + `cancelar-reserva/${this.reservaSeleccionada.id}/`,
+      {
+        method: 'PATCH',
+        credentials: 'include'
+      }
+    );
+    if (res.ok) {
+      // Actualiza la lista de reservas
+      await this.mostrarReservas();
+    }
+    this.cerrarModalCancelar();
   }
 }

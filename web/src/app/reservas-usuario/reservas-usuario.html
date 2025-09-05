@@ -29,7 +29,7 @@
         </p>
       </div>
       <div class="tarjeta-actions">
-        <button class="btn btn-cancelar">
+        <button class="btn btn-cancelar" (click)="abrirModalCancelar(reserva)">
           <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
           </svg>
@@ -50,3 +50,14 @@
   [totalPaginas]="totalPaginas"
   (paginaCambiada)="cambiarPagina($event)">
 </app-paginacion-cliente>
+<div class="modal-cancelar" *ngIf="mostrarModalCancelar">
+  <div class="modal-cancelar-backdrop" (click)="cerrarModalCancelar()"></div>
+  <div class="modal-cancelar-contenido">
+    <h2>¿Cancelar reserva?</h2>
+    <p>¿Seguro que quieres cancelar la reserva de <b>{{ reservaSeleccionada?.paquete }}</b>?</p>
+    <div class="modal-cancelar-acciones">
+      <button class="btn" (click)="cerrarModalCancelar()">Retroceder</button>
+      <button class="btn btn-cancelar" (click)="confirmarCancelarReserva()">Cancelar reserva</button>
+    </div>
+  </div>
+</div>
