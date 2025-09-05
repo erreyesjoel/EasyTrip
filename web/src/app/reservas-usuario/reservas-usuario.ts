@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { RouterModule } from '@angular/router';
+import { PaginacionCliente } from '../paginacion-cliente/paginacion-cliente';
 
 // interface para definir la estructura de una reserva
 interface ReservaUsuario {
@@ -16,7 +17,7 @@ interface ReservaUsuario {
 
 @Component({
   selector: 'app-reservas-usuario',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, PaginacionCliente],
   templateUrl: './reservas-usuario.html',
   styleUrl: './reservas-usuario.scss'
 })
@@ -24,6 +25,9 @@ export class ReservasUsuario {
   // reservas, para el for each en el html
   // reserva sera el nombre que le das en el html, pero es of reservas, porque es reservas como aqui en el ts
   reservas: ReservaUsuario[] = [];
+  reservasPorPagina = 6;
+  paginaActual = 1;
+
   async ngOnInit():Promise<void> {
     console.log('API URL:', environment.apiBaseUrl);
     await this.mostrarReservas();
@@ -59,5 +63,18 @@ export class ReservasUsuario {
     });
 
     doc.save('mis_reservas.pdf');
+  }
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.reservas.length / this.reservasPorPagina));
+  }
+
+  get reservasPaginadas(): ReservaUsuario[] {
+    const start = (this.paginaActual - 1) * this.reservasPorPagina;
+    return this.reservas.slice(start, start + this.reservasPorPagina);
+  }
+
+  cambiarPagina(pagina: number) {
+    this.paginaActual = pagina;
   }
 }

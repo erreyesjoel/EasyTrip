@@ -14,7 +14,7 @@
 </div>
 <div class="reservas-usuario-scroll">
   <div class="reservas-usuario-lista">
-    <div class="tarjeta-reserva-usuario" *ngFor="let reserva of reservas" [attr.data-estado]="reserva.estado">
+    <div class="tarjeta-reserva-usuario" *ngFor="let reserva of reservasPaginadas" [attr.data-estado]="reserva.estado">
       <div class="tarjeta-header">
         <h3 class="titulo-reserva">{{ reserva.paquete }}</h3>
         <span class="estado-reserva" [ngClass]="reserva.estado">{{ reserva.estado | titlecase }}</span>
@@ -46,3 +46,8 @@
     </div>
   </div>
 </div>
+<app-paginacion-cliente
+  [paginaActual]="paginaActual"
+  [totalPaginas]="totalPaginas"
+  (paginaCambiada)="cambiarPagina($event)">
+</app-paginacion-cliente>

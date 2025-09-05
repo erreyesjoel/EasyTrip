@@ -1,0 +1,22 @@
+<div class="paginacion-cliente">
+  <button
+    class="pagina-btn flecha"
+    [disabled]="paginaActual === 1"
+    (click)="cambiarPagina(paginaActual - 1)">
+    &lt;
+  </button>
+  <div *ngFor="let pagina of paginas">
+    <button
+      class="pagina-btn"
+      [class.activa]="pagina === paginaActual"
+      (click)="cambiarPagina(pagina)">
+      {{ pagina }}
+    </button>
+  </div>
+  <button
+    class="pagina-btn flecha"
+    [disabled]="paginaActual === totalPaginas"
+    (click)="cambiarPagina(paginaActual + 1)">
+    &gt;
+  </button>
+</div>
