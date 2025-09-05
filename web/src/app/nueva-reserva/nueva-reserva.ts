@@ -18,7 +18,7 @@ interface Paquete {
 export class NuevaReserva {
   paquetes: Paquete[] = [];
   paqueteId: number | null = null;
-  fechaReservada: string = '';
+  fechaReservada: string = this.getHoy();
 
   @ViewChild('notificaciones') notificaciones!: Notificaciones;
 
@@ -45,6 +45,15 @@ export class NuevaReserva {
   }
 
   async hacerReserva() {
+    // Validación previa para evitar errores por campos vacíos
+    if (!this.paqueteId || !this.fechaReservada) {
+      this.notificaciones.mostrar(
+        'Debes seleccionar un paquete y una fecha para reservar.',
+        'error'
+      );
+      return;
+    }
+
     try {
       const res = await fetch(environment.apiBaseUrl + 'nueva-reserva/', {
         method: 'POST',
@@ -75,12 +84,20 @@ export class NuevaReserva {
             : `Error al reservar "${paqueteNombre}"`,
           'error'
         );
-        console.error('Error al reservar:', error);
+        console.error(error);
       }
     } catch (err) {
       this.notificaciones.mostrar('Error de red al crear la reserva', 'error');
       console.log('Haciendo reserva con paquete_id:', this.paqueteId, 'y fecha_reservada:', this.fechaReservada);
       console.error('Error al crear reserva', err);
     }
+  }
+
+  getHoy(): string {
+    const hoy = new Date();
+    const yyyy = hoy.getFullYear();
+    const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+    const dd = String(hoy.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   }
 }

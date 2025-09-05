@@ -24,7 +24,15 @@
         </svg>
         Fecha reservada
       </label>
-      <input type="date" id="fechaReservada" class="form-input" [(ngModel)]="fechaReservada" name="fechaReservada" required>
+      <input
+        type="date"
+        id="fechaReservada"
+        class="form-input"
+        [(ngModel)]="fechaReservada"
+        name="fechaReservada"
+        [min]="getHoy()"
+        required
+      >
       <button type="submit" class="btn btn-reservar">
         <svg class="icon-check" viewBox="0 0 24 24" fill="currentColor">
           <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
