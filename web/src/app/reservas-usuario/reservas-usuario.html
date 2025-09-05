@@ -50,9 +50,13 @@
         </button>
       </div>
     </div>
+    <div class="sin-registros" *ngIf="reservas.length === 0">
+      No tienes reservas.
+    </div>
   </div>
 </div>
 <app-paginacion-cliente
+  *ngIf="reservas.length > 0 && totalPaginas > 1"
   [paginaActual]="paginaActual"
   [totalPaginas]="totalPaginas"
   (paginaCambiada)="cambiarPagina($event)">

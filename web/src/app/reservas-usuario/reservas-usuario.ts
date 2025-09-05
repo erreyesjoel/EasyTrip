@@ -54,6 +54,12 @@ export class ReservasUsuario {
 
   // el css o estilos, es de la libreria jspdf-autotable, por defecto
   descargarReservasPDF() {
+    // si no tienes reservas
+    // salta notificacion de error
+    if (this.reservas.length === 0) {
+      this.notificaciones?.mostrar('No tienes reservas para descargar.', 'error');
+      return;
+    }
     const doc = new jsPDF();
     doc.text('Mis reservas', 14, 16);
 
@@ -61,7 +67,6 @@ export class ReservasUsuario {
       head: [['Paquete', 'Fecha reservada', 'Estado']],
       body: this.reservas.map(r => [
         r.paquete,
-        // Formatea la fecha como quieras:
         new Date(r.fecha_reservada).toLocaleDateString(),
         r.estado
       ]),
