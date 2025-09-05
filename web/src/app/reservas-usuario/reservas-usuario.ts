@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { RouterModule } from '@angular/router';
 import { PaginacionCliente } from '../paginacion-cliente/paginacion-cliente';
+import { Notificaciones } from '../notificaciones/notificaciones';
 
 // interface para definir la estructura de una reserva
 interface ReservaUsuario {
@@ -18,7 +19,7 @@ interface ReservaUsuario {
 
 @Component({
   selector: 'app-reservas-usuario',
-  imports: [CommonModule, RouterModule, PaginacionCliente],
+  imports: [CommonModule, RouterModule, PaginacionCliente, Notificaciones],
   templateUrl: './reservas-usuario.html',
   styleUrl: './reservas-usuario.scss'
 })
@@ -30,6 +31,8 @@ export class ReservasUsuario {
   paginaActual = 1;
   mostrarModalCancelar = false;
   reservaSeleccionada: ReservaUsuario | null = null;
+
+  @ViewChild(Notificaciones) notificaciones?: Notificaciones;
 
   async ngOnInit():Promise<void> {
     console.log('API URL:', environment.apiBaseUrl);
@@ -101,8 +104,10 @@ export class ReservasUsuario {
       }
     );
     if (res.ok) {
-      // Actualiza la lista de reservas
       await this.mostrarReservas();
+      this.notificaciones?.mostrar('Reserva cancelada correctamente', 'success');
+    } else {
+      this.notificaciones?.mostrar('Error al cancelar la reserva', 'error');
     }
     this.cerrarModalCancelar();
   }
