@@ -5,7 +5,7 @@
   </div>
   
   <div class="paquetes-grid">
-    <div class="paquete-card" *ngFor="let paquete of paquetes">
+    <div class="paquete-card" *ngFor="let paquete of paquetesPaginados">
       <div class="card-image-container">
         <img [src]="getImagenPrincipal(paquete)" alt="Imagen paquete" class="paquete-img">
         <div class="image-overlay"></div>
@@ -30,4 +30,10 @@
     <div class="loading-spinner"></div>
     <p>Cargando paquetes...</p>
   </div>
+
+  <app-paginacion-cliente
+    [paginaActual]="paginaActual"
+    [totalPaginas]="totalPaginas"
+    (paginaCambiada)="cambiarPagina($event)">
+  </app-paginacion-cliente>
 </div>
