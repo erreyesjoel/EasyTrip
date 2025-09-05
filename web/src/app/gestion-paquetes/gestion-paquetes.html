@@ -93,6 +93,9 @@
           <button class="eliminar-paquete" (click)="abrirModalEliminar(paquete)" *ngIf="usuario?.rol === 'administrador'">Eliminar</button> <!-- Botón para que se abra el modal de confirmación de eliminación del paquete -->
         </div>
       </div>
+      <div *ngIf="paquetes.length === 0" class="sin-registros">
+    No hay paquetes que mostrar.
+  </div>
     </div>
   </div>
 

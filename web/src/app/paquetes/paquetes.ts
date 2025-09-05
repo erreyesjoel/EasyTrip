@@ -26,6 +26,7 @@ export class Paquetes {
   paquetes: Paquete[] = [];
   paquetesPorPagina = 3;
   paginaActual = 1;
+  cargando = true;
 
   get totalPaginas(): number {
     return Math.max(1, Math.ceil(this.paquetes.length / this.paquetesPorPagina));
@@ -42,7 +43,9 @@ export class Paquetes {
   })();
 
   async ngOnInit() {
+    this.cargando = true;
     await this.obtenerPaquetesActivos();
+    this.cargando = false;
   }
 
   async obtenerPaquetesActivos(): Promise<void> {

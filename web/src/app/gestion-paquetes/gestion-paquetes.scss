@@ -71,6 +71,7 @@
   background-color: vars.$gris-claro; // Fondo gris claro, cuando habia mas de 3 tarjetas se veia el fondo blanco, ahora ya no!
 }
 
+
 .lista-paquetes {
   display: grid;
   grid-template-columns: repeat(3, 1fr); // 3 columnas iguales
@@ -78,6 +79,15 @@
   justify-items: center; // Centra las tarjetas en su celda
   justify-content: center; // Centra el grid en el contenedor
   margin-top: 32px;
+}
+
+.sin-registros {
+  grid-column: 1 / -1; // Ocupa toda la fila del grid
+  text-align: center;
+  font-size: 1.3rem;
+  color: #888;
+  opacity: 0.85;
+  margin: 2rem 0;
 }
 
 .descripcion-paquete {

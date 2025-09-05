@@ -138,6 +138,9 @@
           </tr>
         </tbody>
       </table>
+      <div *ngIf="usuarios.length === 0" class="sin-registros">
+        No hay usuarios que mostrar.
+      </div>
     </div>
 
     <!-- Solo mostrar paginación si hay usuarios (registros vaya)-->

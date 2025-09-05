@@ -39,3 +39,13 @@ para que haga un espacio, y no este tan "compacto" */
 .container-espacio-mensaje {
   margin-top: 8px;
 }
+
+// clase para cuando no hay registros en una tabla o pagina
+// no es un error, simplemente que no hay registros
+.sin-registros {
+  text-align: center;
+  color: #888;
+  font-size: 1.3rem;
+  margin: 4rem 0;
+  opacity: 0.85;
+}
