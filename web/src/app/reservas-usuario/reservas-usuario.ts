@@ -12,6 +12,7 @@ interface ReservaUsuario {
   paquete: string;
   fecha_reservada: Date;
   estado: string;
+  paquete_id: number;
 }
 
 

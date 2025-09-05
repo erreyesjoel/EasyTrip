@@ -1097,6 +1097,7 @@ def reservas_usuario(request):
     for reserva in reservas:
         resultado.append({
             'id': reserva.id,
+            'paquete_id': reserva.paquete_turistico.id,
             'paquete': reserva.paquete_turistico.nombre,
             'fecha_reservada': reserva.fecha_reservada,
             'estado': reserva.estado
