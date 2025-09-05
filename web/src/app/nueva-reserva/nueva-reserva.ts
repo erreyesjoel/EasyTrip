@@ -40,4 +40,33 @@ export class NuevaReserva {
       console.error('Error al cargar paquetes', err);
     }
   }
+
+  async hacerReserva() {
+    try {
+      const res = await fetch(environment.apiBaseUrl + 'nueva-reserva/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        // credentials para enviar cookies de sesión
+        // ya que en el backend, esta puesto como que requiere autenticacion
+        credentials: 'include',
+        body: JSON.stringify({
+          paquete_id: this.paqueteId,
+          fecha_reservada: this.fechaReservada
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log('Reserva creada:', data);
+      }
+      if (!res.ok) {
+        const error = await res.json();
+        console.error('Error al crear reserva:', error);
+      }
+    } catch (err) {
+      console.log('Haciendo reserva con paquete_id:', this.paqueteId, 'y fecha_reservada:', this.fechaReservada);
+      console.error('Error al crear reserva', err);
+    }
+  }
 }

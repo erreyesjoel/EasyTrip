@@ -3,7 +3,7 @@
     <h2 class="nueva-reserva-titulo">
       Nueva reserva
     </h2>
-    <form class="nueva-reserva-form">
+    <form class="nueva-reserva-form" (ngSubmit)="hacerReserva()">
       <label for="paquete" class="form-label">
         <svg class="icon-paquete" viewBox="0 0 24 24" fill="currentColor">
           <path d="M20.54 5.23l-7.19-3.19a2 2 0 0 0-1.7 0l-7.19 3.19A2 2 0 0 0 3 7.09V17a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7.09a2 2 0 0 0-0.46-1.86zM12 4.15l7 3.11-7 3.11-7-3.11 7-3.11zm7 12.85H5V8.26l7 3.11 7-3.11V17z"/>
@@ -23,8 +23,7 @@
         </svg>
         Fecha reservada
       </label>
-      <input type="date" id="fechaReservada" class="form-input">
-
+      <input type="date" id="fechaReservada" class="form-input" [(ngModel)]="fechaReservada" name="fechaReservada" required>
       <button type="submit" class="btn btn-reservar">
         <svg class="icon-check" viewBox="0 0 24 24" fill="currentColor">
           <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
