@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Notificaciones } from '../notificaciones/notificaciones';
 
 interface Paquete {
   id: number;
@@ -10,7 +11,7 @@ interface Paquete {
 
 @Component({
   selector: 'app-nueva-reserva',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Notificaciones],
   templateUrl: './nueva-reserva.html',
   styleUrl: './nueva-reserva.scss'
 })
@@ -18,6 +19,8 @@ export class NuevaReserva {
   paquetes: Paquete[] = [];
   paqueteId: number | null = null;
   fechaReservada: string = '';
+
+  @ViewChild('notificaciones') notificaciones!: Notificaciones;
 
   async ngOnInit() {
     await this.cargarPaquetes();
@@ -58,13 +61,24 @@ export class NuevaReserva {
       });
       if (res.ok) {
         const data = await res.json();
+        // Busca el nombre del paquete seleccionado
+        const paqueteNombre = this.paquetes.find(p => p.id === this.paqueteId)?.nombre || '';
+        this.notificaciones.mostrar(`¡Has reservado "${paqueteNombre}" con éxito!`, 'success');
         console.log('Reserva creada:', data);
       }
       if (!res.ok) {
         const error = await res.json();
-        console.error('Error al crear reserva:', error);
+        const paqueteNombre = this.paquetes.find(p => p.id === this.paqueteId)?.nombre || '';
+        this.notificaciones.mostrar(
+          error?.error
+            ? `Error al reservar "${paqueteNombre}": ${error.error}`
+            : `Error al reservar "${paqueteNombre}"`,
+          'error'
+        );
+        console.error('Error al reservar:', error);
       }
     } catch (err) {
+      this.notificaciones.mostrar('Error de red al crear la reserva', 'error');
       console.log('Haciendo reserva con paquete_id:', this.paqueteId, 'y fecha_reservada:', this.fechaReservada);
       console.error('Error al crear reserva', err);
     }
