@@ -10,10 +10,11 @@
         </svg>
         Paquete turístico
       </label>
-      <select id="paquete" class="form-select">
-        <option>Aventura en los Pirineos</option>
-        <option>Escapada Mediterránea</option>
-        <option>Ruta por los Castillos</option>
+      <select id="paquete" class="form-select" [(ngModel)]="paqueteId" name="paqueteId" required>
+        <option [ngValue]="null" disabled selected>Selecciona un paquete</option>
+        <option *ngFor="let paquete of paquetes" [ngValue]="paquete.id">
+          {{ paquete.nombre }}
+        </option>
       </select>
 
       <label for="fechaReservada" class="form-label">
