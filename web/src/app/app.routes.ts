@@ -12,6 +12,9 @@ import { Reserva } from './reserva/reserva';
 import { GestionReservas } from './gestion-reservas/gestion-reservas';
 import { Paquetes } from './paquetes/paquetes';
 import { DefinirPassword } from './definir-password/definir-password';
+import { ReservasUsuario } from './reservas-usuario/reservas-usuario';
+import { ClienteGuard } from './guards/cliente.guard';
+import { NuevaReserva } from './nueva-reserva/nueva-reserva';
 
 export const routes: Routes = [
   {
@@ -36,4 +39,8 @@ export const routes: Routes = [
   { path: 'reserva/:id/:nombre', component: Reserva },
   { path: 'paquetes', component: Paquetes }, // ruta para ver todos los paquetes
   { path: 'definir-password', component: DefinirPassword },
+  // Usar cliente guard
+  // Para que, si no estoy logeado, y no soy cliente, no deje acceder a reservas del usuario
+  { path: 'reservas', component: ReservasUsuario, canActivate: [ClienteGuard] },
+  { path: 'nueva-reserva', component: NuevaReserva, canActivate: [ClienteGuard] }
 ];

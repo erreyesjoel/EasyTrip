@@ -1,0 +1,97 @@
+@use '../../_variables' as vars;
+
+.nueva-reserva-container {
+  max-width: 400px;
+  margin: 2.5rem auto;
+  background: vars.$blanco;
+  border: 3px solid #fff; // Borde blanco visible
+  box-shadow: 0 0 0 2px #e0e0e0, 0 4px 24px rgba(0,0,0,0.08); // Contorno gris claro y sombra suave
+  padding: 2rem 2rem 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.nueva-reserva-centrado {
+  margin-top: 15vh;
+}
+
+.nueva-reserva-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: vars.$font-size-xxl;
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  color: vars.$verde-esmeralda;
+  margin-bottom: 0.5rem;
+
+  .icon-reserva {
+    width: 2rem;
+    height: 2rem;
+    color: vars.$verde-claro;
+  }
+}
+
+.nueva-reserva-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: vars.$gris-oscuro;
+  margin-bottom: 0.3rem;
+}
+
+.form-select,
+.form-input {
+  padding: 0.6rem 1rem;
+  font-size: vars.$font-size-base;
+  border: 1.5px solid vars.$gris-medio;
+  background: vars.$gris-claro;
+  color: vars.$gris-oscuro;
+  outline: none;
+  transition: border-color 0.15s;
+  margin-bottom: 0.5rem;
+
+  &:focus {
+    border-color: vars.$verde-esmeralda;
+    background: vars.$blanco;
+  }
+}
+
+.btn-reservar {
+  background: linear-gradient(90deg, vars.$verde-esmeralda 80%, vars.$verde-claro 100%);
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-weight: 700;
+  font-size: vars.$font-size-lg;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(45, 125, 95, 0.10);
+  border-radius: vars.$border-radius;
+  transition: background 0.15s, box-shadow 0.15s;
+
+  .icon-check {
+    width: 1.3rem;
+    height: 1.3rem;
+    color: #fff;
+  }
+
+  &:hover {
+    background: linear-gradient(90deg, vars.$verde-claro 80%, vars.$verde-esmeralda 100%);
+    box-shadow: 0 4px 16px rgba(45, 125, 95, 0.15);
+  }
+}
+
+.icon-paquete, .icon-fecha {
+  width: 1.2rem;
+  height: 1.2rem;
+  vertical-align: middle;
+  margin-right: 0.4rem;
+  color: vars.$verde-esmeralda;
+}

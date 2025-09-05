@@ -1087,3 +1087,41 @@ def usuarios_por_mes(request):
         for u in usuarios
     ]
     return Response(data)
+
+# api get para obtener las reservas de un usuario
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def reservas_usuario(request):
+    reservas = Reserva.objects.filter(usuario=request.user)
+    resultado = []
+    for reserva in reservas:
+        resultado.append({
+            'id': reserva.id,
+            'paquete': reserva.paquete_turistico.nombre,
+            'fecha_reservada': reserva.fecha_reservada,
+            'estado': reserva.estado
+        })
+    return Response(resultado)
+
+# api post para reservas, nueva reserva
+# en ese formulario, saldra un select con los paquetes
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def nueva_reserva(request):
+    if request.method == 'POST':
+        data = request.data
+        paquete = data.get('paquete_id')
+        fecha_reservada = data.get('fecha_reservada')
+
+        # campos requeridos
+        if not paquete or not fecha_reservada:
+            return Response({'error': 'Faltan datos requeridos.'}, status=400)
+
+        # creacion de la reserva
+        reserva = Reserva.objects.create(
+            usuario=request.user,
+            paquete_turistico_id=paquete,
+            fecha_reservada=fecha_reservada
+        )
+        return Response({'ok': True, 'mensaje': 'Reserva creada correctamente.', 'reserva_id': reserva.id}, status=201)
+      
