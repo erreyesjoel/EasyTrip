@@ -1,5 +1,8 @@
 <h2 class="titulo-mostrar-paquetes-landing">Paquetes Turisticos</h2>
 <div class="container-paquetes">
+  <div class="sin-registros" *ngIf="paquetesLanding.length === 0">
+    No hay paquetes disponibles.
+  </div>
   <div class="paquete-container" *ngFor="let paquete of paquetesLanding; let i = index">
     <div class="imagen-container">
       <span class="precio-badge">{{ paquete.precio_base }} €</span>
