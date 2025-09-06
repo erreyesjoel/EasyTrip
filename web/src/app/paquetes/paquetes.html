@@ -6,7 +6,7 @@
   
   <div class="paquetes-grid" *ngIf="paquetesPaginados.length > 0">
     <div class="paquete-card" *ngFor="let paquete of paquetesPaginados">
-      <div class="card-image-container">
+      <div class="card-image-container" (click)="abrirImagenAmpliada(getImagenPrincipal(paquete))" style="cursor: zoom-in;">
         <img [src]="getImagenPrincipal(paquete)" alt="Imagen paquete" class="paquete-img">
         <div class="image-overlay"></div>
       </div>
@@ -40,4 +40,11 @@
     [totalPaginas]="totalPaginas"
     (paginaCambiada)="cambiarPagina($event)">
   </app-paginacion-cliente>
+
+  <!-- Modal para la imagen ampliada -->
+  <div class="modal-backdrop" *ngIf="imagenAmpliada" (click)="cerrarImagenAmpliada()"></div>
+  <div class="modal-imagen-ampliada" *ngIf="imagenAmpliada">
+    <img [src]="imagenAmpliada" alt="Imagen ampliada" />
+    <button class="cerrar-modal" (click)="cerrarImagenAmpliada()" aria-label="Cerrar">&times;</button>
+  </div>
 </div>

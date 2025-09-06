@@ -27,6 +27,7 @@ export class Paquetes {
   paquetesPorPagina = 3;
   paginaActual = 1;
   cargando = true;
+  imagenAmpliada: string | null = null;
 
   get totalPaginas(): number {
     return Math.max(1, Math.ceil(this.paquetes.length / this.paquetesPorPagina));
@@ -77,5 +78,13 @@ export class Paquetes {
       return this.corregirUrl(paquete.imagenes[0].imagen_url);
     }
     return this.predeterminadaUrl;
+  }
+
+  abrirImagenAmpliada(url: string) {
+    this.imagenAmpliada = url;
+  }
+
+  cerrarImagenAmpliada() {
+    this.imagenAmpliada = null;
   }
 }
