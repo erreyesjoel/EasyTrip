@@ -1,0 +1,90 @@
+@use '../../_variables' as vars;
+
+.paginacion-cliente {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  gap: 0.5rem;
+  margin: 2rem 0 1rem 0;
+}
+
+.paginacion-cliente > div {
+  /* Para que el div no afecte el círculo */
+  display: flex;
+}
+
+.pagina-btn {
+  background: vars.$verde-esmeralda;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 2.3rem;
+  height: 2.3rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, box-shadow 0.15s;
+
+  &.activa {
+    background: vars.$verde-claro;
+    color: vars.$verde-esmeralda;
+    box-shadow: 0 0 0 3px rgba(45, 125, 95, 0.15);
+  }
+
+  &:hover:not(.activa) {
+    background: vars.$verde-claro;
+    color: vars.$verde-esmeralda;
+  }
+
+  &:disabled {
+    background: #e0e0e0;
+    color: #aaa;
+    cursor: not-allowed;
+  }
+}
+
+.flecha {
+  background: #f0f0f0;
+  color: vars.$verde-esmeralda;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:disabled {
+    color: #bbb;
+    background: #f9f9f9;
+  }
+}
+
+.icon-flecha {
+  width: 1.3rem;
+  height: 1.3rem;
+  display: block;
+}
+
+.pagina-btn.flecha {
+  font-size: 1.3rem;
+  font-weight: bold;
+  background: #f0f0f0;
+  color: vars.$verde-esmeralda;
+  border: none;
+  border-radius: 50%;
+  width: 2.3rem;
+  height: 2.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+
+  &:disabled {
+    color: #bbb;
+    background: #f9f9f9;
+    cursor: not-allowed;
+  }
+}

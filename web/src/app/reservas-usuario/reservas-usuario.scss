@@ -278,6 +278,11 @@
   }
 }
 
+.btn-detalles-full {
+  flex: 1 1 100%;
+  min-width: 100%;
+}
+
 .btn-cancelar,
 .btn-detalles {
   max-width: 195px;
@@ -389,4 +394,43 @@
     background: linear-gradient(135deg, vars.$verde-claro, vars.$verde-esmeralda);
     box-shadow: 0 4px 16px rgba(45, 125, 95, 0.15);
   }
+}
+
+.modal-cancelar {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .modal-cancelar-backdrop {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.35);
+  }
+  .modal-cancelar-contenido {
+    position: relative;
+    background: #fff;
+    border-radius: 1rem;
+    padding: 2rem 2.5rem;
+    z-index: 1;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    min-width: 320px;
+    max-width: 90vw;
+    text-align: center;
+    animation: fadeIn 0.2s;
+  }
+  .modal-cancelar-acciones {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+}
+
+// transicion suave al abrir el modal de cancelar
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95);}
+  to { opacity: 1; transform: scale(1);}
 }

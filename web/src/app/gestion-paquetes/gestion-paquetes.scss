@@ -71,6 +71,7 @@
   background-color: vars.$gris-claro; // Fondo gris claro, cuando habia mas de 3 tarjetas se veia el fondo blanco, ahora ya no!
 }
 
+
 .lista-paquetes {
   display: grid;
   grid-template-columns: repeat(3, 1fr); // 3 columnas iguales
@@ -80,7 +81,19 @@
   margin-top: 32px;
 }
 
+.sin-registros {
+  grid-column: 1 / -1; // Ocupa toda la fila del grid
+  text-align: center;
+  font-size: 1.3rem;
+  color: #888;
+  opacity: 0.85;
+  margin: 2rem 0;
+}
+
 .descripcion-paquete {
+  white-space: pre-line;      // Respeta saltos de línea y ajusta el texto
+  word-break: break-word;     // Rompe palabras largas si es necesario
+  overflow-wrap: break-word;  // Asegura que no se desborde
   font-size: 13px;
   color: vars.$gris-oscuro;
   margin-left: 9px;

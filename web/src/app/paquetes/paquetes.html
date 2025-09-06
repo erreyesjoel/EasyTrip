@@ -4,9 +4,9 @@
     <p class="section-subtitle">Descubre las mejores experiencias que tenemos para ti</p>
   </div>
   
-  <div class="paquetes-grid">
-    <div class="paquete-card" *ngFor="let paquete of paquetes">
-      <div class="card-image-container">
+  <div class="paquetes-grid" *ngIf="paquetesPaginados.length > 0">
+    <div class="paquete-card" *ngFor="let paquete of paquetesPaginados">
+      <div class="card-image-container" (click)="abrirImagenAmpliada(getImagenPrincipal(paquete))" style="cursor: zoom-in;">
         <img [src]="getImagenPrincipal(paquete)" alt="Imagen paquete" class="paquete-img">
         <div class="image-overlay"></div>
       </div>
@@ -24,10 +24,27 @@
       </div>
     </div>
   </div>
-  
-  <!-- Estado de carga -->
-  <div class="loading-state" *ngIf="paquetes.length === 0">
+
+  <div *ngIf="!cargando && paquetesPaginados.length === 0" class="sin-registros">
+    No hay paquetes disponibles en esta página.
+  </div>
+
+  <div class="loading-state" *ngIf="cargando">
     <div class="loading-spinner"></div>
     <p>Cargando paquetes...</p>
+  </div>
+
+  <app-paginacion-cliente
+    *ngIf="!cargando && totalPaginas > 1 && paquetesPaginados.length > 0"
+    [paginaActual]="paginaActual"
+    [totalPaginas]="totalPaginas"
+    (paginaCambiada)="cambiarPagina($event)">
+  </app-paginacion-cliente>
+
+  <!-- Modal para la imagen ampliada -->
+  <div class="modal-backdrop" *ngIf="imagenAmpliada" (click)="cerrarImagenAmpliada()"></div>
+  <div class="modal-imagen-ampliada" *ngIf="imagenAmpliada">
+    <img [src]="imagenAmpliada" alt="Imagen ampliada" />
+    <button class="cerrar-modal" (click)="cerrarImagenAmpliada()" aria-label="Cerrar">&times;</button>
   </div>
 </div>

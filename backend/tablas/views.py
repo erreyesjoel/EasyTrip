@@ -1097,6 +1097,7 @@ def reservas_usuario(request):
     for reserva in reservas:
         resultado.append({
             'id': reserva.id,
+            'paquete_id': reserva.paquete_turistico.id,
             'paquete': reserva.paquete_turistico.nombre,
             'fecha_reservada': reserva.fecha_reservada,
             'estado': reserva.estado
@@ -1124,4 +1125,20 @@ def nueva_reserva(request):
             fecha_reservada=fecha_reservada
         )
         return Response({'ok': True, 'mensaje': 'Reserva creada correctamente.', 'reserva_id': reserva.id}, status=201)
-      
+
+# api patch, para que el usuario pueda cancelar su reserva
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def cancelar_reserva(request, reserva_id):
+    try:
+        # buscar la reserva por id y usuario
+        reserva = Reserva.objects.get(id=reserva_id, usuario=request.user)
+    except Reserva.DoesNotExist:
+        return Response({'error': 'Reserva no encontrada.'}, status=404)
+    
+    if reserva.estado == 'cancelada':
+        return Response({'error': 'La reserva ya está cancelada.'}, status=400)
+
+    reserva.estado = 'cancelada'
+    reserva.save()
+    return Response({'mensaje': 'Reserva cancelada correctamente.'}, status=200)
