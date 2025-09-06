@@ -1,10 +1,35 @@
-/* clase hero-video */
+/* clase hero-video 
+tambien sirve para tablet en horizontal
+porque en horizontal tiene ancho mayor a 900px
+entonces no se aplica ninguna media querie */
 .hero-video {
   width: 100vw;
-  height: calc(80vh - 60px - 64px); // Ajusta 60px y 64px a la altura real de tu header y footer
+  height: calc(90vh - 60px - 64px); // Ajusta 60px y 64px a la altura real de tu header y footer
   object-fit: cover;
   display: block;
   margin: 0;
   padding: 0;
   z-index: 1;
+}
+
+// responsive para tablet vertical, horizontal la mayoria y movil horizontal (algunos) y movil vertical si es grande
+@media (max-width: 900px) {
+  .hero-video {
+    height: calc(80vh - 40px - 64px);
+  }
+}
+
+// responsive para movil pequeño
+// en vertical
+@media (max-width: 600px) {
+  .hero-video {
+    height: calc(80vh - 40px - 64px);
+  }
+}
+
+// responsive para móvil en horizontal (landscape)
+@media (max-width: 900px) and (orientation: landscape) {
+  .hero-video {
+    height: calc(105vh - 20px - 64px); // Más altura en móvil horizontal
+  }
 }
