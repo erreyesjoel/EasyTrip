@@ -84,9 +84,15 @@
 }
 
 .descripcion {
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 2rem;
+  font-size: 1.13rem;
+  color: #444;
+  margin-bottom: 1.1rem;
+  line-height: 1.6;
+  background: none;
+  box-shadow: none;
+  white-space: pre-line;      // Respeta saltos de línea y ajusta el texto
+  word-break: break-word;     // Rompe palabras largas si es necesario
+  overflow-wrap: break-word;  // Asegura que no se desborde
 }
 
 .detalles-lista {

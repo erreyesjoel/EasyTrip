@@ -91,6 +91,9 @@
 }
 
 .descripcion-paquete {
+  white-space: pre-line;      // Respeta saltos de línea y ajusta el texto
+  word-break: break-word;     // Rompe palabras largas si es necesario
+  overflow-wrap: break-word;  // Asegura que no se desborde
   font-size: 13px;
   color: vars.$gris-oscuro;
   margin-left: 9px;
