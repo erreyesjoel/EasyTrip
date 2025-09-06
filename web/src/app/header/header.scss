@@ -17,6 +17,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
   }
 
   .logo-titulo-texto {
@@ -27,15 +28,70 @@
     padding-left: 2.9rem;
   }
 
-  nav a {
-    color: #fff;
-    text-decoration: none;
-    margin-left: 2rem;
-    font-weight: 500;
-    transition: color 0.2s;
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
 
-    &:hover {
-      color: #e0e0e0;
+    a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 2rem;
+      font-weight: 500;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #e0e0e0;
+      }
+    }
+  }
+
+  // Responsive para tablet y móvil
+  @media (max-width: 900px) {
+    .container {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0 1rem;
+    }
+    nav {
+      width: 100%;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .logo-titulo-texto {
+      padding-left: 0;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .usuario-dropdown {
+      width: 100%;
+      .saludo-usuario {
+        width: 100%;
+        text-align: left;
+        margin-left: 0;
+      }
+      .dropdown-menu {
+        left: 0;
+        transform: none;
+        min-width: 100%;
+      }
+    }
+  }
+
+  // Responsive para móvil pequeño
+  @media (max-width: 600px) {
+    .main-header {
+      padding: 0.7rem 0;
+    }
+    .logo-titulo-texto {
+      font-size: 1rem;
+    }
+    nav a {
+      font-size: 0.98rem;
+      margin-left: 0;
+      padding: 0.5rem 0;
     }
   }
 }
