@@ -241,3 +241,30 @@
     stroke: #fff;
   }
 }
+
+// Móvil pequeño, vertical
+@media (max-width: 600px) {
+  .container-paquetes {
+    flex-direction: column;
+    align-items: center;
+    padding: 1.2rem 2vw;
+    min-height: unset;
+    padding-bottom: 110px;
+  }
+  .paquete-container {
+    flex: 1 1 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .imagen-container {
+    width: 100vw;
+    height: 360px;
+    border-radius: 14px;
+  }
+  .titulo-paquete-card-inferior {
+    font-size: 1rem;
+    padding: 5px 4px 6px 25px;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+  }
+}
