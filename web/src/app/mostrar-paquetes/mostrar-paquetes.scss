@@ -242,6 +242,40 @@
   }
 }
 
+// tablet vertical y móvil horizontal
+@media (max-width: 900px) {
+  .container-paquetes {
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 2rem 6vw;
+    min-height: unset;
+    padding-bottom: 110px; // espacio debajo
+  }
+  .paquete-container {
+    flex: 1 1 360px;
+    max-width: 360px;
+    min-width: 300px;
+  }
+  .imagen-container {
+    width: 360px;
+    height: 500px;
+    border-radius: 30px;
+  }
+  .titulo-paquete-card {
+    font-size: 1.2rem;
+    padding: 5px 12px;
+    max-width: 70%;
+  }
+  .titulo-paquete-card-inferior {
+    font-size: 1.1rem;
+    padding: 10px 24px 8px 24px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    max-width: 95%;
+  }
+}
+
+
 // Móvil pequeño, vertical
 @media (max-width: 600px) {
   .container-paquetes {
