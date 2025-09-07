@@ -302,3 +302,31 @@
     border-bottom-right-radius: 14px;
   }
 }
+
+// responsive solo para tablet en horizontal (tablets grandes incluidas)
+@media (min-width: 601px) and (max-width: 1200px) and (orientation: landscape) {
+  .container-paquetes {
+    justify-content: center;
+    gap: 3.2rem;
+    padding: 2.5rem 10vw;
+    min-height: unset;
+    padding-bottom: 110px;
+  }
+  .paquete-container {
+    flex: 1 1 320px;
+    max-width: 320px;
+    min-width: 220px;
+  }
+  .imagen-container {
+    width: 320px;
+    height: 420px;
+    border-radius: 22px;
+  }
+  .titulo-paquete-card-inferior {
+    font-size: 1.08rem;
+    padding: 8px 10px 7px 10px;
+    border-bottom-left-radius: 22px;
+    border-bottom-right-radius: 22px;
+    max-width: 98%;
+  }
+}
