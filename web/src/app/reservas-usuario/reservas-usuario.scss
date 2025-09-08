@@ -13,7 +13,18 @@
     gap: 1.5rem;
     padding: 0 0.5rem;
   }
+
+  @media (max-width: 900px) {
+    padding-bottom: 110px; // Espacio para paginación/footer fijo
+  }
+
+  @media (max-width: 900px) and (orientation: landscape) {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 0 0.5rem 110px 0.5rem;
+  }
 }
+
 
 .mensaje-vacio {
   grid-column: 1 / -1;
@@ -91,6 +102,11 @@
     &::before {
       background: linear-gradient(90deg, vars.$warning, #ffd700);
     }
+  }
+
+  @media (max-width: 900px) and (orientation: landscape) {
+    padding: 1rem;
+    gap: 0.7rem;
   }
 }
 
@@ -317,6 +333,10 @@
     align-items: stretch;
     gap: 0.7rem;
   }
+
+  @media (max-width: 1024px) {
+    margin-bottom: 1.5rem;
+  }
 }
 
 .btn-descargar {
@@ -433,4 +453,62 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95);}
   to { opacity: 1; transform: scale(1);}
+}
+
+@media (max-width: 600px) {
+  .tarjeta-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .btn {
+    min-width: 100%;
+    font-size: 0.98rem;
+    padding: 0.7rem 0.5rem;
+  }
+  .reservas-usuario-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .modal-cancelar-contenido {
+    min-width: 0 !important;
+    max-width: 70vw !important;
+    width: 70vw !important;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  .modal-cancelar-acciones {
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-top: 1.2rem;
+  }
+  .modal-cancelar-contenido button,
+  .modal-cancelar-contenido .btn {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    white-space: normal !important;
+  }
+  .modal-cancelar-contenido {
+    padding: 1.2rem 0.7rem;
+    min-width: 0;
+    max-width: 70vw;
+    border-radius: 0.7rem;
+    font-size: 1rem;
+  }
+  .modal-cancelar-acciones {
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-top: 1.2rem;
+  }
+  .modal-cancelar-contenido h2 {
+    font-size: 1.15rem;
+    margin-bottom: 0.7rem;
+  }
+  .modal-cancelar-contenido p {
+    font-size: 0.98rem;
+    margin-bottom: 0.7rem;
+  }
 }
