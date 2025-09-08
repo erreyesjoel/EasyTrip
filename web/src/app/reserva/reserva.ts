@@ -16,7 +16,7 @@ export class Reserva {
   nombre: string = '';
   apellido: string = '';
   email: string = '';
-  fechaReservada: Date | null = null;
+  fechaReservada: string = this.getHoy(); // Cambia Date | null a string
 
   constructor(private route: ActivatedRoute) {}
 
@@ -24,6 +24,14 @@ export class Reserva {
     const id = this.route.snapshot.paramMap.get('id');
     const nombre = this.route.snapshot.paramMap.get('nombre');
     this.paquete = { id, nombre };
+  }
+
+  getHoy(): string {
+    const hoy = new Date();
+    const yyyy = hoy.getFullYear();
+    const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+    const dd = String(hoy.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   }
 
   async reservarPaqueteId() {
@@ -39,7 +47,7 @@ export class Reserva {
     });
     if (res.status === 201) {
       alert('Reserva creada correctamente');
-      this.fechaReservada = null;
+      this.fechaReservada = this.getHoy();
     } else {
       console.log('Error al crear la reserva');
     }
