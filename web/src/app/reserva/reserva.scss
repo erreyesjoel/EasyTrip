@@ -95,3 +95,60 @@ body, :host {
 .btn-reservar:hover {
   background: darken(vars.$verde-esmeralda, 10%);
 }
+
+@media (max-width: 600px) and (orientation: portrait) {
+  .reserva-container {
+    max-width: 500px;
+    min-width: unset;
+    min-height: unset;
+    margin: 1.2rem auto;
+    padding: 1.1rem 0.1rem 0.7rem 0.5rem;
+    border-radius: 10px;
+    margin-bottom: 24vh;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  }
+
+  .paquete-titulo {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    margin-top: 0.1rem;
+    letter-spacing: 0.2px;
+    max-width: 100%;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  .reserva-form {
+    max-width: 100vw;
+    gap: 0.8rem;
+    padding-bottom: 0.5rem;
+    margin-top: 0.2rem;
+  }
+
+  .label-fecha {
+    font-size: 0.98rem;
+    margin-bottom: 0.2rem;
+    margin-top: 0.1rem;
+    text-align: center;
+    padding-left: 0;
+  }
+
+  .input-reserva {
+    font-size: 1rem;
+    padding: 0.7rem 0.6rem;
+    border-radius: 7px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .btn-reservar {
+    font-size: 1rem;
+    padding: 0.8rem 0;
+    border-radius: 8px;
+    margin-bottom: 0.7rem;
+    margin-top: 0.5rem;
+    width: 100%;
+    max-width: 100vw;
+    align-self: stretch;
+  }
+}
