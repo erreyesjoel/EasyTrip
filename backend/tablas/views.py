@@ -759,20 +759,16 @@ def obtener_paquete_por_id(request, paquete_id):
     except PaqueteTuristico.DoesNotExist:
         return Response({'error': 'Paquete no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def reservar_paquete_por_id(request, paquete_id):
     data = request.data
-    email = data.get('email')
     fecha_reservada = data.get('fecha_reservada')  # formato: 'YYYY-MM-DD'
 
-    if not all([email, fecha_reservada]):
-        return Response({'error': 'Faltan datos requeridos.'}, status=400)
+    if not fecha_reservada:
+        return Response({'error': 'Falta la fecha reservada.'}, status=400)
 
-    # Buscar usuario
-    try:
-        usuario = User.objects.get(email=email)
-    except User.DoesNotExist:
-        return Response({'error': 'Usuario no encontrado.'}, status=404)
-
+    # Usar el usuario autenticado
+    usuario = request.user
 
     # Buscar paquete
     try:
@@ -781,7 +777,6 @@ def reservar_paquete_por_id(request, paquete_id):
         return Response({'error': 'Paquete no encontrado.'}, status=404)
 
     # validacion, si el paquete está inactivo, no se puede reservar
-    # error 403 Forbidden
     if paquete.estado == 'inactivo':
         return Response({'error': 'Paquete inactivo.'}, status=403)
     

@@ -27,28 +27,20 @@ export class Reserva {
   }
 
   async reservarPaqueteId() {
-    // llamar a la api para reservar el paquete por id
     const res = await fetch(environment.apiBaseUrl + 'crear-reserva/' + this.paquete.id + '/', {
-      method: 'POST', // metodo POST para crear la reserva
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      // cuerpo de la peticion, se envia el nombre, apellido, email y fecha reservada
+      credentials: 'include', // porque hay que estar logeado para reservar
       body: JSON.stringify({
-        nombre: this.nombre,
-        apellido: this.apellido,
-        email: this.email,
         fecha_reservada: this.fechaReservada
       })
     });
     if (res.status === 201) {
       alert('Reserva creada correctamente');
-      console.log('Reserva creada correctamente:', this.email);
-      this.email = ''; // Limpiar el campo de email
-      this.fechaReservada = null; // Limpiar la fecha reservada
+      this.fechaReservada = null;
     } else {
-      console.log(environment.apiBaseUrl + 'crear-reserva/' + this.paquete.id + '/');
-      console.log('ID del paquete:', this.paquete.id);
       console.log('Error al crear la reserva');
     }
   }
