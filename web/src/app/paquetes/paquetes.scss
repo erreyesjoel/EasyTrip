@@ -277,6 +277,7 @@
   }
 }
 
+// tablet horizontal
 @media (max-width: 1024px) {
   .paquetes-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -284,6 +285,9 @@
   }
   .card-image-container {
     height: 180px;
+  }
+    .paquetes-container {
+    padding-bottom: 110px; // espacio para abajo, para que la paginacion se vea
   }
 }
 
@@ -306,5 +310,12 @@
   .btn-detalles {
     padding: 0.65rem 1.25rem;
     font-size: 0.9rem;
+  }
+}
+
+// movil vertical
+@media (max-width: 600px) {
+  .paquetes-container {
+    padding-bottom: 110px; // espacio para abajo, para que la paginacion se vea
   }
 }

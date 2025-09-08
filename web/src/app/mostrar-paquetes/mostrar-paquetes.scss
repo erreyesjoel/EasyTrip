@@ -35,7 +35,6 @@
   max-width: 440px;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #fff;
   min-width: 360px; // opcional, para responsividad
 }
 
@@ -240,5 +239,94 @@
 
   svg {
     stroke: #fff;
+  }
+}
+
+// tablet vertical y móvil horizontal
+@media (max-width: 900px) {
+  .container-paquetes {
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 2rem 6vw;
+    min-height: unset;
+    padding-bottom: 110px; // espacio debajo
+  }
+  .paquete-container {
+    flex: 1 1 360px;
+    max-width: 360px;
+    min-width: 300px;
+  }
+  .imagen-container {
+    width: 360px;
+    height: 500px;
+    border-radius: 30px;
+  }
+  .titulo-paquete-card {
+    font-size: 1.2rem;
+    padding: 5px 12px;
+    max-width: 70%;
+  }
+  .titulo-paquete-card-inferior {
+    font-size: 1.1rem;
+    padding: 10px 24px 8px 24px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    max-width: 95%;
+  }
+}
+
+
+// Móvil pequeño, vertical
+@media (max-width: 600px) {
+  .container-paquetes {
+    flex-direction: column;
+    align-items: center;
+    padding: 1.2rem 2vw;
+    min-height: unset;
+    padding-bottom: 110px;
+  }
+  .paquete-container {
+    flex: 1 1 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .imagen-container {
+    width: 100vw;
+    height: 360px;
+    border-radius: 14px;
+  }
+  .titulo-paquete-card-inferior {
+    font-size: 1rem;
+    padding: 5px 4px 6px 25px;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+  }
+}
+
+// responsive solo para tablet en horizontal (tablets grandes incluidas)
+@media (min-width: 601px) and (max-width: 1200px) and (orientation: landscape) {
+  .container-paquetes {
+    justify-content: center;
+    gap: 3.2rem;
+    padding: 2.5rem 10vw;
+    min-height: unset;
+    padding-bottom: 110px;
+  }
+  .paquete-container {
+    flex: 1 1 320px;
+    max-width: 320px;
+    min-width: 220px;
+  }
+  .imagen-container {
+    width: 320px;
+    height: 420px;
+    border-radius: 22px;
+  }
+  .titulo-paquete-card-inferior {
+    font-size: 1.08rem;
+    padding: 8px 10px 7px 10px;
+    border-bottom-left-radius: 22px;
+    border-bottom-right-radius: 22px;
+    max-width: 98%;
   }
 }

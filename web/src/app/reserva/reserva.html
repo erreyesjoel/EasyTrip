@@ -1,9 +1,17 @@
+<app-notificaciones #notificaciones></app-notificaciones>
 <div class="reserva-container">
   <span class="paquete-titulo">{{ paquete?.nombre }}</span>
   <form (ngSubmit)="reservarPaqueteId()" class="reserva-form">
-    <input type="email" [(ngModel)]="email" name="email" required class="input-reserva" placeholder="Correo electrónico">
     <label for="fechaReservada" class="label-fecha">¿Para qué fecha quieres empezar el turismo?</label>
-    <input type="date" [(ngModel)]="fechaReservada" name="fechaReservada" id="fechaReservada" required class="input-reserva">
+    <input
+      type="date"
+      [(ngModel)]="fechaReservada"
+      name="fechaReservada"
+      id="fechaReservada"
+      required
+      class="input-reserva"
+      [min]="getHoy()"
+    >
     <button type="submit" class="btn-reservar">Reservar</button>
   </form>
 </div>

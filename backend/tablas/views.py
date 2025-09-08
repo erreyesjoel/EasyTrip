@@ -759,20 +759,16 @@ def obtener_paquete_por_id(request, paquete_id):
     except PaqueteTuristico.DoesNotExist:
         return Response({'error': 'Paquete no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def reservar_paquete_por_id(request, paquete_id):
     data = request.data
-    email = data.get('email')
     fecha_reservada = data.get('fecha_reservada')  # formato: 'YYYY-MM-DD'
 
-    if not all([email, fecha_reservada]):
-        return Response({'error': 'Faltan datos requeridos.'}, status=400)
+    if not fecha_reservada:
+        return Response({'error': 'Falta la fecha reservada.'}, status=400)
 
-    # Buscar usuario
-    try:
-        usuario = User.objects.get(email=email)
-    except User.DoesNotExist:
-        return Response({'error': 'Usuario no encontrado.'}, status=404)
-
+    # Usar el usuario autenticado
+    usuario = request.user
 
     # Buscar paquete
     try:
@@ -781,7 +777,6 @@ def reservar_paquete_por_id(request, paquete_id):
         return Response({'error': 'Paquete no encontrado.'}, status=404)
 
     # validacion, si el paquete está inactivo, no se puede reservar
-    # error 403 Forbidden
     if paquete.estado == 'inactivo':
         return Response({'error': 'Paquete inactivo.'}, status=403)
     
@@ -796,6 +791,20 @@ def reservar_paquete_por_id(request, paquete_id):
         fecha_reservada=fecha_reservada,
         usuario_gestor=agente_gestor
     )
+
+    # Enviar correo de confirmación
+    send_mail(
+        subject=f'Confirmación de reserva en {settings.APP_NAME}',
+        message=(
+            f'¡Hola {usuario.first_name or usuario.username}!\n\n'
+            f'Tu reserva para el paquete "{paquete.nombre}" el día {fecha_reservada} se ha realizado correctamente.\n\n'
+            f'¡Gracias por confiar en {settings.APP_NAME}!'
+        ),
+        from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
+        recipient_list=[usuario.email],
+        fail_silently=True
+    )
+
     return Response({'mensaje': 'Reserva creada correctamente.', 'reserva_id': reserva.id}, status=201)
 
 # api get, para mostrar todas las reservas, en el panel de administración (gestion)
@@ -886,6 +895,7 @@ def asignar_gestor_reserva(request, reserva_id):
 
     # Actualizar gestor si se envía
     email = request.data.get('usuario_gestor')
+    gestor = None
     if email:
         try:
             gestor = User.objects.get(email=email)
@@ -904,6 +914,25 @@ def asignar_gestor_reserva(request, reserva_id):
         reserva.fecha_reservada = fecha_reservada
 
     reserva.save()
+
+    # Enviar correo al agente si se ha asignado uno
+    if gestor:
+        send_mail(
+            subject=f'Nueva reserva asignada en {settings.APP_NAME}',
+            message=(
+                f'Hola {gestor.first_name or gestor.username},\n\n'
+                f'Se te ha asignado la gestión de una nueva reserva:\n'
+                f'- Paquete: {reserva.paquete_turistico.nombre}\n'
+                f'- Usuario: {reserva.usuario.email}\n'
+                f'- Fecha reservada: {reserva.fecha_reservada}\n\n'
+                f'Por favor, accede a la plataforma para gestionar la reserva.\n\n'
+                f'Equipo {settings.APP_NAME}'
+            ),
+            from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
+            recipient_list=[gestor.email],
+            fail_silently=True
+        )
+
     return Response({'mensaje': 'Reserva actualizada correctamente.'}, status=200)
 
 # api para crear reserva desde panel gestion (administracion y agente)
@@ -1124,6 +1153,21 @@ def nueva_reserva(request):
             paquete_turistico_id=paquete,
             fecha_reservada=fecha_reservada
         )
+
+        # Enviar correo de confirmación
+        send_mail(
+            subject=f'Confirmación de reserva en {settings.APP_NAME}',
+            message=(
+                f'¡Hola {request.user.first_name or request.user.username}!\n\n'
+                f'Tu reserva para el paquete {reserva.paquete_turistico.nombre} se ha realizado correctamente.\n'
+                f'Fecha reservada: {fecha_reservada}\n\n'
+                f'¡Gracias por confiar en {settings.APP_NAME}!'
+            ),
+            from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
+            recipient_list=[request.user.email],
+            fail_silently=True
+        )
+
         return Response({'ok': True, 'mensaje': 'Reserva creada correctamente.', 'reserva_id': reserva.id}, status=201)
 
 # api patch, para que el usuario pueda cancelar su reserva
@@ -1141,4 +1185,19 @@ def cancelar_reserva(request, reserva_id):
 
     reserva.estado = 'cancelada'
     reserva.save()
+
+    # Enviar correo de cancelación
+    send_mail(
+        subject=f'Reserva cancelada en {settings.APP_NAME}',
+        message=(
+            f'Hola {request.user.first_name or request.user.username},\n\n'
+            f'Tu reserva para el paquete "{reserva.paquete_turistico.nombre}" el día {reserva.fecha_reservada} ha sido cancelada.\n\n'
+            f'Si no has sido tú o crees que es un error, por favor contacta con soporte respondiendo a este correo.\n\n'
+            f'Equipo {settings.APP_NAME}'
+        ),
+        from_email=f"{settings.APP_NAME} <{settings.EMAIL_HOST_USER}>",
+        recipient_list=[request.user.email],
+        fail_silently=True
+    )
+
     return Response({'mensaje': 'Reserva cancelada correctamente.'}, status=200)

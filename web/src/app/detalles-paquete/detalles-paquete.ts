@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 interface ImagenesPaquete {
   id: number;
@@ -23,7 +24,7 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-detalles-paquete',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './detalles-paquete.html',
   styleUrl: './detalles-paquete.scss'
 })

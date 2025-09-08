@@ -1,14 +1,14 @@
 @use '../../_variables' as vars;
 
 .formulario-container {
-  position: relative;
-  height: 80vh;
+  width: 100vw;
+  min-height: 100vh;
+  background: #fff;
+  margin: auto;
+  padding: 150px 0 48px 0; // Antes era 48px arriba, ahora 80px
 }
+
 .formulario {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   background: #fff;
   border: 2px solid vars.$verde-esmeralda;
   border-radius: 16px;
@@ -17,8 +17,10 @@
   display: flex;
   flex-direction: column;
   gap: 22px;
-  min-width: 450px;
-  max-width: 480px;
+  min-width: 350px;
+  max-width: 420px;
+  width: 90vw;
+  margin: 0 auto; // Centrado horizontal SIEMPRE
 }
 
 .titulo-formulario {
@@ -31,7 +33,7 @@
 }
 
 .formulario input {
-  width: auto;
+  width: 90%;
   padding: 12px 14px;
   border: 1.5px solid #e0e0e0;
   border-radius: 8px;
@@ -46,7 +48,7 @@
 }
 
 .enviar {
-  width: 60%;
+  width: 70%;
   background-color: vars.$verde-esmeralda;
   color: #fff;
   border: none;
@@ -55,7 +57,7 @@
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
-  margin: 8px auto 0 auto; // Centrado horizontal y margen arriba
+  margin: 8px auto 0 auto;
   box-shadow: 0 2px 8px rgba(vars.$verde-esmeralda, 0.10);
   transition: background 0.2s, transform 0.1s;
 
@@ -83,5 +85,92 @@
   &:hover {
     text-decoration: underline;
     color: darken(vars.$verde-esmeralda, 10%);
+  }
+}
+
+/* Tablet y móvil horizontal */
+@media (max-width: 1024px) {
+  .formulario-container {
+    padding: 64px 0 60px 0; // Antes 36px arriba, ahora 64px
+  }
+  .formulario {
+    min-width: 260px;
+    max-width: 55vw;
+    padding: 28px 6vw 20px 6vw;
+    gap: 16px;
+  }
+  .titulo-formulario {
+    font-size: 1.5rem;
+  }
+  .enviar {
+    width: 90%;
+    font-size: 1rem;
+    padding: 12px 0;
+  }
+}
+
+/* Móvil vertical */
+@media (max-width: 600px) {
+  .formulario-container {
+    padding: 48px 0 90px 0; // Antes 24px arriba, ahora 48px
+    min-height: 100vh;
+  }
+  .formulario {
+    min-width: unset;
+    max-width: 99vw;
+    padding: 14px 2vw 12px 2vw;
+    border-radius: 10px;
+    gap: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  }
+  .titulo-formulario {
+    font-size: 1.13rem;
+  }
+  .formulario input {
+    font-size: 0.98rem;
+    padding: 10px 10px;
+  }
+  .enviar {
+    width: 95%;
+    font-size: 0.98rem;
+    padding: 11px 0;
+    border-radius: 10px;
+  }
+  .extra-links {
+    font-size: 0.93rem;
+    gap: 5px;
+  }
+}
+
+/* Móvil horizontal */
+@media (max-width: 900px) and (orientation: landscape) {
+  .formulario-container {
+    padding-top: 48px; // Antes 24px, ahora 48px
+    padding-bottom: 160px;
+    min-height: 100vh;
+  }
+  .formulario {
+    min-width: unset;
+    max-width: 96vw;
+    padding: 10px 2vw 10px 2vw;
+    border-radius: 10px;
+    gap: 8px;
+  }
+  .titulo-formulario {
+    font-size: 1.05rem;
+  }
+  .formulario input {
+    font-size: 0.95rem;
+    padding: 8px 8px;
+  }
+  .enviar {
+    width: 100%;
+    font-size: 0.95rem;
+    padding: 10px 0;
+    border-radius: 10px;
+  }
+  .extra-links {
+    font-size: 0.9rem;
+    gap: 4px;
   }
 }
