@@ -157,24 +157,29 @@ body, :host {
 @media (max-width: 900px) and (orientation: landscape) {
   body, :host {
     display: block !important;
-    min-height: unset !important;
+    min-height: 100vh !important;
     align-items: unset !important;
     justify-content: unset !important;
+    background: #f7fafc;
   }
 
   .reserva-container {
-    max-width: 95vw;
-    min-width: unset;
-    min-height: unset;
-    margin: 1rem auto;
-    padding: 0.7rem 0.2rem 0.7rem 0.2rem;
-    border-radius: 8px;
+    max-width: 520px;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0.7rem auto 0.2rem auto;
+    padding: 0.7rem 0.5rem 0.7rem 0.5rem;
+    border-radius: 12px;
     box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .paquete-titulo {
-    font-size: 1rem;
-    margin-bottom: 0.6rem;
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
     margin-top: 0.1rem;
     letter-spacing: 0.1px;
     max-width: 100%;
@@ -183,36 +188,39 @@ body, :host {
   }
 
   .reserva-form {
-    max-width: 98vw;
-    gap: 0.6rem;
-    padding-bottom: 0.3rem;
+    max-width: 100%;
+    width: 100%;
+    gap: 0.4rem;
+    padding-bottom: 0.1rem;
     margin-top: 0.1rem;
+    align-items: stretch;
   }
 
   .label-fecha {
-    font-size: 0.95rem;
+    font-size: 0.93rem;
     margin-bottom: 0.1rem;
     margin-top: 0.1rem;
-    text-align: center;
-    padding-left: 0;
+    text-align: left;
+    padding-left: 0.1rem;
   }
 
   .input-reserva {
-    font-size: 0.95rem;
-    padding: 0.6rem 0.4rem;
+    font-size: 0.93rem;
+    padding: 0.5rem 0.4rem;
     border-radius: 6px;
     width: 100%;
     box-sizing: border-box;
+    margin: 0;
   }
 
   .btn-reservar {
-    font-size: 0.95rem;
-    padding: 0.7rem 0;
+    font-size: 0.93rem;
+    padding: 0.6rem 0;
     border-radius: 7px;
-    margin-bottom: 0.6rem;
-    margin-top: 0.4rem;
+    margin-bottom: 0.2rem;
+    margin-top: 0.2rem;
     width: 100%;
-    max-width: 98vw;
+    max-width: 100%;
     align-self: stretch;
   }
 }
