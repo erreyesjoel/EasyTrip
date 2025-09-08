@@ -39,6 +39,15 @@
   <div class="info-col slide-in">
     <div class="info-texto">
       <h1 class="titulo">{{ paquete.nombre }}</h1>
+
+      <!-- Botón de reserva aquí, más visible -->
+      <a
+        class="btn-reserva-rapida"
+        [routerLink]="['/reserva', paquete.id, paquete.nombre]"
+      >
+        Reservar este paquete
+      </a>
+
       <p class="descripcion">
         {{ paquete.descripcion }}<br><br>
         Este viaje tiene una duración de <b>{{ paquete.duracion_dias }} días</b>, pensados para que disfrutes al máximo cada experiencia y cada destino incluido en el itinerario.<br><br>
