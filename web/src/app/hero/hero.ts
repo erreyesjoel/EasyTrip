@@ -2,6 +2,7 @@ import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { MostrarPaquetes } from '../mostrar-paquetes/mostrar-paquetes';
+import { SobreNosotros } from '../sobre-nosotros/sobre-nosotros';
 
 // hero ts
 @Component({
@@ -9,7 +10,7 @@ import { MostrarPaquetes } from '../mostrar-paquetes/mostrar-paquetes';
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
   standalone: true,
-  imports: [MostrarPaquetes] // Importamos MostrarPaquetes para usarlo en el template
+  imports: [MostrarPaquetes, SobreNosotros] // Importamos MostrarPaquetes y SobreNosotros para usarlos en el template
 })
 export class Hero implements AfterViewInit {
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
