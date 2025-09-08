@@ -10,10 +10,53 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+
+  // Móvil vertical: espacio arriba y abajo, formulario más compacto y ancho casi completo
+  @media (max-width: 600px) and (orientation: portrait) {
+    max-width: 80vw; // ancho formulario, movil vertical
+    padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+    gap: 1rem;
+  }
+
+  // Móvil horizontal: más espacio abajo y formulario más compacto
+  @media (max-width: 900px) and (orientation: landscape) {
+    max-width: 90vw;
+    padding: 1rem 0.5rem 1rem 0.5rem;
+    gap: 0.8rem;
+  }
 }
 
 .nueva-reserva-centrado {
   margin-top: 15vh;
+
+  // Tablet horizontal: más espacio abajo para que el formulario respire
+  @media (min-width: 901px) and (max-width: 1200px) and (orientation: landscape) {
+    margin-top: 10vh;
+    margin-bottom: 8vh;
+  }
+
+  // Móvil vertical: espacio arriba y abajo, formulario más compacto y ancho casi completo
+  @media (max-width: 600px) and (orientation: portrait) {
+    margin-top: 4vh;
+    margin-bottom: 10vh;
+  }
+
+  // Móvil horizontal: espacio abajo para que no quede pegado
+  @media (max-width: 900px) and (orientation: landscape) {
+    margin-top: 2vh;
+    margin-bottom: 14vh;
+  }
+
+  // Móvil vertical: más espacio abajo para que el botón no se corte
+  @media (max-width: 600px) and (orientation: portrait) {
+    margin-bottom: 16vh; // Más espacio abajo
+  }
+
+  // Móvil horizontal: más espacio abajo para que el botón no se corte
+  @media (max-width: 900px) and (orientation: landscape) {
+    margin-bottom: 40vh; // Más espacio abajo
+  }
 }
 
 .nueva-reserva-titulo {
@@ -29,6 +72,19 @@
     width: 2rem;
     height: 2rem;
     color: vars.$verde-claro;
+  }
+
+  // Móvil vertical: ajuste de tamaño y espaciado
+  @media (max-width: 600px) and (orientation: portrait) {
+    font-size: 1.2rem;
+    gap: 0.5rem;
+  }
+
+  // Móvil horizontal: ajuste de tamaño, espaciado y margen inferior
+  @media (max-width: 900px) and (orientation: landscape) {
+    font-size: 1.1rem;
+    gap: 0.4rem;
+    margin-bottom: 1.2rem; // Añade este margen inferior
   }
 }
 
@@ -80,6 +136,18 @@
     width: 1.3rem;
     height: 1.3rem;
     color: #fff;
+  }
+
+  // Móvil vertical: ajuste de tamaño y padding
+  @media (max-width: 600px) and (orientation: portrait) {
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
+  }
+
+  // Móvil horizontal: ajuste de tamaño y padding
+  @media (max-width: 900px) and (orientation: landscape) {
+    font-size: 0.98rem;
+    padding: 0.6rem 0.8rem;
   }
 
   &:hover {
