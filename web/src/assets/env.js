@@ -1,0 +1,1 @@
+window.NG_APP_API_BASE_URL = 'https://easytrip-0651.onrender.com/api/';
