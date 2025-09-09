@@ -1,3 +1,4 @@
+<app-notificaciones></app-notificaciones>
 <section class="contacto-section contacto-distinto">
   <h2>
     <span class="icono-contacto">✉️</span>
@@ -30,8 +31,6 @@
       <span *ngIf="enviando">Enviando...</span>
       <span class="icono-boton">➡️</span>
     </button>
-    <div *ngIf="enviado" class="mensaje-exito">¡Mensaje enviado correctamente!</div>
-    <div *ngIf="error" class="mensaje-error">{{ error }}</div>
   </form>
 </section>
 <div class="contacto-espaciador-final"></div>
