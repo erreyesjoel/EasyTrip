@@ -174,7 +174,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://127.0.0.1:4200",
-    "https://easy-trip-nine.vercel.app/"
+    "https://easy-trip-nine.vercel.app"
 ]
 
 SIMPLE_JWT = {
