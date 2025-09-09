@@ -1238,3 +1238,9 @@ def ejecutar_seeder_paquetes(request):
 def ejecutar_seeder_agentes(request):
     call_command('agentes_seeder')
     return Response({'ok': True, 'mensaje': 'Seeder de agentes ejecutado.'})
+
+@api_view(['POST'])
+def ejecutar_crear_admin_joel(request):
+    from django.core.management import call_command
+    call_command('crear_admin_joel')
+    return Response({'ok': True, 'mensaje': 'Admin JoelTrip creado.'})

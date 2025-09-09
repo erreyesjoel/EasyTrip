@@ -24,7 +24,7 @@ from tablas.views import CustomTokenObtainPairView, usuario_actual, logout_view
 from django.conf import settings
 from django.conf.urls.static import static
 from tablas.views import contacto_easytrip
-from tablas.views import ejecutar_seeder_paquetes, ejecutar_seeder_agentes
+from tablas.views import ejecutar_seeder_paquetes, ejecutar_seeder_agentes, ejecutar_crear_admin_joel
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -66,6 +66,7 @@ urlpatterns = [
     path('api/contacto/', contacto_easytrip, name='contacto_easytrip'),
     path('api/ejecutar-seeder-paquetes/', ejecutar_seeder_paquetes),
     path('api/ejecutar-seeder-agentes/', ejecutar_seeder_agentes),
+    path('api/ejecutar-crear-admin-joel/', ejecutar_crear_admin_joel),
 ] 
 
 # Solo en desarrollo: sirve archivos media desde MEDIA_URL
