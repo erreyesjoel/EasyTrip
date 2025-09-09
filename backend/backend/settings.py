@@ -191,3 +191,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 FRONTEND_URL = env('FRONTEND_URL')
+
+CONTACT_EMAIL = "erreyesjoel.gms@gmail.com"  # Cambia por el correo real de EasyTrip

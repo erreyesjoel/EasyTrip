@@ -23,6 +23,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from tablas.views import CustomTokenObtainPairView, usuario_actual, logout_view
 from django.conf import settings
 from django.conf.urls.static import static
+from tablas.views import contacto_easytrip
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -61,6 +62,7 @@ urlpatterns = [
     path('api/reservas-usuario/', reservas_usuario, name='reservas_usuario'),
     path('api/nueva-reserva/', nueva_reserva, name='nueva_reserva'),  # Nueva ruta para la vista de nueva reserva
     path('api/cancelar-reserva/<int:reserva_id>/', cancelar_reserva, name='cancelar_reserva'),  # Nueva ruta para cancelar reserva
+    path('api/contacto/', contacto_easytrip, name='contacto_easytrip'),
 ] 
 
 # Solo en desarrollo: sirve archivos media desde MEDIA_URL
