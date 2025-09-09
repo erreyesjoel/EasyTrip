@@ -5,9 +5,9 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "prebuild": "echo \"window.NG_APP_API_BASE_URL = 'https://easytrip-0651.onrender.com/api/';\" > ./src/assets/env.js",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "postbuild": "echo \"window.NG_APP_API_BASE_URL = 'https://easytrip-0651.onrender.com/api/';\" > ./src/assets/env.js"
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
