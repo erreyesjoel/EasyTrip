@@ -7,24 +7,31 @@
     ¿Tienes dudas, sugerencias o quieres saludar?<br>
     Completa el formulario y te responderé lo antes posible.
   </p>
-  <form class="contacto-form-distinto">
+  <form class="contacto-form-distinto" (submit)="enviarFormulario($event)">
     <div class="campos-superiores">
       <div class="campo-form">
         <label for="nombre"><span>👤</span> Nombre</label>
-        <input id="nombre" type="text" placeholder="Tu nombre" autocomplete="off" />
+        <input id="nombre" type="text" placeholder="Tu nombre" autocomplete="off"
+          [(ngModel)]="datos.nombre" name="nombre" required />
       </div>
       <div class="campo-form">
         <label for="email"><span>📧</span> Email</label>
-        <input id="email" type="email" placeholder="tu@email.com" autocomplete="off" />
+        <input id="email" type="email" placeholder="tu@email.com" autocomplete="off"
+          [(ngModel)]="datos.email" name="email" required />
       </div>
     </div>
     <div class="campo-form mensaje-form">
       <label for="mensaje"><span>💬</span> Mensaje</label>
-      <textarea id="mensaje" rows="5" placeholder="¿En qué puedo ayudarte?"></textarea>
+      <textarea id="mensaje" rows="5" placeholder="¿En qué puedo ayudarte?"
+        [(ngModel)]="datos.mensaje" name="mensaje" required></textarea>
     </div>
-    <button type="submit" class="btn-enviar">
-      <span>Enviar mensaje</span> <span class="icono-boton">➡️</span>
+    <button type="submit" class="btn-enviar" [disabled]="enviando">
+      <span *ngIf="!enviando">Enviar mensaje</span>
+      <span *ngIf="enviando">Enviando...</span>
+      <span class="icono-boton">➡️</span>
     </button>
+    <div *ngIf="enviado" class="mensaje-exito">¡Mensaje enviado correctamente!</div>
+    <div *ngIf="error" class="mensaje-error">{{ error }}</div>
   </form>
 </section>
 <div class="contacto-espaciador-final"></div>
