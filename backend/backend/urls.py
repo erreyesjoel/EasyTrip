@@ -24,6 +24,7 @@ from tablas.views import CustomTokenObtainPairView, usuario_actual, logout_view
 from django.conf import settings
 from django.conf.urls.static import static
 from tablas.views import contacto_easytrip
+from tablas.views import ejecutar_seeder_paquetes, ejecutar_seeder_agentes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -63,6 +64,8 @@ urlpatterns = [
     path('api/nueva-reserva/', nueva_reserva, name='nueva_reserva'),  # Nueva ruta para la vista de nueva reserva
     path('api/cancelar-reserva/<int:reserva_id>/', cancelar_reserva, name='cancelar_reserva'),  # Nueva ruta para cancelar reserva
     path('api/contacto/', contacto_easytrip, name='contacto_easytrip'),
+    path('api/ejecutar-seeder-paquetes/', ejecutar_seeder_paquetes),
+    path('api/ejecutar-seeder-agentes/', ejecutar_seeder_agentes),
 ] 
 
 # Solo en desarrollo: sirve archivos media desde MEDIA_URL

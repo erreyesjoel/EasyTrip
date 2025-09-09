@@ -6,6 +6,7 @@ from django.contrib.auth.tokens import default_token_generator
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.core.management import call_command
 import random
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -1227,3 +1228,13 @@ def contacto_easytrip(request):
     )
 
     return Response({'ok': True, 'mensaje': 'Mensaje enviado correctamente.'})
+
+@api_view(['POST'])
+def ejecutar_seeder_paquetes(request):
+    call_command('paquetes_seeder')
+    return Response({'ok': True, 'mensaje': 'Seeder de paquetes ejecutado.'})
+
+@api_view(['POST'])
+def ejecutar_seeder_agentes(request):
+    call_command('agentes_seeder')
+    return Response({'ok': True, 'mensaje': 'Seeder de agentes ejecutado.'})
