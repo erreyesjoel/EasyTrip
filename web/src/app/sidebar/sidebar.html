@@ -63,7 +63,7 @@
   </nav>
 
   <div class="sidebar-footer">
-    <div class="user-info" *ngIf="!isCollapsed && usuario">
+    <div class="user-info" *ngIf="usuario">
       <div class="user-avatar">
         <!-- Heroicons: User Circle -->
         <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -73,7 +73,7 @@
           <circle cx="12" cy="10" r="3" stroke-width="1.5"/>
         </svg>
       </div>
-      <div class="user-details">
+      <div class="user-details" *ngIf="!isCollapsed">
         <span class="user-name">{{ usuario.username }}</span>
         <span class="user-role">{{ usuario.rol | titlecase }}</span>
       </div>

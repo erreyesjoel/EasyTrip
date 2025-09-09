@@ -1,0 +1,156 @@
+@use '../../_variables' as vars;
+
+.sobre-nosotros {
+  // Quita fondo blanco, borde y sombra
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 2.5rem 3.5rem 2.5rem 2.5rem;
+  margin: 3rem auto 0 auto;
+  max-width: 820px;
+  min-height: 220px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  animation: fadeInUp 1s cubic-bezier(.23,1.02,.47,.98);
+
+  .sobre-nosotros-texto {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  h2 {
+    color: vars.$verde-esmeralda;
+    font-size: 2.1rem;
+    margin-bottom: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-align: left;
+    animation: fadeInDown 1s;
+  }
+
+  p {
+    color: #333;
+    font-size: 1.18rem;
+    margin-bottom: 0.2rem;
+    line-height: 1.7;
+    text-align: left;
+    animation: fadeInUp 1.2s;
+  }
+
+  .autor-info {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+
+    .autor-nombre {
+      font-weight: 700;
+      color: #222;
+      font-size: 1.13rem;
+      margin-right: 0.6rem;
+      letter-spacing: 0.2px;
+    }
+    .autor-rol {
+      color: #888;
+      font-size: 1.01rem;
+      font-weight: 500;
+    }
+    .autor-link {
+      margin-left: 2.5rem;
+      color: vars.$verde-esmeralda;
+      font-weight: 600;
+      font-size: 1.08rem;
+      text-decoration: none;
+      border-bottom: 1.5px solid vars.$verde-esmeralda;
+      transition: color 0.2s, border-color 0.2s;
+      &:hover {
+        color: darken(vars.$verde-esmeralda, 10%);
+        border-color: darken(vars.$verde-esmeralda, 10%);
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+@keyframes fadeInUpSimple {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade-in al hacer scroll */
+.fade-in-scroll {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s, transform 0.7s;
+  will-change: opacity, transform;
+}
+.fade-in-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .sobre-nosotros {
+    padding: 1.3rem 1rem 1.3rem 1rem;
+    max-width: 98vw;
+    margin-top: 2rem;
+    border-radius: 12px;
+  }
+  .sobre-nosotros-texto {
+    gap: 1.1rem;
+  }
+  .autor-info {
+    gap: 1.2rem;
+    .autor-link { margin-left: 1.2rem; }
+  }
+}
+
+/* Móvil */
+@media (max-width: 600px) {
+  .sobre-nosotros {
+    padding: 1rem 0.2rem 1rem 0.2rem;
+    margin: 10px;
+    border-radius: 8px;
+    min-height: unset;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInUp 1s cubic-bezier(.23,1.02,.47,.98);
+  }
+  .sobre-nosotros-texto {
+    gap: 0.7rem;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+  .autor-info {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    .autor-link { margin-left: 0; margin-top: 0.5rem; }
+  }
+  h2, p {
+    text-align: center !important;
+  }
+}

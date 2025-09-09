@@ -1201,3 +1201,29 @@ def cancelar_reserva(request, reserva_id):
     )
 
     return Response({'mensaje': 'Reserva cancelada correctamente.'}, status=200)
+
+@api_view(['POST'])
+def contacto_easytrip(request):
+    nombre = request.data.get('nombre', '').strip()
+    email = request.data.get('email', '').strip()
+    mensaje = request.data.get('mensaje', '').strip()
+
+    if not nombre or not email or not mensaje:
+        return Response({'error': 'Todos los campos son obligatorios.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    asunto = f'Nuevo mensaje de contacto de {nombre}'
+    cuerpo = (
+        f'Nombre: {nombre}\n'
+        f'Email: {email}\n\n'
+        f'Mensaje:\n{mensaje}'
+    )
+
+    send_mail(
+        subject=asunto,
+        message=cuerpo,
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[settings.CONTACT_EMAIL],  # Añade CONTACT_EMAIL en settings.py
+        fail_silently=False,
+    )
+
+    return Response({'ok': True, 'mensaje': 'Mensaje enviado correctamente.'})
