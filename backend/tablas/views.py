@@ -78,16 +78,17 @@ def registro_usuario(request):
         key='access_token',
         value=access,
         httponly=True,
-        secure=False,
-        samesite='Lax',
+        secure=True,
+        samesite='None', # en produccion, si estan en dominios diferentes, cambiar a None
+        # en desarrollo (mismo dominio o localhost), puede ser Lax o secure False
         path='/'
     )
     response.set_cookie(
         key='refresh_token',
         value=refresh,
         httponly=True,
-        secure=False,
-        samesite='Lax',
+        secure=True,
+        samesite='None',
         path='/'
     )
 
@@ -185,16 +186,16 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 key='access_token',
                 value=access,
                 httponly=True,
-                secure=False,  # True en producción
-                samesite='Lax',
+                secure=True,  # True en producción, false en desarrollo
+                samesite='None',
                 path='/'       # <-- Añade esto
             )
             response.set_cookie(
                 key='refresh_token',
                 value=refresh,
                 httponly=True,
-                secure=False,
-                samesite='Lax',
+                secure=True,
+                samesite='None',
                 path='/'       # <-- Añade esto
             )
         return response
